@@ -1,0 +1,63 @@
+.. highlight:: r
+
+*************************************************
+Week 2: Exploritory Data Analyis (EDA) 
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+ 
+
+Find functions for the following:
+
+* Descriptive statistics  (http://www.statmethods.net/stats/descriptives.html)
+* Frequencies www.statmethods.net/stats/frequencies.
+* Cross tabs
+* Correlations http://www.statmethods.net/stats/correlations.html
+* How to display these statistics
+
+
+I read the following textbook:  R: Data Analysis and Visualization
+
+Some notes are as follows:
+    
+  * c()  stands for combine
+  * vectors need to have same data type
+  * [] - subscript operator
+  * : used for sequences
+  * NA is Null
+  * Vectors can be recycled (expanded until same size)
+  * For loops not needed in R because of vector and matrix capability
+  * function.name <-function(argument1, argument 2,...) { #some funciton}
+  * sapply (Takes every element in vector and applies it to a function)
+  * Can define function in sapply (use instead of for loop)
+  * Components of R include:
+    * vector data structure
+    * matrix
+    * data frames
+    * list
+    * array data structures
+  * Matrix:
+    * a.matrix <-matrix(c(x,x,x,),nol=?)
+    * cbin (column columns)
+    * rbin (row combine)
+    * apply() 1 rows, 2 column (rows 1 columns 2)
+  * Data.frame.  Rectangular array of data like a spreadsheet application (may have columns of different data type)
+   
+
+Chapter 2:
+  * Univariate data (samples of one variable)
+      
+
+
+Data science working document
+==============================
+#. Giving me a brief introduction to your data
+
+#. Discuss what you hope to discover about your data, or certain questions that you will solve for
+
+#. Show a header or summary of your data and explain the columns were applicable (max, means, min)
+
+#. Work in R to find your answers to the questions in part 2
+
+#. A summary of your findings, did you expect this? did you not? 
+

@@ -1,0 +1,635 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 7 Mahout &#8212; Data Science 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 8 Spark Outlier detector" href="week8.html" />
+    <link rel="prev" title="Week 6+ SparkOnMac" href="SparkOnMac.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-7-mahout">
+<h1>Week 7 Mahout<a class="headerlink" href="#week-7-mahout" title="Permalink to this headline">¶</a></h1>
+<p>by Josh Peterson</p>
+<div class="section" id="overview-of-mahout">
+<h2>Overview of Mahout<a class="headerlink" href="#overview-of-mahout" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Information in this section was taken from the book Manhout in action on Safari Online</p>
+</div>
+<ul class="simple">
+<li>Hini word that refers to an elephant driver</li>
+<li><dl class="first docutils">
+<dt>Inital three areas of maturity:</dt>
+<dd><ul class="first last">
+<li>recommender engines</li>
+<li>Clustering</li>
+<li>Classificaiton</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>Built with Hadoop in mind to help deal with large amount of data</li>
+<li><dl class="first docutils">
+<dt>Dependences include:</dt>
+<dd><ul class="first last">
+<li>Java</li>
+<li>Maven (online tool that manages dependencies, compiles code, packages, releases, generates documents, and publishes formal releases (store typically at /usr/local/maven</li>
+<li>Mahout</li>
+<li>Hadoop</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Following informaiton comes from &#8220;Learning Apache Mahout&#8221;</p>
+</div>
+<ul class="simple">
+<li>Mahout built upon Apache&#8217;s Hadoop distrubted project using MapReduce</li>
+<li>Future work involves writing Mahout for Apache Spark</li>
+<li>Community and license make it a highly desirable code</li>
+<li><dl class="first docutils">
+<dt>When to use Mahout:</dt>
+<dd><ul class="first last">
+<li>Data to large</li>
+<li>Data already on Hadoop</li>
+<li>Mahout has the desired algorithms for project</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Install mahout requires:</dt>
+<dd><ul class="first last">
+<li>Java</li>
+<li>Maven</li>
+<li>Hadoop</li>
+<li>Mahout</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-centos-and-vmfusion">
+<h2>Installing CentOS and VMFusion<a class="headerlink" href="#installing-centos-and-vmfusion" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Installed CentOS7 64-bit (minimal install) with networking on, date and time set, and kdump disability</p>
+</li>
+<li><p class="first">I then set a root password and also created a user name.</p>
+</li>
+<li><p class="first">Because I am using just the minimal install there was no user interface so I decided to interact with CentOS7 through ssh from my mac.  I like iterm better on mac then its original terminal so I used that for ssh into the machine.  The first step was to find my ip address using command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ip</span> <span class="n">addr</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>This is used to determine my ip address was <em>172.16.84.130</em>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">84.130</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">Once I was able to ssh to the CentOS7 vitural machine I installed the OS updates doing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span>
+<span class="n">yum</span> <span class="n">update</span>
+<span class="n">yum</span> <span class="n">install</span> <span class="n">wget</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-java">
+<h2>Installing Java<a class="headerlink" href="#installing-java" title="Permalink to this headline">¶</a></h2>
+<p>I installed java by doing the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span>
+<span class="n">wget</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cookies</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">check</span><span class="o">-</span><span class="n">certificate</span> <span class="o">--</span><span class="n">header</span> <span class="s2">&quot;Cookie: gpw_e24=http%3A</span><span class="si">%2F%2F</span><span class="s2">www.oracle.com</span><span class="si">%2F</span><span class="s2">; oraclelicense=accept-securebackup-cookie&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">oracle</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">otn</span><span class="o">-</span><span class="n">pub</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">jdk</span><span class="o">/</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">b14</span><span class="o">/</span><span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">root</span><span class="p">:</span><span class="n">root</span> <span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>I then used alternative to install java doing the following: (Alternative allows for softlinks to the desired location of the executable so as different version of java are released they can be installed and then alternatives used to link to a new one without having to uninstall the old.  This allows for the user to also test the new release and easily go back to the previous one if problems occur):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="o">.</span><span class="mi">111</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="n">java</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">config</span> <span class="n">java</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span>
+</pre></div>
+</div>
+<p>The next step is to create the Hadoop user with commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">useradd</span> <span class="n">hadoop</span>
+<span class="n">passwd</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>To allow me the ability for password-less login in using ssh-keygen I do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span>
+<span class="n">cat</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+<span class="n">chmod</span> <span class="mi">0600</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+</pre></div>
+</div>
+<p>Once I have established the new user I need to add some environment variables before installing Hadoop.  These are created by modifying the .bashrc file for Hadoop.  This is accomplished by adding the following to the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export JAVA_HOME=/opt/jdk1.8.0_111
+export JRE_HOME=/opt/jdk1.8.0_111/jre
+export PATH=$PATH:$JAVA_HOME/bin
+</pre></div>
+</div>
+<p>I then source the .bashrc to restart it so I do not need to log out and log back in to get access to it
+To edit the .bashrc I like to use vi instead of nano.  I also use ultraedit for mac to edit longer files through ssh instead</p>
+</div>
+<div class="section" id="installing-hadoop">
+<h2>Installing Hadoop<a class="headerlink" href="#installing-hadoop" title="Permalink to this headline">¶</a></h2>
+<p>First I login as the Hadoop user using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="o">.</span><span class="n">claz</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mf">3.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mf">3.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">mv</span> <span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>I then rename the hadoop-2.7.3 folder to hadoop and then add the following variables to the .bashrc and once added restart the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>#  Info for HADOOP
+export HADOOP_HOME=/home/hadoop/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+</pre></div>
+</div>
+<p>I then run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>I then change directories:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cd $HADOOP_HOME/etc/hadoop
+</pre></div>
+</div>
+<p>In this directory there are five main xml files that need to be customized.</p>
+<ul>
+<li><p class="first">core-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">fs</span><span class="o">.</span><span class="n">defaultFS</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9000</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">hdfs.site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">replication</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">dir</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoopdata</span><span class="o">/</span><span class="n">hdfs</span><span class="o">/</span><span class="n">namenode</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dir</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoopdata</span><span class="o">/</span><span class="n">hdfs</span><span class="o">/</span><span class="n">datanode</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">mapred-site.xml(<strong>cp mapred-site.xml.template mapred-site.xml</strong>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">mapreduce</span><span class="o">.</span><span class="n">framework</span><span class="o">.</span><span class="n">name</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">yarn</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">yarn-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">yarn</span><span class="o">.</span><span class="n">nodemanager</span><span class="o">.</span><span class="n">aux</span><span class="o">-</span><span class="n">services</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">mapreduce_shuffle</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>After editing the xml then I format the namenode (namenode is the centerpiece of the HDFS file system and is also known as master.  It is a single point of failure and if it goes down all of the system goes down):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hdfs</span> <span class="n">namenode</span> <span class="o">-</span><span class="nb">format</span>
+</pre></div>
+</div>
+<p>I then start HDFS, YARN, and HistoryServer using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">start</span><span class="o">-</span><span class="n">dfs</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">start</span><span class="o">-</span><span class="n">yarn</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">mr</span><span class="o">-</span><span class="n">jobhistory</span><span class="o">-</span><span class="n">daemon</span><span class="o">.</span><span class="n">sh</span> <span class="n">start</span> <span class="n">historyserver</span>
+</pre></div>
+</div>
+<p>To see all of the java jobs running I type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">jps</span>
+</pre></div>
+</div>
+<p>The following java scripts should be seen:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">28112</span> <span class="n">DataNode</span>
+<span class="mi">28883</span> <span class="n">NodeManager</span>
+<span class="mi">29155</span> <span class="n">JobHistoryServer</span>
+<span class="mi">28774</span> <span class="n">ResourceManager</span>
+<span class="mi">29208</span> <span class="n">Jps</span>
+<span class="mi">27818</span> <span class="n">NameNode</span>
+<span class="mi">28269</span> <span class="n">SecondaryNameNode</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>I then disabled the firewall using the command::</dt>
+<dd>su
+systemctl stop firewalld</dd>
+</dl>
+<p>I then disabled the IPV6 by adding these lines to /etc/sysctl.conf:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">disable_ipv6</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">disable_ipv6</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-maven">
+<h2>Installing Maven<a class="headerlink" href="#installing-maven" title="Permalink to this headline">¶</a></h2>
+<p>Maven is an online tool that manages dependencies, compiles code, packages, releases, generates documents, and publishes formal releases.  It is required so running mahout</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Some of this information was taken from the book Learning Apache Mahout</p>
+</div>
+<p>Get the code:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">mirror</span><span class="o">.</span><span class="n">cogentco</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">pub</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">maven</span><span class="o">/</span><span class="n">maven</span><span class="o">-</span><span class="mi">3</span><span class="o">/</span><span class="mf">3.3</span><span class="o">.</span><span class="mi">9</span><span class="o">/</span><span class="n">binaries</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">maven</span><span class="o">-</span><span class="mf">3.3</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="nb">bin</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">apache</span><span class="o">-</span><span class="n">maven</span><span class="o">-</span><span class="mf">3.3</span><span class="o">.</span><span class="mi">9</span><span class="o">-</span><span class="nb">bin</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">mv</span> <span class="n">apache</span><span class="o">-</span><span class="n">maven</span><span class="o">-</span><span class="mf">3.3</span><span class="o">.</span><span class="mi">9</span> <span class="n">maven</span>
+<span class="n">vi</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>Add the following to the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export MAVEN_HOME=/home/hadoop/maven
+export PATH=$PATH:$MAVEN_HOME/bin
+</pre></div>
+</div>
+<p>Then run the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>Test that maven is installed correcting using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">mvn</span> <span class="o">-</span><span class="n">v</span>
+</pre></div>
+</div>
+<p>The output should be:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Apache</span> <span class="n">Maven</span> <span class="mf">3.3</span><span class="o">.</span><span class="mi">9</span> <span class="p">(</span><span class="n">bb52d8502b132ec0a5a3f4c09453c07478323dc5</span><span class="p">;</span> <span class="mi">2015</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T11</span><span class="p">:</span><span class="mi">41</span><span class="p">:</span><span class="mi">47</span><span class="o">-</span><span class="mi">05</span><span class="p">:</span><span class="mi">00</span><span class="p">)</span>
+<span class="n">Maven</span> <span class="n">home</span><span class="p">:</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">maven</span>
+<span class="n">Java</span> <span class="n">version</span><span class="p">:</span> <span class="mf">1.8</span><span class="o">.</span><span class="mi">0</span><span class="n">_111</span><span class="p">,</span> <span class="n">vendor</span><span class="p">:</span> <span class="n">Oracle</span> <span class="n">Corporation</span>
+<span class="n">Java</span> <span class="n">home</span><span class="p">:</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="n">jre</span>
+<span class="n">Default</span> <span class="n">locale</span><span class="p">:</span> <span class="n">en_US</span><span class="p">,</span> <span class="n">platform</span> <span class="n">encoding</span><span class="p">:</span> <span class="n">UTF</span><span class="o">-</span><span class="mi">8</span>
+<span class="n">OS</span> <span class="n">name</span><span class="p">:</span> <span class="s2">&quot;linux&quot;</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="s2">&quot;3.10.0-514.el7.x86_64&quot;</span><span class="p">,</span> <span class="n">arch</span><span class="p">:</span> <span class="s2">&quot;amd64&quot;</span><span class="p">,</span> <span class="n">family</span><span class="p">:</span> <span class="s2">&quot;unix&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-mahout">
+<h2>Installing Mahout<a class="headerlink" href="#installing-mahout" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Some of this information was taken from the book Learning Apache Mahout</p>
+</div>
+<p>Do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="o">.</span><span class="n">claz</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">mahout</span><span class="o">/</span><span class="mf">0.12</span><span class="o">.</span><span class="mi">2</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">mahout</span><span class="o">-</span><span class="n">distribution</span><span class="o">-</span><span class="mf">0.12</span><span class="o">.</span><span class="mf">2.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">mahout</span><span class="o">-</span><span class="n">distribution</span><span class="o">-</span><span class="mf">0.12</span><span class="o">.</span><span class="mf">2.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">mv</span> <span class="n">apache</span><span class="o">-</span><span class="n">mahout</span><span class="o">-</span><span class="n">distribution</span><span class="o">-</span><span class="mf">0.12</span><span class="o">.</span><span class="mi">2</span> <span class="n">mahout</span>
+<span class="n">vi</span> <span class="o">.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>Change .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>#Statements related to Mahout
+export MAHOUT_HOME=/home/hadoop/mahout
+export PATH=$PATH:$MAHOUT_HOME/bin
+###end of mahout statement
+</pre></div>
+</div>
+<p>Then do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>source ~/.bashrc
+mvn -version
+mahout
+</pre></div>
+</div>
+<p>The output is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[hadoop@localhost ~]$ mvn -version
+Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-10T11:41:47-05:00)
+Maven home: /home/hadoop/maven
+Java version: 1.8.0_111, vendor: Oracle Corporation
+Java home: /opt/jdk1.8.0_111/jre
+Default locale: en_US, platform encoding: UTF-8
+OS name: &quot;linux&quot;, version: &quot;3.10.0-514.el7.x86_64&quot;, arch: &quot;amd64&quot;, family: &quot;unix&quot;
+[hadoop@localhost ~]$ mahout
+Running on hadoop, using /home/hadoop/hadoop/bin/hadoop and HADOOP_CONF_DIR=
+MAHOUT-JOB: /home/hadoop/mahout/mahout-examples-0.12.2-job.jar
+An example program must be given as the first argument.
+Valid program names are:
+  arff.vector: : Generate Vectors from an ARFF file or directory
+  baumwelch: : Baum-Welch algorithm for unsupervised HMM training
+  canopy: : Canopy clustering
+  cat: : Print a file or resource as the logistic regression models would see it
+  cleansvd: : Cleanup and verification of SVD output
+  clusterdump: : Dump cluster output to text
+  clusterpp: : Groups Clustering Output In Clusters
+  cmdump: : Dump confusion matrix in HTML or text formats
+  cvb: : LDA via Collapsed Variation Bayes (0th deriv. approx)
+  cvb0_local: : LDA via Collapsed Variation Bayes, in memory locally.
+  describe: : Describe the fields and target variable in a data set
+  evaluateFactorization: : compute RMSE and MAE of a rating matrix factorization against probes
+  fkmeans: : Fuzzy K-means clustering
+  hmmpredict: : Generate random sequence of observations by given HMM
+  itemsimilarity: : Compute the item-item-similarities for item-based collaborative filtering
+  kmeans: : K-means clustering
+  lucene.vector: : Generate Vectors from a Lucene index
+  matrixdump: : Dump matrix in CSV format
+  matrixmult: : Take the product of two matrices
+  parallelALS: : ALS-WR factorization of a rating matrix
+  qualcluster: : Runs clustering experiments and summarizes results in a CSV
+  recommendfactorized: : Compute recommendations using the factorization of a rating matrix
+  recommenditembased: : Compute recommendations using item-based collaborative filtering
+  regexconverter: : Convert text files on a per line basis based on regular expressions
+  resplit: : Splits a set of SequenceFiles into a number of equal splits
+  rowid: : Map SequenceFile&lt;Text,VectorWritable&gt; to {SequenceFile&lt;IntWritable,VectorWritable&gt;, SequenceFile&lt;IntWritable,Text&gt;}
+  rowsimilarity: : Compute the pairwise similarities of the rows of a matrix
+  runAdaptiveLogistic: : Score new production data using a probably trained and validated AdaptivelogisticRegression model
+  runlogistic: : Run a logistic regression model against CSV data
+  seq2encoded: : Encoded Sparse Vector generation from Text sequence files
+  seq2sparse: : Sparse Vector generation from Text sequence files
+  seqdirectory: : Generate sequence files (of Text) from a directory
+  seqdumper: : Generic Sequence File dumper
+  seqmailarchives: : Creates SequenceFile from a directory containing gzipped mail archives
+  seqwiki: : Wikipedia xml dump to sequence file
+  spectralkmeans: : Spectral k-means clustering
+  split: : Split Input data into test and train sets
+  splitDataset: : split a rating dataset into training and probe parts
+  ssvd: : Stochastic SVD
+  streamingkmeans: : Streaming k-means clustering
+  svd: : Lanczos Singular Value Decomposition
+  testnb: : Test the Vector-based Bayes classifier
+  trainAdaptiveLogistic: : Train an AdaptivelogisticRegression model
+  trainlogistic: : Train a logistic regression using stochastic gradient descent
+  trainnb: : Train the Vector-based Bayes classifier
+  transpose: : Take the transpose of a matrix
+  validateAdaptiveLogistic: : Validate an AdaptivelogisticRegression model against hold-out data set
+  vecdist: : Compute the distances between a set of Vectors (or Cluster or Canopy, they must fit in memory) and a list of Vectors
+  vectordump: : Dump vectors from a sequence file to text
+  viterbi: : Viterbi decoding of hidden states from given output states sequence
+</pre></div>
+</div>
+</div>
+<div class="section" id="testing-mahout">
+<h2>Testing Mahout<a class="headerlink" href="#testing-mahout" title="Permalink to this headline">¶</a></h2>
+<p>Do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cd $MAHOUT_HOME
+cd examples/bin
+ls --ltr
+./cluster-reuters.sh
+</pre></div>
+</div>
+<p>The end of output is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>            <span class="n">resources</span>                               <span class="o">=&gt;</span>   <span class="mf">4.837392330169678</span>
+            <span class="mi">41</span>                                      <span class="o">=&gt;</span>   <span class="mf">4.762823581695557</span>
+            <span class="n">gas</span>                                     <span class="o">=&gt;</span>   <span class="mf">4.651492595672607</span>
+            <span class="mf">09.81</span>                                   <span class="o">=&gt;</span>    <span class="mf">4.59383487701416</span>
+            <span class="n">low</span>                                     <span class="o">=&gt;</span>   <span class="mf">4.493268966674805</span>
+            <span class="n">sees</span>                                    <span class="o">=&gt;</span>    <span class="mf">4.45147180557251</span>
+            <span class="n">declined</span>                                <span class="o">=&gt;</span>   <span class="mf">4.445640563964844</span>
+    <span class="n">Weight</span> <span class="p">:</span> <span class="p">[</span><span class="n">props</span> <span class="o">-</span> <span class="n">optional</span><span class="p">]:</span>  <span class="n">Point</span><span class="p">:</span>
+
+<span class="p">:{</span><span class="s2">&quot;identifier&quot;</span><span class="p">:</span><span class="s2">&quot;VL-19355&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[{</span><span class="s2">&quot;06&quot;</span><span class="p">:</span><span class="mf">1.798</span><span class="p">},{</span><span class="s2">&quot;1&quot;</span><span class="p">:</span><span class="mf">1.196</span><span class="p">},{</span><span class="s2">&quot;11&quot;</span><span class="p">:</span><span class="mf">1.175</span><span class="p">},{</span><span class="s2">&quot;11.33&quot;</span><span class="p">:</span><span class="mf">4.154</span><span class="p">},{</span><span class="s2">&quot;110&quot;</span><span class="p">:</span><span class="mf">2.815</span><span class="p">},{</span><span class="s2">&quot;</span>
+    <span class="n">Top</span> <span class="n">Terms</span><span class="p">:</span>
+            <span class="n">burlington</span>                              <span class="o">=&gt;</span>  <span class="mf">27.376057624816895</span>
+            <span class="n">samjens</span>                                 <span class="o">=&gt;</span>  <span class="mf">16.805683135986328</span>
+            <span class="n">edelman</span>                                 <span class="o">=&gt;</span>  <span class="mf">16.628662943840027</span>
+            <span class="n">dominion</span>                                <span class="o">=&gt;</span>  <span class="mf">15.947927713394165</span>
+            <span class="n">ammeen</span>                                  <span class="o">=&gt;</span>   <span class="mf">10.81406545639038</span>
+            <span class="n">takeover</span>                                <span class="o">=&gt;</span>   <span class="mf">8.852294206619263</span>
+            <span class="n">bur</span>                                     <span class="o">=&gt;</span>   <span class="mf">8.494523048400879</span>
+            <span class="n">textile</span>                                 <span class="o">=&gt;</span>    <span class="mf">8.20582389831543</span>
+            <span class="n">asher</span>                                   <span class="o">=&gt;</span>    <span class="mf">8.14621639251709</span>
+            <span class="n">lawyers</span>                                 <span class="o">=&gt;</span>   <span class="mf">7.981342911720276</span>
+            <span class="n">injunction</span>                              <span class="o">=&gt;</span>  <span class="mf">6.6086156368255615</span>
+            <span class="n">stanley</span>                                 <span class="o">=&gt;</span>   <span class="mf">6.207991242408752</span>
+            <span class="n">information</span>                             <span class="o">=&gt;</span>   <span class="mf">5.840623617172241</span>
+            <span class="n">lawyer</span>                                  <span class="o">=&gt;</span>   <span class="mf">5.754413366317749</span>
+            <span class="n">morgan</span>                                  <span class="o">=&gt;</span>   <span class="mf">5.620885014533997</span>
+            <span class="n">denim</span>                                   <span class="o">=&gt;</span>   <span class="mf">5.523544788360596</span>
+            <span class="n">offer</span>                                   <span class="o">=&gt;</span>   <span class="mf">5.326757371425629</span>
+            <span class="n">gormley</span>                                 <span class="o">=&gt;</span>   <span class="mf">5.143141269683838</span>
+            <span class="n">gordon</span>                                  <span class="o">=&gt;</span>   <span class="mf">5.104058742523193</span>
+            <span class="n">painewebber</span>                             <span class="o">=&gt;</span>   <span class="mf">5.081052780151367</span>
+    <span class="n">Weight</span> <span class="p">:</span> <span class="p">[</span><span class="n">props</span> <span class="o">-</span> <span class="n">optional</span><span class="p">]:</span>  <span class="n">Point</span><span class="p">:</span>
+
+<span class="p">:{</span><span class="s2">&quot;identifier&quot;</span><span class="p">:</span><span class="s2">&quot;VL-16751&quot;</span><span class="p">,</span><span class="s2">&quot;r&quot;</span><span class="p">:[],</span><span class="s2">&quot;c&quot;</span><span class="p">:[{</span><span class="s2">&quot;05&quot;</span><span class="p">:</span><span class="mf">4.189</span><span class="p">},{</span><span class="s2">&quot;17&quot;</span><span class="p">:</span><span class="mf">3.052</span><span class="p">},{</span><span class="s2">&quot;1985&quot;</span><span class="p">:</span><span class="mf">3.678</span><span class="p">},{</span><span class="s2">&quot;27&quot;</span><span class="p">:</span><span class="mf">3.793</span><span class="p">},{</span><span class="s2">&quot;50,000&quot;</span>
+    <span class="n">Top</span> <span class="n">Terms</span><span class="p">:</span>
+            <span class="n">chit</span>                                    <span class="o">=&gt;</span>   <span class="mf">14.54699993133545</span>
+            <span class="n">rubber</span>                                  <span class="o">=&gt;</span>  <span class="mf">12.708913803100586</span>
+            <span class="n">teck</span>                                    <span class="o">=&gt;</span>   <span class="mf">12.13612174987793</span>
+            <span class="n">thai</span>                                    <span class="o">=&gt;</span>  <span class="mf">12.076025009155273</span>
+            <span class="mi">69</span><span class="p">,</span><span class="mi">952</span>                                  <span class="o">=&gt;</span>   <span class="mf">9.880817413330078</span>
+            <span class="mi">60</span><span class="p">,</span><span class="mi">296</span>                                  <span class="o">=&gt;</span>   <span class="mf">9.880817413330078</span>
+            <span class="mf">56.73</span>                                   <span class="o">=&gt;</span>   <span class="mf">9.369991302490234</span>
+            <span class="n">sheet</span>                                   <span class="o">=&gt;</span>   <span class="mf">8.698991775512695</span>
+            <span class="n">venture</span>                                 <span class="o">=&gt;</span>   <span class="mf">8.661195755004883</span>
+            <span class="n">chinese</span>                                 <span class="o">=&gt;</span>    <span class="mf">8.63268756866455</span>
+            <span class="n">china</span>                                   <span class="o">=&gt;</span>    <span class="mf">7.46561336517334</span>
+            <span class="n">tonnes</span>                                  <span class="o">=&gt;</span>   <span class="mf">7.303538799285889</span>
+            <span class="n">soon</span>                                    <span class="o">=&gt;</span>   <span class="mf">6.968311786651611</span>
+            <span class="n">exporter</span>                                <span class="o">=&gt;</span>   <span class="mf">6.868555545806885</span>
+            <span class="n">joint</span>                                   <span class="o">=&gt;</span>   <span class="mf">6.497229099273682</span>
+            <span class="n">auto</span>                                    <span class="o">=&gt;</span>   <span class="mf">6.208745002746582</span>
+            <span class="mi">50</span><span class="p">,</span><span class="mi">000</span>                                  <span class="o">=&gt;</span>   <span class="mf">6.074154853820801</span>
+            <span class="n">imported</span>                                <span class="o">=&gt;</span>   <span class="mf">6.059448719024658</span>
+            <span class="n">annually</span>                                <span class="o">=&gt;</span>   <span class="mf">5.995822906494141</span>
+            <span class="n">registered</span>                              <span class="o">=&gt;</span>   <span class="mf">5.820374488830566</span>
+    <span class="n">Weight</span> <span class="p">:</span> <span class="p">[</span><span class="n">props</span> <span class="o">-</span> <span class="n">optional</span><span class="p">]:</span>  <span class="n">Point</span><span class="p">:</span>
+
+
+<span class="n">Inter</span><span class="o">-</span><span class="n">Cluster</span> <span class="n">Density</span><span class="p">:</span> <span class="mf">0.45886739446111874</span>
+<span class="n">Intra</span><span class="o">-</span><span class="n">Cluster</span> <span class="n">Density</span><span class="p">:</span> <span class="mf">0.5966193459389921</span>
+<span class="n">CDbw</span> <span class="n">Inter</span><span class="o">-</span><span class="n">Cluster</span> <span class="n">Density</span><span class="p">:</span> <span class="mf">0.0</span>
+<span class="n">CDbw</span> <span class="n">Intra</span><span class="o">-</span><span class="n">Cluster</span> <span class="n">Density</span><span class="p">:</span> <span class="mf">17.88264903791789</span>
+<span class="n">CDbw</span> <span class="n">Separation</span><span class="p">:</span> <span class="mf">28288.037114682844</span>
+</pre></div>
+</div>
+<p>Run the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">classify</span><span class="o">-</span><span class="mi">20</span><span class="n">newsgroups</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>The end of output is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">=======================================================</span>
+<span class="n">Summary</span>
+<span class="o">-------------------------------------------------------</span>
+<span class="n">Correctly</span> <span class="n">Classified</span> <span class="n">Instances</span>          <span class="p">:</span>       <span class="mi">6767</span>           <span class="mf">89.8911</span><span class="o">%</span>
+<span class="n">Incorrectly</span> <span class="n">Classified</span> <span class="n">Instances</span>        <span class="p">:</span>        <span class="mi">761</span>           <span class="mf">10.1089</span><span class="o">%</span>
+<span class="n">Total</span> <span class="n">Classified</span> <span class="n">Instances</span>              <span class="p">:</span>       <span class="mi">7528</span>
+
+<span class="o">=======================================================</span>
+<span class="n">Confusion</span> <span class="n">Matrix</span>
+<span class="o">-------------------------------------------------------</span>
+<span class="n">a</span>           <span class="n">b</span>       <span class="n">c</span>       <span class="n">d</span>       <span class="n">e</span>       <span class="n">f</span>       <span class="n">g</span>       <span class="n">h</span>       <span class="n">i</span>       <span class="n">j</span>       <span class="n">k</span>       <span class="n">l</span>       <span class="n">m</span>    <span class="n">n</span>          <span class="n">o</span>       <span class="n">p</span>       <span class="n">q</span>       <span class="n">r</span>       <span class="n">s</span>       <span class="n">t</span>       <span class="o">&lt;--</span><span class="n">Classified</span> <span class="k">as</span>
+<span class="mi">290</span>         <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>    <span class="mi">1</span>          <span class="mi">0</span>       <span class="mi">5</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">2</span>       <span class="mi">8</span>        <span class="o">|</span>  <span class="mi">306</span>         <span class="n">a</span>     <span class="o">=</span> <span class="n">alt</span><span class="o">.</span><span class="n">atheism</span>
+<span class="mi">2</span>           <span class="mi">330</span>     <span class="mi">4</span>       <span class="mi">15</span>      <span class="mi">10</span>      <span class="mi">6</span>       <span class="mi">4</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">3</span>       <span class="mi">8</span>    <span class="mi">2</span>          <span class="mi">4</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">388</span>         <span class="n">b</span>     <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">graphics</span>
+<span class="mi">0</span>           <span class="mi">30</span>      <span class="mi">220</span>     <span class="mi">92</span>      <span class="mi">18</span>      <span class="mi">16</span>      <span class="mi">5</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">3</span>    <span class="mi">0</span>          <span class="mi">4</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">2</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">393</span>         <span class="n">c</span>     <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">os</span><span class="o">.</span><span class="n">ms</span><span class="o">-</span><span class="n">windows</span><span class="o">.</span><span class="n">misc</span>
+<span class="mi">1</span>           <span class="mi">11</span>      <span class="mi">0</span>       <span class="mi">351</span>     <span class="mi">24</span>      <span class="mi">1</span>       <span class="mi">8</span>       <span class="mi">2</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">11</span>   <span class="mi">0</span>          <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">410</span>         <span class="n">d</span>     <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">sys</span><span class="o">.</span><span class="n">ibm</span><span class="o">.</span><span class="n">pc</span><span class="o">.</span><span class="n">hardware</span>
+<span class="mi">0</span>           <span class="mi">4</span>       <span class="mi">0</span>       <span class="mi">15</span>      <span class="mi">349</span>     <span class="mi">2</span>       <span class="mi">2</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">7</span>    <span class="mi">0</span>          <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">2</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">383</span>         <span class="n">e</span>     <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">sys</span><span class="o">.</span><span class="n">mac</span><span class="o">.</span><span class="n">hardware</span>
+<span class="mi">0</span>           <span class="mi">29</span>      <span class="mi">1</span>       <span class="mi">4</span>       <span class="mi">3</span>       <span class="mi">351</span>     <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">1</span>    <span class="mi">0</span>          <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">395</span>         <span class="n">f</span>     <span class="o">=</span> <span class="n">comp</span><span class="o">.</span><span class="n">windows</span><span class="o">.</span><span class="n">x</span>
+<span class="mi">1</span>           <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">24</span>      <span class="mi">9</span>       <span class="mi">0</span>       <span class="mi">314</span>     <span class="mi">14</span>      <span class="mi">1</span>       <span class="mi">3</span>       <span class="mi">2</span>       <span class="mi">3</span>       <span class="mi">15</span>   <span class="mi">1</span>          <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">389</span>         <span class="n">g</span>     <span class="o">=</span> <span class="n">misc</span><span class="o">.</span><span class="n">forsale</span>
+<span class="mi">0</span>           <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">2</span>       <span class="mi">1</span>       <span class="mi">3</span>       <span class="mi">374</span>     <span class="mi">2</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">4</span>    <span class="mi">0</span>          <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">3</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">391</span>         <span class="n">h</span>     <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">autos</span>
+<span class="mi">0</span>           <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">4</span>       <span class="mi">7</span>       <span class="mi">365</span>     <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>    <span class="mi">1</span>          <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">381</span>         <span class="n">i</span>     <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">motorcycles</span>
+<span class="mi">0</span>           <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">2</span>       <span class="mi">357</span>     <span class="mi">9</span>       <span class="mi">0</span>       <span class="mi">0</span>    <span class="mi">1</span>          <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">373</span>         <span class="n">j</span>     <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">sport</span><span class="o">.</span><span class="n">baseball</span>
+<span class="mi">0</span>           <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">4</span>       <span class="mi">380</span>     <span class="mi">0</span>       <span class="mi">0</span>    <span class="mi">0</span>          <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">389</span>         <span class="n">k</span>     <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">sport</span><span class="o">.</span><span class="n">hockey</span>
+<span class="mi">0</span>           <span class="mi">3</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">4</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">381</span>     <span class="mi">0</span>    <span class="mi">1</span>          <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">6</span>       <span class="mi">0</span>       <span class="mi">2</span>       <span class="mi">2</span>        <span class="o">|</span>  <span class="mi">402</span>         <span class="n">l</span>     <span class="o">=</span> <span class="n">sci</span><span class="o">.</span><span class="n">crypt</span>
+<span class="mi">0</span>           <span class="mi">4</span>       <span class="mi">0</span>       <span class="mi">10</span>      <span class="mi">9</span>       <span class="mi">0</span>       <span class="mi">7</span>       <span class="mi">3</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">348</span>  <span class="mi">1</span>          <span class="mi">2</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">389</span>         <span class="n">m</span>     <span class="o">=</span> <span class="n">sci</span><span class="o">.</span><span class="n">electronics</span>
+<span class="mi">1</span>           <span class="mi">5</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">2</span>       <span class="mi">2</span>    <span class="mi">341</span>        <span class="mi">3</span>       <span class="mi">0</span>       <span class="mi">2</span>       <span class="mi">0</span>       <span class="mi">5</span>       <span class="mi">1</span>        <span class="o">|</span>  <span class="mi">368</span>         <span class="n">n</span>     <span class="o">=</span> <span class="n">sci</span><span class="o">.</span><span class="n">med</span>
+<span class="mi">0</span>           <span class="mi">2</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">3</span>       <span class="mi">2</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">3</span>    <span class="mi">3</span>          <span class="mi">370</span>     <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>        <span class="o">|</span>  <span class="mi">386</span>         <span class="n">o</span>     <span class="o">=</span> <span class="n">sci</span><span class="o">.</span><span class="n">space</span>
+<span class="mi">6</span>           <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">2</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">1</span>    <span class="mi">4</span>          <span class="mi">1</span>       <span class="mi">394</span>     <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">5</span>        <span class="o">|</span>  <span class="mi">419</span>         <span class="n">p</span>     <span class="o">=</span> <span class="n">soc</span><span class="o">.</span><span class="n">religion</span><span class="o">.</span><span class="n">christian</span>
+<span class="mi">0</span>           <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>    <span class="mi">0</span>          <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">357</span>     <span class="mi">1</span>       <span class="mi">10</span>      <span class="mi">2</span>        <span class="o">|</span>  <span class="mi">372</span>         <span class="n">q</span>     <span class="o">=</span> <span class="n">talk</span><span class="o">.</span><span class="n">politics</span><span class="o">.</span><span class="n">guns</span>
+<span class="mi">3</span>           <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>    <span class="mi">0</span>          <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">1</span>       <span class="mi">383</span>     <span class="mi">4</span>       <span class="mi">0</span>        <span class="o">|</span>  <span class="mi">393</span>         <span class="n">r</span>     <span class="o">=</span> <span class="n">talk</span><span class="o">.</span><span class="n">politics</span><span class="o">.</span><span class="n">mideast</span>
+<span class="mi">1</span>           <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">2</span>       <span class="mi">0</span>       <span class="mi">2</span>       <span class="mi">2</span>    <span class="mi">0</span>          <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">18</span>      <span class="mi">1</span>       <span class="mi">315</span>     <span class="mi">1</span>        <span class="o">|</span>  <span class="mi">344</span>         <span class="n">s</span>     <span class="o">=</span> <span class="n">talk</span><span class="o">.</span><span class="n">politics</span><span class="o">.</span><span class="n">misc</span>
+<span class="mi">30</span>          <span class="mi">3</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">1</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>       <span class="mi">0</span>    <span class="mi">0</span>          <span class="mi">2</span>       <span class="mi">9</span>       <span class="mi">6</span>       <span class="mi">2</span>       <span class="mi">7</span>       <span class="mi">197</span>      <span class="o">|</span>  <span class="mi">257</span>         <span class="n">t</span>     <span class="o">=</span> <span class="n">talk</span><span class="o">.</span><span class="n">religion</span><span class="o">.</span><span class="n">misc</span>
+
+<span class="o">=======================================================</span>
+<span class="n">Statistics</span>
+<span class="o">-------------------------------------------------------</span>
+<span class="n">Kappa</span>                                       <span class="mf">0.8701</span>
+<span class="n">Accuracy</span>                                   <span class="mf">89.8911</span><span class="o">%</span>
+<span class="n">Reliability</span>                                <span class="mf">85.4952</span><span class="o">%</span>
+<span class="n">Reliability</span> <span class="p">(</span><span class="n">standard</span> <span class="n">deviation</span><span class="p">)</span>            <span class="mf">0.2179</span>
+<span class="n">Weighted</span> <span class="n">precision</span>                          <span class="mf">0.9051</span>
+<span class="n">Weighted</span> <span class="n">recall</span>                             <span class="mf">0.8989</span>
+<span class="n">Weighted</span> <span class="n">F1</span> <span class="n">score</span>                           <span class="mf">0.8979</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ports-for-hadoop">
+<h2>Ports for HADOOP<a class="headerlink" href="#ports-for-hadoop" title="Permalink to this headline">¶</a></h2>
+<p>Here are some ports for HADOOP:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>Daemon      Default Port    Configuration Parameter
+HDFS        Namenode                    50070       dfs.http.address
+        Datanodes               50075       dfs.datanode.http.address
+        Secondarynamenode       50090       dfs.secondary.http.address
+        Backup/Checkpoint node?     50105   dfs.backup.http.address
+
+
+        Resource manager        8088
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week 7 Mahout</a><ul>
+<li><a class="reference internal" href="#overview-of-mahout">Overview of Mahout</a></li>
+<li><a class="reference internal" href="#installing-centos-and-vmfusion">Installing CentOS and VMFusion</a></li>
+<li><a class="reference internal" href="#installing-java">Installing Java</a></li>
+<li><a class="reference internal" href="#installing-hadoop">Installing Hadoop</a></li>
+<li><a class="reference internal" href="#installing-maven">Installing Maven</a></li>
+<li><a class="reference internal" href="#installing-mahout">Installing Mahout</a></li>
+<li><a class="reference internal" href="#testing-mahout">Testing Mahout</a></li>
+<li><a class="reference internal" href="#ports-for-hadoop">Ports for HADOOP</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Data Science at Regis University!</a><ul>
+      <li>Previous: <a href="SparkOnMac.html" title="previous chapter">Week 6+ SparkOnMac</a></li>
+      <li>Next: <a href="week8.html" title="next chapter">Week 8 Spark Outlier detector</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataEngineering/week7mahout.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Josh Peterson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/dataEngineering/week7mahout.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,492 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>From the experts &#8212; Data Science 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Disucssion Questions:" href="discussionQuestions.html" />
+    <link rel="prev" title="Data Analytics at Regis University!" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="from-the-experts">
+<h1>From the experts<a class="headerlink" href="#from-the-experts" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<div class="section" id="week-2">
+<h2>Week 2<a class="headerlink" href="#week-2" title="Permalink to this headline">¶</a></h2>
+<p>Exploratory Data anlaysis and design of experiment</p>
+<ul>
+<li><dl class="first docutils">
+<dt>Data science process:</dt>
+<dd><ul class="first last simple">
+<li>Ask an interesting question (frame the problem)</li>
+<li><dl class="first docutils">
+<dt>Get the data (</dt>
+<dd><ul class="first last">
+<li>collect the raw data needed to solve the problem)</li>
+<li>process the data (data wrangling)</li>
+<li>clean the data</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>explore the data (EDA)</li>
+<li><dl class="first docutils">
+<dt>Model  the data and algorithms (in-depth analysis)</dt>
+<dd><ul class="first last">
+<li>machine learning</li>
+<li>statistical models</li>
+<li>Algorithms</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>Communcate and visualize the results</li>
+<li>Act, make decisions, data product</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>(EDA) exploratory data analysis (first but essential part of the data science process)</dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt>Includes:</dt>
+<dd><ul class="first last">
+<li>plots</li>
+<li>graphs</li>
+<li>summary statistics</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>John Tukey from Bell labs was father</li>
+<li>sampling distrubtion is crucial concept of statistical inerence (sample is subset of population)</li>
+<li><dl class="first docutils">
+<dt>EDA used for:</dt>
+<dd><ul class="first last">
+<li>verifiyng assumptions</li>
+<li>examining the direction and relationships among variables</li>
+<li>detecting mistakes</li>
+<li>initla searching for the appropriate models</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>No clear hypothesis stated before data in analyized</li>
+<li>Find idea of theory not test the theory</li>
+<li>In spreadsheets or databases (but to hard to see anything by just lookng at the raw data)</li>
+<li>rows reprent experimental subjects</li>
+<li>columns subjct indentifiers</li>
+<li>Two types of variables:</li>
+<li><dl class="first docutils">
+<dt>Quantitative variables</dt>
+<dd><ul class="first last">
+<li>Discrete variables</li>
+<li>Continous variables</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Categorical variables</dt>
+<dd><ul class="first last">
+<li>Normal variables</li>
+<li>Ordinal variables</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>EDA can be:</dt>
+<dd><ul class="first last simple">
+<li><dl class="first docutils">
+<dt>non graphical one variable (statistical summaries)</dt>
+<dd><ul class="first last">
+<li>Outlier deteciton plays a role</li>
+<li>Table of frequency (category percentages)</li>
+<li>Sample staticts (mean, sample variane, skewness, kurtosis)</li>
+<li>Central tendency (mean, meadan (robustness), mode (most frequent))</li>
+<li>Quartial (in normal standard deviation is 3/4 IQR (Q3-Q1)</li>
+<li>Kurtosis (measure of peakedness)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>univariate graphical</dt>
+<dd><ul class="first last">
+<li>histogram (idea about shape, central tendency, spread, modaility, and outlers</li>
+<li>Pie chart (not often used)</li>
+<li>Stem and leaf plots</li>
+<li>Boxplots</li>
+<li>Quantile-normal plots (quantile-quantile  QQ)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>multivariate non-graphical EDA</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Cross tabulation for:</dt>
+<dd><ul class="first last">
+<li>covarance</li>
+<li>corolaton</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>multivariate graphical EDA</dt>
+<dd><ul class="first last">
+<li>Scatter plot</li>
+<li>Side by side box plots</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>(perform univariate EDA before multivariate EDA)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Design of experimental or experimental design (DOE)</dt>
+<dd><ul class="first last">
+<li><p class="first">Maximum information from fewest experiments</p>
+</li>
+<li><p class="first">Quantify effect on a dependent variable</p>
+</li>
+<li><dl class="first docutils">
+<dt>Factors include</dt>
+<dd><ul class="first last simple">
+<li>Control factors</li>
+<li>Uncontrollable factors (measured but not determined by the expeimenter)</li>
+<li>Noise factors Uunmeasured and uncontrolled factors)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Design an experiment:</dt>
+<dd><ul class="first last simple">
+<li>Identify the research hypothese</li>
+<li>Choose set of experimental units</li>
+<li>Dtermine the response or output variable</li>
+<li>Determine potential sources of variation in the response</li>
+<li>Decided which variables to measure and control</li>
+<li>Decide how treatments are to be randomly assigned</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Terminaly review</dt>
+<dd><ul class="first last simple">
+<li>Response variable: the output variable measurse the outcome of the experiment</li>
+<li>Factor variable (input variable - predictor variable)</li>
+<li>Levels: subdivision (different levels) of a cator that can be controlled</li>
+<li>Treatment combination of factor levels</li>
+<li>Primary factor the factor which their effects need to be measured</li>
+<li>Secondary factor: factors in which we are not interested</li>
+<li>Replication: repeated of the experiments</li>
+<li>Experimental design: plan for experimentation such as number of experiments</li>
+<li>Experimental unit: (person, animpal, plant, time peried) emplyed in the expeirment</li>
+<li>Interaction: change of one level effecting change in the other level</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Three types of experimental design:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>Completely randomized design (one primary factor is randomly assigned to the expermmental units</dt>
+<dd><ul class="first last">
+<li><p class="first">Is there different between the k treatment</p>
+</li>
+<li><p class="first">WHen k&gt;2 this is known as one-way ANOVA</p>
+</li>
+<li><p class="first">Goal is to compare the treatment</p>
+</li>
+<li><p class="first">Samples are random and independently select</p>
+</li>
+<li><p class="first">Normal distributions</p>
+</li>
+<li><p class="first">Population variance are equal</p>
+</li>
+<li><p class="first">If assumptions not vaild use a non-parmatric statistical method such as Kruskall-Wallis</p>
+</li>
+<li><p class="first">in R:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span>result<span class="o">=</span> aov<span class="p">(</span>y<span class="o">~</span>A <span class="p">,</span> data<span class="o">=</span>dataframe<span class="p">)</span>
+<span class="o">&gt;</span><span class="kp">summary</span><span class="p">(</span>result<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Randomized block design</dt>
+<dd><ul class="first last">
+<li><p class="first">One primary factor is considered in the experiment</p>
+</li>
+<li><p class="first">Units are grouped into blocks</p>
+</li>
+<li><p class="first">Effect is looked at along with effects desired to be removed</p>
+</li>
+<li><dl class="first docutils">
+<dt>Assumptiiosn:</dt>
+<dd><ul class="first last simple">
+<li>b blocks and k are randomly selected</li>
+<li>distrubtion of the block-treatment are normal approxmation</li>
+<li>variance of block treamnet bk are equal</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">If assumptions not valide use non-parametric statistical method such as Friedman F</p>
+</li>
+<li><p class="first">in R:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span>result<span class="o">=</span>aov <span class="p">(</span>y<span class="o">~</span>A<span class="o">+</span>B<span class="p">,</span> data<span class="o">=</span>dataframe<span class="p">)</span>
+<span class="o">&gt;</span><span class="kp">summary</span><span class="p">(</span>result<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Factorial designs</dt>
+<dd><ul class="first last">
+<li><p class="first">Study interaction effects between factors (2 factors is two-way factorial design)</p>
+</li>
+<li><p class="first">Concerns about two or more factors and the effect on each other</p>
+</li>
+<li><dl class="first docutils">
+<dt>Assumptions include:</dt>
+<dd><ul class="first last">
+<li><p class="first">Distrubtion of responce on each factor level combination is normal</p>
+</li>
+<li><p class="first">Variance of the response is constant for all treatments</p>
+</li>
+<li><p class="first">Experimental units are random and independently assigned for each treatment</p>
+</li>
+<li><dl class="first docutils">
+<dt>Can test for</dt>
+<dd><ul class="first last simple">
+<li>factor interactions</li>
+<li>effect on factor</li>
+<li>main affect on a actor</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">In R:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span> result <span class="o">=</span> aov<span class="p">(</span>y<span class="o">~</span>A<span class="o">*</span>B<span class="p">,</span>data<span class="o">=</span>dataframe<span class="p">)</span> <span class="c1"># interaction included</span>
+<span class="o">&gt;</span> <span class="kp">summary</span><span class="p">(</span>result<span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="week-3-inferntial-statistics">
+<h2>Week 3 Inferntial Statistics<a class="headerlink" href="#week-3-inferntial-statistics" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Making conclusion about a population from a sample</li>
+<li>Data from differences, relationships, and associations</li>
+<li><dl class="first docutils">
+<dt>Two types</dt>
+<dd><ul class="first last">
+<li>Non-parametric (normal and ordinal data) - assumes normaily</li>
+<li>Parametric (interval and ratio data) - no assumption of normaily</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><em>significant level (alpha)</em> type I error is probabilty of rejectiong null hpyothesis when the null hypothesis is true &lt;wrong decision&gt;</li>
+<li><em>P-value</em> probabilty of obtaining your sample data if null was true (high P Null is more likely true)</li>
+<li><dl class="first docutils">
+<dt><em>Confidence interval</em> likely range of population parameter (mean)</dt>
+<dd><ul class="first last">
+<li>Confidence level + alpha = 1</li>
+<li>Confidence interval and p-value will result in same conclusion when p-value greater then alpha confidence interval will include the hypothezied mean</li>
+<li>if p-value low null must go</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Tools include</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>one and two sample t-test (is sample mean of one ore two groups different from hypotheized mean)</dt>
+<dd><ul class="first last">
+<li>population distrubtion is normal and sample size large enought for central limit theorem</li>
+<li>one sample t-test</li>
+<li>dependent sample t-test (paired sample t-test) two sample when they are related blood preasure before and after medicine</li>
+<li>independent sample t-test</li>
+<li>ANOVOA (more then two groups)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Chi-square test (frequence test for percentages and propotions) - normal</dt>
+<dd><ul class="first last">
+<li>test associations (intepdencies) in a two-way table</li>
+<li>good ness of fit (test of homgenety)</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li>general linear model (linear relationship between variable x and y)</li>
+<li>regression analysis (response variable relates to the predictor variable)</li>
+<li>ANOVA</li>
+<li>Bayesian</li>
+<li>Correlation coefficent (r) and Coefficienct of Dermination (R2) (reation but not causation)</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>======= Discussion</p>
+<p><a class="reference external" href="http://www2.psychology.uiowa.edu/faculty/mordkoff/GradStats/part%201/I.07%20normal.pdf">http://www2.psychology.uiowa.edu/faculty/mordkoff/GradStats/part%201/I.07%20normal.pdf</a></p>
+<p>Mist infertial staticstics is based on the assumtion that the variable being measured are normally distrubites.</p>
+<p>Perfect normailly distributed can be determined if the mean is equal to the median as well as the mode.   The reason it is desirous to have normal distribution that basedo nthe central limit ttheorm if the variales and independent and random then the distrubtion of the variables will approximate normal as N increases regarless the shape of the population distrbution.  Test that required normaiaty include: t-test, ANOZVA, simple region &#8220;Assumtion of Normailty&#8221;</p>
+<p>Can conduct test of the Assumption of Normailty (Kolmogorov-Sminov or Shaipor-Wilk Test.  Test shape against a varitey of popular shapes.  If p-value is under 0.05 then significant evidence the sample is not normal (some say .10)</p>
+<p>Somethings are not normal such as bacteria growth following an expontential dsitrubtion. Structural integrate of material follow a weibull distrubiton</p>
+<p>Outliers, insufficent data, inappropritaly graphhed</p>
+<p><a class="reference external" href="http://www.statisticshowto.com/probability-and-statistics/non-normal-distributions/">http://www.statisticshowto.com/probability-and-statistics/non-normal-distributions/</a></p>
+<p>Nonormal could include one sample Z-test,  (can transform data to fit normal model.  <a class="reference external" href="http://www.statisticshowto.com/probability-and-statistics/non-normal-distributions/">http://www.statisticshowto.com/probability-and-statistics/non-normal-distributions/</a></p>
+<p>Binomal when there are only two outcomes</p>
+<p>nonparametric statistical (which makes fewer or no assumtions about the data distrubtion.  Dats transformation</p>
+<p>graph data</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">From the experts</a><ul>
+<li><a class="reference internal" href="#week-2">Week 2</a></li>
+<li><a class="reference internal" href="#week-3-inferntial-statistics">Week 3 Inferntial Statistics</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Data Analytics at Regis University!</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Data Analytics at Regis University!</a></li>
+      <li>Next: <a href="discussionQuestions.html" title="next chapter">Disucssion Questions:</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataAnalytics/fromTheExpert.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Josh Peterson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/dataAnalytics/fromTheExpert.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

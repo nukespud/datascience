@@ -1,0 +1,654 @@
+==============
+Week5 PIG
+==============
+by Josh Peterson
+
+
+Installing CentOS and VMFusion
+===============================
+
+* Installed CentOS7 64-bit (minimal install) with networking on, date and time set, and kdump disability
+
+* I then set a root password and also created a user name.  
+
+ 
+
+* Because I am using just the minimal install there was no user interface so I decided to interact with CentOS7 through ssh from my mac.  I like iterm better on mac then its original terminal so I used that for ssh into the machine.  The first step was to find my ip address using command:
+
+    ip addr
+    
+This is used to determine my ip address was “172.16.84.128" ::
+
+    ssh 172.16.84.128
+
+.. note::  
+
+    My computer broke so I am borrowing a friends with a different IP address.  I am glad I know how to do everything from scratch so it wasn't to bad to switch to a new computer.  I just hade to download some stuff again.
+
+* Once I was able to ssh to the CentOS7 vitural machine I installed the OS updates doing::
+
+    su
+    yum update
+    yum install wget 
+
+
+
+Installing Java
+===============
+
+I installed java by doing the following::
+    
+    cd /opt
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz     
+    tar xzf jdk-8u111-linux-x64.tar.gz   
+    chown -R root:root jdk1.8.0_111/   
+    
+I then used alternative to install java doing the following: (Alternative allows for softlinks to the desired location of the executable so as different version of java are released they can be installed and then alternatives used to link to a new one without having to uninstall the old.  This allows for the user to also test the new release and easily go back to the previous one if problems occur):: 
+ 
+    cd /opt/jdk1.8.0.111
+    alternatives --install /usr/bin/java java /opt/jdk1.8.0_111/bin/java 2    
+    alternatives --config java
+    alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_111/bin/jar 2
+    alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_111/bin/javac 2
+    alternatives --set jar /opt/jdk1.8.0_111/bin/jar
+    alternatives --set javac /opt/jdk1.8.0_111/bin/javac
+
+The next step is to create the Hadoop user with commands::
+   
+
+    useradd hadoop
+    passwd hadoop
+
+To allow me the ability for password-less login in using ssh-keygen I do the following::
+
+    su - hadoop
+    ssh-keygen -t rsa
+    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+    chmod 0600 ~/.ssh/authorized_keys
+
+Once I have established the new user I need to add some environment variables before installing Hadoop.  These are created by modifying the .bashrc file for Hadoop.  This is accomplished by adding the following to the .bashrc::
+
+    export JAVA_HOME=/opt/jdk1.8.0_111
+    export JRE_HOME=/opt/jdk1.8.0_111/jre
+    export PATH=$PATH:$JAVA_HOME/bin
+
+I then source the .bashrc to restart it so I do not need to log out and log back in to get access to it
+To edit the .bashrc I like to use vi instead of nano.  I also use ultraedit for mac to edit longer files through ssh instead 
+
+
+
+Installing Hadoop
+=================
+
+First I login as the Hadoop user using::
+
+    su - hadoop
+    wget http://apache.claz.org/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
+    tar xzf hadoop-2.7.3.tar.gz
+    mv hadoop-2.7.3 hadoop
+
+
+I then rename the hadoop-2.7.3 folder to hadoop and then add the following variables to the .bashrc and once added restart the .bashrc::
+
+    export HADOOP_HOME=/home/hadoop/hadoop
+    export HADOOP_INSTALL=$HADOOP_HOME
+    export HADOOP_MAPRED_HOME=$HADOOP_HOME
+    export HADOOP_COMMON_HOME=$HADOOP_HOME
+    export HADOOP_HDFS_HOME=$HADOOP_HOME
+    export YARN_HOME=$HADOOP_HOME
+    export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+
+I then run::
+
+	source ~/.bashrc
+	
+I then change directories::
+
+    cd $HADOOP_HOME/etc/hadoop
+
+In this directory there are five main xml files that need to be customized.
+
+* core-site.xml::
+
+    <configuration>
+    <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://localhost:9000</value>
+    </property>
+    </configuration>
+
+
+* hdfs.site.xml::
+
+    <configuration>
+    <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+    </property>
+    
+    <property>
+    <name>dfs.name.dir</name>
+    
+    <value>file:///home/hadoop/hadoopdata/hdfs/namenode</value>
+    </property>
+    
+    <property>
+    <name>dfs.data.dir</name>
+    <value>file:///home/hadoop/hadoopdata/hdfs/datanode</value>
+    </property>
+    </configuration>
+    
+* mapred-site.xml(cp map-site.xml.tempalte to map-sit.xml)::
+
+    <configuration>
+    <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+    </property>
+    </configuration>
+    
+* yarn-site.xml::
+
+    <configuration>
+    <property>
+      <name>yarn.nodemanager.aux-services</name>
+      <value>mapreduce_shuffle</value>
+    </property>
+    </configuration>
+
+After editing the xml then I format the namenode (namenode is the centerpiece of the HDFS file system and is also known as master.  It is a single point of failure and if it goes down all of the system goes down)::
+
+    hdfs namenode -format
+    
+I then start HDFS, YARN, and HistoryServer using the command::
+
+    start-dfs.sh
+    start-yarn.sh
+    mr-jobhistory-daemon.sh start historyserver
+
+To see all of the java jobs running I type::
+
+    jps
+
+The following java scripts should be seen::
+
+    32034 Jps
+    31303 DataNode
+    31449 SecondaryNameNode
+    31594 ResourceManager
+    31695 NodeManager
+    31999 JobHistoryServer
+
+I then disabled the firewall using the command::
+    su
+    systemctl stop firewalld
+
+I then disabled the IPV6 by adding these lines to /etc/sysctl.conf::
+
+    net.ipv6.conf.all.disable_ipv6 = 1
+    net.ipv6.conf.default.disable_ipv6 = 1
+    
+    
+    
+    
+Installing PIG
+================
+
+To install PIG I do the following::
+
+    wget http://www-us.apache.org/dist/pig/pig-0.16.0/pig-0.16.0.tar.gz
+    tar -zxvf pig-0.16.0.tar.gz
+    mv pig-0.16.0 pig
+
+I then add the following to my .bashrc::
+
+	export PIG_HOME=/home/hadoop/pig
+	export PATH=$PIG_HOME/bin:$PATH
+	export PIG_CLASS=$HADOOP_CONF/conf
+	export PIG_HOME=/home/hadoop/pig
+	
+The new .bashrc is the following::
+
+    # .bashrc
+    
+    # Source global definitions
+    if [ -f /etc/bashrc ]; then
+            . /etc/bashrc
+    fi
+    
+    # Uncomment the following line if you don't like systemctl's auto-paging feature:
+    # export SYSTEMD_PAGER=
+    
+    # User specific aliases and functions
+    
+    
+    export JAVA_HOME=/opt/jdk1.8.0_111
+    export JRE_HOME=/opt/jdk1.8.0_111/jre
+    export PATH=$PATH:$JAVA_HOME/bin
+    
+    export HADOOP_HOME=/home/hadoop/hadoop
+    export HADOOP_INSTALL=$HADOOP_HOME
+    export HADOOP_MAPRED_HOME=$HADOOP_HOME
+    export HADOOP_COMMON_HOME=$HADOOP_HOME
+    export HADOOP_HDFS_HOME=$HADOOP_HOME
+    export YARN_HOME=$HADOOP_HOME
+    export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+    
+    export PIG_HOME=/home/hadoop/pig
+    export PATH=$PIG_HOME/bin:$PATH
+    export PIG_CLASS=$HADOOP_CONF/conf
+    export PIG_HOME=/home/hadoop/pig
+
+I then source the bashrc using::
+
+	source ./bashrc
+	
+Then to test pig I use the command::
+
+	pig -help
+	
+
+
+Used the commands::
+
+    hadoop fs -mkdir /user
+    hadoop fs -mkdir /user/hadoop
+    hadoop fs -copyFromLocal /etc/passwd /user/hadoop   
+    pig
+
+Then ran the followign pig latin commands::
+
+    A = load 'passwd' using PigStorage(':'); 
+    B = foreach A generate $0 as id;    
+    dump B;
+    
+Then got the following output::
+
+    ig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
+    (root)
+    (bin)
+    (daemon)
+    (adm)
+    (lp)
+    (sync)
+    (shutdown)
+    (halt)
+    (mail)
+    (operator)
+    (games)
+    (ftp)
+    (nobody)
+    (systemd-bus-proxy)
+    (systemd-network)
+    (dbus)
+    (polkitd)
+    (tss)
+    (sshd)
+    (postfix)
+    (chrony)
+    (f4p)
+    (hadoop)
+
+
+Running pig script in mapreduce mode::
+    
+    cp pigtutorial.tar.gz ../../
+    tar -xvf pigtutorial.tar.gz
+    cd pigtutorial
+    hadoop fs –copyFromLocal excite.log.bz2 .
+    pig script1-hadoop.pig
+ 
+
+The process took about four minutes and then I ran the command:: 
+
+    hadoop fs -cat 'script1-hadoop-results/*' | less
+ 
+The results were::
+
+    00      and shareware   2.112885636821291       3       1.5294117647058825
+    00      vcd     2.1213203435596424      3       1.5
+    00      bluebird        2.1555530241167826      4       1.9285714285714282
+    00      cute    2.1650635094610955      4       1.8571428571428574
+    00      chested 2.182820625326997       4       1.75
+    00      diablo cheats   2.197401062294143       3       1.4705882352941178
+    00      psygnosis       2.23606797749979        2       1.1666666666666667
+    00      vacancy 2.2360679774997902      2       1.1666666666666665
+    00      pennywise       2.2360679774997902      2       1.1666666666666665
+    00      morisette       2.2360679774997902      2       1.1666666666666665
+    00      labyrinth       2.2360679774997902      2       1.1666666666666665
+    00      ywam    2.2360679774997902      2       1.1666666666666665
+    00      lax     2.2360679774997902      2       1.1666666666666665
+    00      ecg     2.2360679774997902      2       1.1666666666666665
+    00      gif s   2.2360679774997902      2       1.1666666666666665
+    00      and go  2.2360679774997902      2       1.1666666666666665
+    00      free mpegs      2.2360679774997902      2       1.1666666666666665
+    00      universidade    2.2360679774997902      2       1.1666666666666665
+    00      video camera    2.2360679774997902      2       1.1666666666666665
+    00      depp    2.236067977499791       2       1.1666666666666665
+    00      foot fetish     2.250167329788653       6       2.272727272727272
+    00      hong    2.260186147283002       15      8.541666666666666
+    00      mib     2.279211529192758       4       1.7777777777777781
+ 
+ 
+Did the following also (taken from the book *Programming Pig. 2nd edition* (http://techbus.safaribooksonline.com/book/databases/9781491937082)::
+    
+    hadoop fs -copyFromLocal ../../data/NYSE_dividends /user/hadoop 
+    pig
+
+Then I ran these commands in pig::
+
+    dividends = load 'NYSE_dividends' as (exchange, symbol, date, dividend);
+    grouped   = group dividends by symbol;
+    avg       = foreach grouped generate group, AVG(dividends.dividend);
+    store avg into 'average_dividend';
+
+Then I use tail to look at the info::
+
+    [hadoop@localhost ~]$ hadoop fs -tail /user/hadoop/average_dividend/part-r-00000
+    33333332
+    CJR	0.04383333333333333
+    CJS	0.7159999999999999
+    CJT	0.7124999999999999
+    CKR	0.06
+    CLB	0.28750000000000003
+    CLC	0.092
+    CLF	0.064
+    CLI	0.4975
+    CLP	0.17500000000000002
+    CLX	0.48
+    CMA	0.05
+    CMC	0.12
+    CME	1.15
+    CMI	0.175
+    CMK	0.040249999999999994
+    CMO	0.56
+    CMP	0.355
+    CMS	0.125
+    CMU	0.02783333333333334
+    CNI	0.22275
+    CNK	0.18
+    CNL	0.225
+    CNP	0.19
+    CNQ	0.0935
+    CNS	0.05
+    CNW	0.1
+    CNX	0.1
+    COF	0.13125
+    COG	0.03
+    COH	0.075
+    COL	0.24
+    COO	0.03
+    COP	0.4775
+    COV	0.165
+    COY	0.06099999999999998
+    CPA	0.37
+    CPB	0.25625
+    CPK	0.3125
+    CPL	1.79
+    CPO	0.14
+    CPP	1.006
+    CPT	0.5125
+    CPV	0.422
+    CPY	0.16
+    CRE	0.17
+    CRH	0.437
+    CRP	0.494
+    CRR	0.175
+    CRS	0.18
+    CRT	0.15725
+    CSA	0.15
+    CSE	0.01
+    CSH	0.035
+    CSJ	0.3231
+    CSL	0.1575
+    CSP	0.06508333333333334
+    CSQ	0.06550000000000002
+    CSS	0.15
+    CSX	0.22
+    CTB	0.105
+    CTL	0.7
+    CTS	0.03
+    CUB	0.09
+    CUZ	0.17
+    CVB	0.388
+    CVC	0.1
+    CVE	11.8749995
+    CVS	0.076
+    CVX	0.665
+    CWF	0.03400000000000001
+    CWT	0.295
+    CWZ	1.109
+    CXE	0.030416666666666675
+    CXH	0.05108333333333334
+    CYD	0.1
+    CYE	0.05666666666666668
+    CYN	0.13749999999999998
+    CYS	0.45
+    CYT	0.041
+    CASC	0.03
+    CATO	0.165
+    CLNY	0.07
+
+
+
+
+    
+Useful PIG Latin commands 
+==========================
+(Taken from Book:  Hadoop The Definitive Guide, 4th Edition:  
+http://techbus.safaribooksonline.com/9781491901687/id721167_html?percentage=0&reader=html#X2ludGVybmFsX0h0bWxWaWV3P3htbGlkPTk3ODE0OTE5MDE2ODclMkZjaDE2X2h0bWwmcXVlcnk9
+
+
+Here is a list of useful commands for PIG
+
+Operators for Pig Latin
+-----------------------
+    
+* Loading and storing::
+
+    LOAD AS
+    STORE
+    DUMP
+
+* Filtering::
+
+    FILTER
+    DISTINCT
+    FOREACH ... GENERATE
+    MAPREDUCE
+    STREAM
+    SAMPLE
+    ASSERT
+    
+* Grouping and joining::
+
+    JOIN
+    COGROUP
+    GROUP
+    CROSS
+    CUBE
+    
+* Sorting::
+
+    ORDER
+    RANK
+    LIMIT
+    
+* Combining and spliting::
+
+    UNION
+    SPLIT
+    
+* diagnostic operators::
+
+
+    DESCRIBE
+    EXPLAIN
+    ILLUSTRATE
+    
+* Macro and UDF statements::
+
+    REGISTER
+    DEFINE
+    IMPORT
+    
+
+
+
+    
+Commands for Pig Latin
+----------------------
+
+Hadoop filesystem commands::
+
+    cat
+    cd
+    copyFromLocal
+    copyToLocal
+    cp
+    fs
+    ls
+    mkdir
+    mv
+    pwd
+    rm
+    rmf
+
+Hadoop MapReduce::
+
+    kill
+    
+Utility::
+    
+    clear
+    exec
+    help
+    history
+    quit 
+    run
+    set
+    sh
+
+    
+Expressions for Pig Latin 
+---------------------------
+    
+Type of expresions::
+
+    Constant
+    Field (by position)
+    Field (by name)
+    Field (disambigute)
+    Projection
+    Map lookup
+    Cast
+    Arithmetic
+    Conditional
+    COmparision
+    Boolean
+    Functional
+    Flatten
+
+Types::
+    
+    boolean
+    int
+    long
+    float
+    double
+    biginteger
+    bigdecimeal
+    chararray
+    bytearray
+    datetime
+    tuple
+    bag
+    map
+    
+   
+
+Functions for Pig Latin
+-----------------------
+
+Eval::
+
+    AVG
+    CONCAT
+    COUNT
+    COUNT_STAR
+    DIFF
+    MAX
+    MIN
+    SIZE
+    SUM
+    TOBAG
+    TOKENIZE
+    TOMAP
+    TOP
+    TOTUPLE
+    
+Fliter::
+
+    IsEmpty
+    
+Load/Store::
+
+    PigStoreage
+    TextLoader
+    JsonLoader
+    JsonStorage
+    AvroStorage
+    ParquetLoader
+    ParquetStorrer
+    OrcStorage
+    HBaseStorage
+    
+
+
+    
+
+Useful HDFS commands
+=====================
+
+Here is a list of usefull commands taken from website:  https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html::
+
+    bin/hadoop fs <args>
+    hadoop fs -appendToFile <localsrc> ... <dst>
+    hadoop fs -cat [-ignoreCrc] URI [URI ...]
+    hadoop fs -copyFromLocal <localsrc> URI
+    hadoop fs -copyToLocal [-ignorecrc] [-crc] URI <localdst>
+    hadoop fs -find <path> ... <expression> ...
+    hadoop fs -ls [-C] [-d] [-h] [-q] [-R] [-t] [-S] [-r] [-u] <args>
+    hadoop fs -mkdir [-p] <paths>
+    hadoop fs -tail [-f] URI
+    
+    
+Another list of usefull hadoop commands taken from http://princetonits.com/blog/technology/33-frequently-used-hdfs-shell-commands/  ::
+
+    hadoop version
+    hadoop fs -ls /
+    hadoop fs -df hdfs:/
+    hadoop fs -count hdfs:/
+    hadoop fsck – /
+    hadoop balancer
+    hadoop fs -mkdir /user/training/hadoop
+    hadoop fs -put data/retail /user/training/hadoop
+    hadoop fs -ls
+    hadoop fs -du -s -h hadoop/retail
+    hadoop fs -rm hadoop/retail/*
+    hadoop fs -expunge
+    hadoop fs -copyFromLocal /home/training/purchases.txt hadoop/
+    hadoop fs -cat hadoop/purchases.txt
+    hadoop fs -copyToLocal hadoop/purchases.txt /home/training/data
+    hadoop fs -cp /user/training/*.txt /user/training/hadoop
+    hadoop fs -get hadoop/sample.txt /home/training/
+    hadoop fs -tail hadoop/purchases.txt
+    hadoop fs -ls hadoop/purchases.txt
+    sudo -u hdfs hadoop fs -chmod 600 hadoop/purchases.txt
+    sudo -u hdfs hadoop fs -chown root:root hadoop/purchases.txt
+    hadoop fs -mv hadoop apache_hadoop
+    hadoop fs -setrep -w 2 apache_hadoop/sample.txt
+    hadoop fs -distcp hdfs://namenodeA/apache_hadoop hdfs://namenodeB/hadoop
+    sudo -u hdfs hdfs dfsadmin -safemode leave
+    hadoop fs
+    hadoop fs -help

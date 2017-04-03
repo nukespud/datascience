@@ -1,0 +1,207 @@
+.. highlight:: r
+
+*************************************************
+From the experts 
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+Week 2
+=================
+
+Exploratory Data anlaysis and design of experiment
+
+* Data science process:
+    * Ask an interesting question (frame the problem)
+    * Get the data (
+        * collect the raw data needed to solve the problem)
+        * process the data (data wrangling)
+        * clean the data
+    * explore the data (EDA)
+    * Model  the data and algorithms (in-depth analysis)
+        * machine learning
+        * statistical models
+        * Algorithms
+    * Communcate and visualize the results
+    * Act, make decisions, data product
+    
+
+* (EDA) exploratory data analysis (first but essential part of the data science process)
+    * Includes:
+        * plots
+        * graphs
+        * summary statistics
+    * John Tukey from Bell labs was father
+    * sampling distrubtion is crucial concept of statistical inerence (sample is subset of population)
+    * EDA used for:
+        * verifiyng assumptions
+        * examining the direction and relationships among variables
+        * detecting mistakes
+        * initla searching for the appropriate models
+    * No clear hypothesis stated before data in analyized
+    * Find idea of theory not test the theory
+    * In spreadsheets or databases (but to hard to see anything by just lookng at the raw data)
+    * rows reprent experimental subjects
+    * columns subjct indentifiers    
+    * Two types of variables:
+    * Quantitative variables
+        * Discrete variables
+        * Continous variables
+    * Categorical variables
+        * Normal variables
+        * Ordinal variables
+* EDA can be:
+        * non graphical one variable (statistical summaries)
+        	* Outlier deteciton plays a role
+        	* Table of frequency (category percentages)
+        	* Sample staticts (mean, sample variane, skewness, kurtosis)
+        	* Central tendency (mean, meadan (robustness), mode (most frequent))
+        	* Quartial (in normal standard deviation is 3/4 IQR (Q3-Q1)
+        	* Kurtosis (measure of peakedness)
+        * univariate graphical
+        	* histogram (idea about shape, central tendency, spread, modaility, and outlers
+        	* Pie chart (not often used)
+        	* Stem and leaf plots
+        	* Boxplots 
+        	* Quantile-normal plots (quantile-quantile  QQ)
+        * multivariate non-graphical EDA
+        	* Cross tabulation for:
+        		* covarance 
+        		* corolaton
+        *  multivariate graphical EDA
+        	* Scatter plot
+        	* Side by side box plots
+        * (perform univariate EDA before multivariate EDA)
+* Design of experimental or experimental design (DOE)
+    * Maximum information from fewest experiments
+    * Quantify effect on a dependent variable           
+    * Factors include
+        * Control factors
+        * Uncontrollable factors (measured but not determined by the expeimenter)
+        * Noise factors Uunmeasured and uncontrolled factors)
+    * Design an experiment:
+        * Identify the research hypothese
+        * Choose set of experimental units
+        * Dtermine the response or output variable
+        * Determine potential sources of variation in the response
+        * Decided which variables to measure and control
+        * Decide how treatments are to be randomly assigned
+        
+    * Terminaly review
+        * Response variable: the output variable measurse the outcome of the experiment
+        * Factor variable (input variable - predictor variable)
+        * Levels: subdivision (different levels) of a cator that can be controlled
+        * Treatment combination of factor levels
+        * Primary factor the factor which their effects need to be measured
+        * Secondary factor: factors in which we are not interested
+        * Replication: repeated of the experiments
+        * Experimental design: plan for experimentation such as number of experiments
+        * Experimental unit: (person, animpal, plant, time peried) emplyed in the expeirment
+        * Interaction: change of one level effecting change in the other level
+    
+    * Three types of experimental design:
+        * Completely randomized design (one primary factor is randomly assigned to the expermmental units
+            * Is there different between the k treatment
+            * WHen k>2 this is known as one-way ANOVA
+            * Goal is to compare the treatment
+            * Samples are random and independently select
+            * Normal distributions
+            * Population variance are equal
+            * If assumptions not vaild use a non-parmatric statistical method such as Kruskall-Wallis
+            * in R::
+            
+              >result= aov(y~A , data=dataframe)
+              >summary(result)    
+                        
+        * Randomized block design
+            * One primary factor is considered in the experiment
+            * Units are grouped into blocks
+            * Effect is looked at along with effects desired to be removed
+            * Assumptiiosn:
+                * b blocks and k are randomly selected
+                * distrubtion of the block-treatment are normal approxmation
+                * variance of block treamnet bk are equal
+            * If assumptions not valide use non-parametric statistical method such as Friedman F
+            * in R::
+                
+                    >result=aov (y~A+B, data=dataframe)
+                    >summary(result)                
+        * Factorial designs    
+            * Study interaction effects between factors (2 factors is two-way factorial design)
+            * Concerns about two or more factors and the effect on each other
+            * Assumptions include:
+                * Distrubtion of responce on each factor level combination is normal
+                * Variance of the response is constant for all treatments
+                * Experimental units are random and independently assigned for each treatment
+                * Can test for 
+                    * factor interactions
+                    * effect on factor
+                    * main affect on a actor
+                    
+                * In R::
+                
+                    > result = aov(y~A*B,data=dataframe) # interaction included
+                    > summary(result)
+                
+                    
+Week 3 Inferntial Statistics
+============================
+
+* Making conclusion about a population from a sample
+* Data from differences, relationships, and associations
+* Two types
+    * Non-parametric (normal and ordinal data) - assumes normaily
+    * Parametric (interval and ratio data) - no assumption of normaily
+* *significant level (alpha)* type I error is probabilty of rejectiong null hpyothesis when the null hypothesis is true <wrong decision>
+* *P-value* probabilty of obtaining your sample data if null was true (high P Null is more likely true)
+* *Confidence interval* likely range of population parameter (mean)
+    * Confidence level + alpha = 1
+    * Confidence interval and p-value will result in same conclusion when p-value greater then alpha confidence interval will include the hypothezied mean
+    * if p-value low null must go
+* Tools include
+    * one and two sample t-test (is sample mean of one ore two groups different from hypotheized mean)
+        * population distrubtion is normal and sample size large enought for central limit theorem
+        * one sample t-test
+        * dependent sample t-test (paired sample t-test) two sample when they are related blood preasure before and after medicine
+        * independent sample t-test
+        * ANOVOA (more then two groups)      
+    * Chi-square test (frequence test for percentages and propotions) - normal
+        * test associations (intepdencies) in a two-way table
+        * good ness of fit (test of homgenety)
+    * general linear model (linear relationship between variable x and y)
+    * regression analysis (response variable relates to the predictor variable)
+    * ANOVA
+    * Bayesian
+    * Correlation coefficent (r) and Coefficienct of Dermination (R2) (reation but not causation)
+
+
+======= Discussion
+
+
+http://www2.psychology.uiowa.edu/faculty/mordkoff/GradStats/part%201/I.07%20normal.pdf
+
+
+
+
+
+
+
+
+Mist infertial staticstics is based on the assumtion that the variable being measured are normally distrubites.  
+
+Perfect normailly distributed can be determined if the mean is equal to the median as well as the mode.   The reason it is desirous to have normal distribution that basedo nthe central limit ttheorm if the variales and independent and random then the distrubtion of the variables will approximate normal as N increases regarless the shape of the population distrbution.  Test that required normaiaty include: t-test, ANOZVA, simple region "Assumtion of Normailty"  
+
+Can conduct test of the Assumption of Normailty (Kolmogorov-Sminov or Shaipor-Wilk Test.  Test shape against a varitey of popular shapes.  If p-value is under 0.05 then significant evidence the sample is not normal (some say .10)
+
+Somethings are not normal such as bacteria growth following an expontential dsitrubtion. Structural integrate of material follow a weibull distrubiton
+
+Outliers, insufficent data, inappropritaly graphhed
+
+http://www.statisticshowto.com/probability-and-statistics/non-normal-distributions/
+
+Nonormal could include one sample Z-test,  (can transform data to fit normal model.  http://www.statisticshowto.com/probability-and-statistics/non-normal-distributions/
+
+Binomal when there are only two outcomes
+
+nonparametric statistical (which makes fewer or no assumtions about the data distrubtion.  Dats transformation
+
+graph data

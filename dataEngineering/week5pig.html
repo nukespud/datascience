@@ -1,0 +1,757 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week5 PIG &#8212; Data Science 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week6 Spark" href="week6spark.html" />
+    <link rel="prev" title="Week4 HIVE" href="week4hive.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week5-pig">
+<h1>Week5 PIG<a class="headerlink" href="#week5-pig" title="Permalink to this headline">¶</a></h1>
+<p>by Josh Peterson</p>
+<div class="section" id="installing-centos-and-vmfusion">
+<h2>Installing CentOS and VMFusion<a class="headerlink" href="#installing-centos-and-vmfusion" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Installed CentOS7 64-bit (minimal install) with networking on, date and time set, and kdump disability</p>
+</li>
+<li><p class="first">I then set a root password and also created a user name.</p>
+</li>
+<li><p class="first">Because I am using just the minimal install there was no user interface so I decided to interact with CentOS7 through ssh from my mac.  I like iterm better on mac then its original terminal so I used that for ssh into the machine.  The first step was to find my ip address using command:</p>
+<blockquote>
+<div><p>ip addr</p>
+</div></blockquote>
+</li>
+</ul>
+<p>This is used to determine my ip address was “172.16.84.128&#8221;</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">84.128</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">My computer broke so I am borrowing a friends with a different IP address.  I am glad I know how to do everything from scratch so it wasn&#8217;t to bad to switch to a new computer.  I just hade to download some stuff again.</p>
+</div>
+<ul>
+<li><p class="first">Once I was able to ssh to the CentOS7 vitural machine I installed the OS updates doing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span>
+<span class="n">yum</span> <span class="n">update</span>
+<span class="n">yum</span> <span class="n">install</span> <span class="n">wget</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-java">
+<h2>Installing Java<a class="headerlink" href="#installing-java" title="Permalink to this headline">¶</a></h2>
+<p>I installed java by doing the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span>
+<span class="n">wget</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cookies</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">check</span><span class="o">-</span><span class="n">certificate</span> <span class="o">--</span><span class="n">header</span> <span class="s2">&quot;Cookie: gpw_e24=http%3A</span><span class="si">%2F%2F</span><span class="s2">www.oracle.com</span><span class="si">%2F</span><span class="s2">; oraclelicense=accept-securebackup-cookie&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">oracle</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">otn</span><span class="o">-</span><span class="n">pub</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">jdk</span><span class="o">/</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">b14</span><span class="o">/</span><span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">root</span><span class="p">:</span><span class="n">root</span> <span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>I then used alternative to install java doing the following: (Alternative allows for softlinks to the desired location of the executable so as different version of java are released they can be installed and then alternatives used to link to a new one without having to uninstall the old.  This allows for the user to also test the new release and easily go back to the previous one if problems occur):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="o">.</span><span class="mi">111</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="n">java</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">config</span> <span class="n">java</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span>
+</pre></div>
+</div>
+<p>The next step is to create the Hadoop user with commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">useradd</span> <span class="n">hadoop</span>
+<span class="n">passwd</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>To allow me the ability for password-less login in using ssh-keygen I do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span>
+<span class="n">cat</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+<span class="n">chmod</span> <span class="mi">0600</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+</pre></div>
+</div>
+<p>Once I have established the new user I need to add some environment variables before installing Hadoop.  These are created by modifying the .bashrc file for Hadoop.  This is accomplished by adding the following to the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export JAVA_HOME=/opt/jdk1.8.0_111
+export JRE_HOME=/opt/jdk1.8.0_111/jre
+export PATH=$PATH:$JAVA_HOME/bin
+</pre></div>
+</div>
+<p>I then source the .bashrc to restart it so I do not need to log out and log back in to get access to it
+To edit the .bashrc I like to use vi instead of nano.  I also use ultraedit for mac to edit longer files through ssh instead</p>
+</div>
+<div class="section" id="installing-hadoop">
+<h2>Installing Hadoop<a class="headerlink" href="#installing-hadoop" title="Permalink to this headline">¶</a></h2>
+<p>First I login as the Hadoop user using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="o">.</span><span class="n">claz</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mf">3.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mf">3.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">mv</span> <span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>I then rename the hadoop-2.7.3 folder to hadoop and then add the following variables to the .bashrc and once added restart the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export HADOOP_HOME=/home/hadoop/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+</pre></div>
+</div>
+<p>I then run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>I then change directories:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cd $HADOOP_HOME/etc/hadoop
+</pre></div>
+</div>
+<p>In this directory there are five main xml files that need to be customized.</p>
+<ul>
+<li><p class="first">core-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">fs</span><span class="o">.</span><span class="n">defaultFS</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9000</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">hdfs.site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">replication</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">dir</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoopdata</span><span class="o">/</span><span class="n">hdfs</span><span class="o">/</span><span class="n">namenode</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dir</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoopdata</span><span class="o">/</span><span class="n">hdfs</span><span class="o">/</span><span class="n">datanode</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">mapred-site.xml(cp map-site.xml.tempalte to map-sit.xml):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">mapreduce</span><span class="o">.</span><span class="n">framework</span><span class="o">.</span><span class="n">name</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">yarn</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">yarn-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">yarn</span><span class="o">.</span><span class="n">nodemanager</span><span class="o">.</span><span class="n">aux</span><span class="o">-</span><span class="n">services</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">mapreduce_shuffle</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>After editing the xml then I format the namenode (namenode is the centerpiece of the HDFS file system and is also known as master.  It is a single point of failure and if it goes down all of the system goes down):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hdfs</span> <span class="n">namenode</span> <span class="o">-</span><span class="nb">format</span>
+</pre></div>
+</div>
+<p>I then start HDFS, YARN, and HistoryServer using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">start</span><span class="o">-</span><span class="n">dfs</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">start</span><span class="o">-</span><span class="n">yarn</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">mr</span><span class="o">-</span><span class="n">jobhistory</span><span class="o">-</span><span class="n">daemon</span><span class="o">.</span><span class="n">sh</span> <span class="n">start</span> <span class="n">historyserver</span>
+</pre></div>
+</div>
+<p>To see all of the java jobs running I type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">jps</span>
+</pre></div>
+</div>
+<p>The following java scripts should be seen:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">32034</span> <span class="n">Jps</span>
+<span class="mi">31303</span> <span class="n">DataNode</span>
+<span class="mi">31449</span> <span class="n">SecondaryNameNode</span>
+<span class="mi">31594</span> <span class="n">ResourceManager</span>
+<span class="mi">31695</span> <span class="n">NodeManager</span>
+<span class="mi">31999</span> <span class="n">JobHistoryServer</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>I then disabled the firewall using the command::</dt>
+<dd>su
+systemctl stop firewalld</dd>
+</dl>
+<p>I then disabled the IPV6 by adding these lines to /etc/sysctl.conf:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">disable_ipv6</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">disable_ipv6</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-pig">
+<h2>Installing PIG<a class="headerlink" href="#installing-pig" title="Permalink to this headline">¶</a></h2>
+<p>To install PIG I do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">-</span><span class="n">us</span><span class="o">.</span><span class="n">apache</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">dist</span><span class="o">/</span><span class="n">pig</span><span class="o">/</span><span class="n">pig</span><span class="o">-</span><span class="mf">0.16</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">pig</span><span class="o">-</span><span class="mf">0.16</span><span class="o">.</span><span class="mf">0.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">zxvf</span> <span class="n">pig</span><span class="o">-</span><span class="mf">0.16</span><span class="o">.</span><span class="mf">0.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">mv</span> <span class="n">pig</span><span class="o">-</span><span class="mf">0.16</span><span class="o">.</span><span class="mi">0</span> <span class="n">pig</span>
+</pre></div>
+</div>
+<p>I then add the following to my .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export PIG_HOME=/home/hadoop/pig
+export PATH=$PIG_HOME/bin:$PATH
+export PIG_CLASS=$HADOOP_CONF/conf
+export PIG_HOME=/home/hadoop/pig
+</pre></div>
+</div>
+<p>The new .bashrc is the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span># .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+# Uncomment the following line if you don&#39;t like systemctl&#39;s auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+
+
+export JAVA_HOME=/opt/jdk1.8.0_111
+export JRE_HOME=/opt/jdk1.8.0_111/jre
+export PATH=$PATH:$JAVA_HOME/bin
+
+export HADOOP_HOME=/home/hadoop/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+
+export PIG_HOME=/home/hadoop/pig
+export PATH=$PIG_HOME/bin:$PATH
+export PIG_CLASS=$HADOOP_CONF/conf
+export PIG_HOME=/home/hadoop/pig
+</pre></div>
+</div>
+<p>I then source the bashrc using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">./</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>Then to test pig I use the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pig</span> <span class="o">-</span><span class="n">help</span>
+</pre></div>
+</div>
+<p>Used the commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="o">/</span><span class="n">user</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyFromLocal</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">passwd</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span>
+<span class="n">pig</span>
+</pre></div>
+</div>
+<p>Then ran the followign pig latin commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>A = load &#39;passwd&#39; using PigStorage(&#39;:&#39;);
+B = foreach A generate $0 as id;
+dump B;
+</pre></div>
+</div>
+<p>Then got the following output:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ig</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">hadoop</span><span class="o">.</span><span class="n">executionengine</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">MapRedUtil</span> <span class="o">-</span> <span class="n">Total</span> <span class="nb">input</span> <span class="n">paths</span> <span class="n">to</span> <span class="n">process</span> <span class="p">:</span> <span class="mi">1</span>
+<span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">bin</span><span class="p">)</span>
+<span class="p">(</span><span class="n">daemon</span><span class="p">)</span>
+<span class="p">(</span><span class="n">adm</span><span class="p">)</span>
+<span class="p">(</span><span class="n">lp</span><span class="p">)</span>
+<span class="p">(</span><span class="n">sync</span><span class="p">)</span>
+<span class="p">(</span><span class="n">shutdown</span><span class="p">)</span>
+<span class="p">(</span><span class="n">halt</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mail</span><span class="p">)</span>
+<span class="p">(</span><span class="n">operator</span><span class="p">)</span>
+<span class="p">(</span><span class="n">games</span><span class="p">)</span>
+<span class="p">(</span><span class="n">ftp</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nobody</span><span class="p">)</span>
+<span class="p">(</span><span class="n">systemd</span><span class="o">-</span><span class="n">bus</span><span class="o">-</span><span class="n">proxy</span><span class="p">)</span>
+<span class="p">(</span><span class="n">systemd</span><span class="o">-</span><span class="n">network</span><span class="p">)</span>
+<span class="p">(</span><span class="n">dbus</span><span class="p">)</span>
+<span class="p">(</span><span class="n">polkitd</span><span class="p">)</span>
+<span class="p">(</span><span class="n">tss</span><span class="p">)</span>
+<span class="p">(</span><span class="n">sshd</span><span class="p">)</span>
+<span class="p">(</span><span class="n">postfix</span><span class="p">)</span>
+<span class="p">(</span><span class="n">chrony</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f4p</span><span class="p">)</span>
+<span class="p">(</span><span class="n">hadoop</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Running pig script in mapreduce mode:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cp pigtutorial.tar.gz ../../
+tar -xvf pigtutorial.tar.gz
+cd pigtutorial
+hadoop fs –copyFromLocal excite.log.bz2 .
+pig script1-hadoop.pig
+</pre></div>
+</div>
+<p>The process took about four minutes and then I ran the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">cat</span> <span class="s1">&#39;script1-hadoop-results/*&#39;</span> <span class="o">|</span> <span class="n">less</span>
+</pre></div>
+</div>
+<p>The results were:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">00</span>      <span class="ow">and</span> <span class="n">shareware</span>   <span class="mf">2.112885636821291</span>       <span class="mi">3</span>       <span class="mf">1.5294117647058825</span>
+<span class="mi">00</span>      <span class="n">vcd</span>     <span class="mf">2.1213203435596424</span>      <span class="mi">3</span>       <span class="mf">1.5</span>
+<span class="mi">00</span>      <span class="n">bluebird</span>        <span class="mf">2.1555530241167826</span>      <span class="mi">4</span>       <span class="mf">1.9285714285714282</span>
+<span class="mi">00</span>      <span class="n">cute</span>    <span class="mf">2.1650635094610955</span>      <span class="mi">4</span>       <span class="mf">1.8571428571428574</span>
+<span class="mi">00</span>      <span class="n">chested</span> <span class="mf">2.182820625326997</span>       <span class="mi">4</span>       <span class="mf">1.75</span>
+<span class="mi">00</span>      <span class="n">diablo</span> <span class="n">cheats</span>   <span class="mf">2.197401062294143</span>       <span class="mi">3</span>       <span class="mf">1.4705882352941178</span>
+<span class="mi">00</span>      <span class="n">psygnosis</span>       <span class="mf">2.23606797749979</span>        <span class="mi">2</span>       <span class="mf">1.1666666666666667</span>
+<span class="mi">00</span>      <span class="n">vacancy</span> <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">pennywise</span>       <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">morisette</span>       <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">labyrinth</span>       <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">ywam</span>    <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">lax</span>     <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">ecg</span>     <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">gif</span> <span class="n">s</span>   <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="ow">and</span> <span class="n">go</span>  <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">free</span> <span class="n">mpegs</span>      <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">universidade</span>    <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">video</span> <span class="n">camera</span>    <span class="mf">2.2360679774997902</span>      <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">depp</span>    <span class="mf">2.236067977499791</span>       <span class="mi">2</span>       <span class="mf">1.1666666666666665</span>
+<span class="mi">00</span>      <span class="n">foot</span> <span class="n">fetish</span>     <span class="mf">2.250167329788653</span>       <span class="mi">6</span>       <span class="mf">2.272727272727272</span>
+<span class="mi">00</span>      <span class="n">hong</span>    <span class="mf">2.260186147283002</span>       <span class="mi">15</span>      <span class="mf">8.541666666666666</span>
+<span class="mi">00</span>      <span class="n">mib</span>     <span class="mf">2.279211529192758</span>       <span class="mi">4</span>       <span class="mf">1.7777777777777781</span>
+</pre></div>
+</div>
+<p>Did the following also (taken from the book <em>Programming Pig. 2nd edition</em> (<a class="reference external" href="http://techbus.safaribooksonline.com/book/databases/9781491937082">http://techbus.safaribooksonline.com/book/databases/9781491937082</a>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyFromLocal</span> <span class="o">../../</span><span class="n">data</span><span class="o">/</span><span class="n">NYSE_dividends</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hadoop</span>
+<span class="n">pig</span>
+</pre></div>
+</div>
+<p>Then I ran these commands in pig:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dividends</span> <span class="o">=</span> <span class="n">load</span> <span class="s1">&#39;NYSE_dividends&#39;</span> <span class="k">as</span> <span class="p">(</span><span class="n">exchange</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">dividend</span><span class="p">);</span>
+<span class="n">grouped</span>   <span class="o">=</span> <span class="n">group</span> <span class="n">dividends</span> <span class="n">by</span> <span class="n">symbol</span><span class="p">;</span>
+<span class="n">avg</span>       <span class="o">=</span> <span class="n">foreach</span> <span class="n">grouped</span> <span class="n">generate</span> <span class="n">group</span><span class="p">,</span> <span class="n">AVG</span><span class="p">(</span><span class="n">dividends</span><span class="o">.</span><span class="n">dividend</span><span class="p">);</span>
+<span class="n">store</span> <span class="n">avg</span> <span class="n">into</span> <span class="s1">&#39;average_dividend&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Then I use tail to look at the info:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[hadoop@localhost ~]$ hadoop fs -tail /user/hadoop/average_dividend/part-r-00000
+33333332
+CJR 0.04383333333333333
+CJS 0.7159999999999999
+CJT 0.7124999999999999
+CKR 0.06
+CLB 0.28750000000000003
+CLC 0.092
+CLF 0.064
+CLI 0.4975
+CLP 0.17500000000000002
+CLX 0.48
+CMA 0.05
+CMC 0.12
+CME 1.15
+CMI 0.175
+CMK 0.040249999999999994
+CMO 0.56
+CMP 0.355
+CMS 0.125
+CMU 0.02783333333333334
+CNI 0.22275
+CNK 0.18
+CNL 0.225
+CNP 0.19
+CNQ 0.0935
+CNS 0.05
+CNW 0.1
+CNX 0.1
+COF 0.13125
+COG 0.03
+COH 0.075
+COL 0.24
+COO 0.03
+COP 0.4775
+COV 0.165
+COY 0.06099999999999998
+CPA 0.37
+CPB 0.25625
+CPK 0.3125
+CPL 1.79
+CPO 0.14
+CPP 1.006
+CPT 0.5125
+CPV 0.422
+CPY 0.16
+CRE 0.17
+CRH 0.437
+CRP 0.494
+CRR 0.175
+CRS 0.18
+CRT 0.15725
+CSA 0.15
+CSE 0.01
+CSH 0.035
+CSJ 0.3231
+CSL 0.1575
+CSP 0.06508333333333334
+CSQ 0.06550000000000002
+CSS 0.15
+CSX 0.22
+CTB 0.105
+CTL 0.7
+CTS 0.03
+CUB 0.09
+CUZ 0.17
+CVB 0.388
+CVC 0.1
+CVE 11.8749995
+CVS 0.076
+CVX 0.665
+CWF 0.03400000000000001
+CWT 0.295
+CWZ 1.109
+CXE 0.030416666666666675
+CXH 0.05108333333333334
+CYD 0.1
+CYE 0.05666666666666668
+CYN 0.13749999999999998
+CYS 0.45
+CYT 0.041
+CASC        0.03
+CATO        0.165
+CLNY        0.07
+</pre></div>
+</div>
+</div>
+<div class="section" id="useful-pig-latin-commands">
+<h2>Useful PIG Latin commands<a class="headerlink" href="#useful-pig-latin-commands" title="Permalink to this headline">¶</a></h2>
+<p>(Taken from Book:  Hadoop The Definitive Guide, 4th Edition:
+<a class="reference external" href="http://techbus.safaribooksonline.com/9781491901687/id721167_html?percentage=0&amp;reader=html#X2ludGVybmFsX0h0bWxWaWV3P3htbGlkPTk3ODE0OTE5MDE2ODclMkZjaDE2X2h0bWwmcXVlcnk9">http://techbus.safaribooksonline.com/9781491901687/id721167_html?percentage=0&amp;reader=html#X2ludGVybmFsX0h0bWxWaWV3P3htbGlkPTk3ODE0OTE5MDE2ODclMkZjaDE2X2h0bWwmcXVlcnk9</a></p>
+<p>Here is a list of useful commands for PIG</p>
+<div class="section" id="operators-for-pig-latin">
+<h3>Operators for Pig Latin<a class="headerlink" href="#operators-for-pig-latin" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">Loading and storing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">LOAD</span> <span class="n">AS</span>
+<span class="n">STORE</span>
+<span class="n">DUMP</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Filtering:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">FILTER</span>
+<span class="n">DISTINCT</span>
+<span class="n">FOREACH</span> <span class="o">...</span> <span class="n">GENERATE</span>
+<span class="n">MAPREDUCE</span>
+<span class="n">STREAM</span>
+<span class="n">SAMPLE</span>
+<span class="n">ASSERT</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Grouping and joining:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">JOIN</span>
+<span class="n">COGROUP</span>
+<span class="n">GROUP</span>
+<span class="n">CROSS</span>
+<span class="n">CUBE</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Sorting:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ORDER</span>
+<span class="n">RANK</span>
+<span class="n">LIMIT</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Combining and spliting:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">UNION</span>
+<span class="n">SPLIT</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">diagnostic operators:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">DESCRIBE</span>
+<span class="n">EXPLAIN</span>
+<span class="n">ILLUSTRATE</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Macro and UDF statements:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">REGISTER</span>
+<span class="n">DEFINE</span>
+<span class="n">IMPORT</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="commands-for-pig-latin">
+<h3>Commands for Pig Latin<a class="headerlink" href="#commands-for-pig-latin" title="Permalink to this headline">¶</a></h3>
+<p>Hadoop filesystem commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cat</span>
+<span class="n">cd</span>
+<span class="n">copyFromLocal</span>
+<span class="n">copyToLocal</span>
+<span class="n">cp</span>
+<span class="n">fs</span>
+<span class="n">ls</span>
+<span class="n">mkdir</span>
+<span class="n">mv</span>
+<span class="n">pwd</span>
+<span class="n">rm</span>
+<span class="n">rmf</span>
+</pre></div>
+</div>
+<p>Hadoop MapReduce:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">kill</span>
+</pre></div>
+</div>
+<p>Utility:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">clear</span>
+<span class="n">exec</span>
+<span class="n">help</span>
+<span class="n">history</span>
+<span class="n">quit</span>
+<span class="n">run</span>
+<span class="nb">set</span>
+<span class="n">sh</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="expressions-for-pig-latin">
+<h3>Expressions for Pig Latin<a class="headerlink" href="#expressions-for-pig-latin" title="Permalink to this headline">¶</a></h3>
+<p>Type of expresions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Constant</span>
+<span class="n">Field</span> <span class="p">(</span><span class="n">by</span> <span class="n">position</span><span class="p">)</span>
+<span class="n">Field</span> <span class="p">(</span><span class="n">by</span> <span class="n">name</span><span class="p">)</span>
+<span class="n">Field</span> <span class="p">(</span><span class="n">disambigute</span><span class="p">)</span>
+<span class="n">Projection</span>
+<span class="n">Map</span> <span class="n">lookup</span>
+<span class="n">Cast</span>
+<span class="n">Arithmetic</span>
+<span class="n">Conditional</span>
+<span class="n">COmparision</span>
+<span class="n">Boolean</span>
+<span class="n">Functional</span>
+<span class="n">Flatten</span>
+</pre></div>
+</div>
+<p>Types:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">boolean</span>
+<span class="nb">int</span>
+<span class="n">long</span>
+<span class="nb">float</span>
+<span class="n">double</span>
+<span class="n">biginteger</span>
+<span class="n">bigdecimeal</span>
+<span class="n">chararray</span>
+<span class="nb">bytearray</span>
+<span class="n">datetime</span>
+<span class="nb">tuple</span>
+<span class="n">bag</span>
+<span class="nb">map</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="functions-for-pig-latin">
+<h3>Functions for Pig Latin<a class="headerlink" href="#functions-for-pig-latin" title="Permalink to this headline">¶</a></h3>
+<p>Eval:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">AVG</span>
+<span class="n">CONCAT</span>
+<span class="n">COUNT</span>
+<span class="n">COUNT_STAR</span>
+<span class="n">DIFF</span>
+<span class="n">MAX</span>
+<span class="n">MIN</span>
+<span class="n">SIZE</span>
+<span class="n">SUM</span>
+<span class="n">TOBAG</span>
+<span class="n">TOKENIZE</span>
+<span class="n">TOMAP</span>
+<span class="n">TOP</span>
+<span class="n">TOTUPLE</span>
+</pre></div>
+</div>
+<p>Fliter:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">IsEmpty</span>
+</pre></div>
+</div>
+<p>Load/Store:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">PigStoreage</span>
+<span class="n">TextLoader</span>
+<span class="n">JsonLoader</span>
+<span class="n">JsonStorage</span>
+<span class="n">AvroStorage</span>
+<span class="n">ParquetLoader</span>
+<span class="n">ParquetStorrer</span>
+<span class="n">OrcStorage</span>
+<span class="n">HBaseStorage</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="useful-hdfs-commands">
+<h2>Useful HDFS commands<a class="headerlink" href="#useful-hdfs-commands" title="Permalink to this headline">¶</a></h2>
+<p>Here is a list of usefull commands taken from website:  <a class="reference external" href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html">https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">bin</span><span class="o">/</span><span class="n">hadoop</span> <span class="n">fs</span> <span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">appendToFile</span> <span class="o">&lt;</span><span class="n">localsrc</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">dst</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">cat</span> <span class="p">[</span><span class="o">-</span><span class="n">ignoreCrc</span><span class="p">]</span> <span class="n">URI</span> <span class="p">[</span><span class="n">URI</span> <span class="o">...</span><span class="p">]</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyFromLocal</span> <span class="o">&lt;</span><span class="n">localsrc</span><span class="o">&gt;</span> <span class="n">URI</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyToLocal</span> <span class="p">[</span><span class="o">-</span><span class="n">ignorecrc</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">crc</span><span class="p">]</span> <span class="n">URI</span> <span class="o">&lt;</span><span class="n">localdst</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">find</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">expression</span><span class="o">&gt;</span> <span class="o">...</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">ls</span> <span class="p">[</span><span class="o">-</span><span class="n">C</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">R</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">S</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">u</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">paths</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">tail</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span><span class="p">]</span> <span class="n">URI</span>
+</pre></div>
+</div>
+<p>Another list of usefull hadoop commands taken from <a class="reference external" href="http://princetonits.com/blog/technology/33-frequently-used-hdfs-shell-commands/">http://princetonits.com/blog/technology/33-frequently-used-hdfs-shell-commands/</a></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>hadoop version
+hadoop fs -ls /
+hadoop fs -df hdfs:/
+hadoop fs -count hdfs:/
+hadoop fsck – /
+hadoop balancer
+hadoop fs -mkdir /user/training/hadoop
+hadoop fs -put data/retail /user/training/hadoop
+hadoop fs -ls
+hadoop fs -du -s -h hadoop/retail
+hadoop fs -rm hadoop/retail/*
+hadoop fs -expunge
+hadoop fs -copyFromLocal /home/training/purchases.txt hadoop/
+hadoop fs -cat hadoop/purchases.txt
+hadoop fs -copyToLocal hadoop/purchases.txt /home/training/data
+hadoop fs -cp /user/training/*.txt /user/training/hadoop
+hadoop fs -get hadoop/sample.txt /home/training/
+hadoop fs -tail hadoop/purchases.txt
+hadoop fs -ls hadoop/purchases.txt
+sudo -u hdfs hadoop fs -chmod 600 hadoop/purchases.txt
+sudo -u hdfs hadoop fs -chown root:root hadoop/purchases.txt
+hadoop fs -mv hadoop apache_hadoop
+hadoop fs -setrep -w 2 apache_hadoop/sample.txt
+hadoop fs -distcp hdfs://namenodeA/apache_hadoop hdfs://namenodeB/hadoop
+sudo -u hdfs hdfs dfsadmin -safemode leave
+hadoop fs
+hadoop fs -help
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week5 PIG</a><ul>
+<li><a class="reference internal" href="#installing-centos-and-vmfusion">Installing CentOS and VMFusion</a></li>
+<li><a class="reference internal" href="#installing-java">Installing Java</a></li>
+<li><a class="reference internal" href="#installing-hadoop">Installing Hadoop</a></li>
+<li><a class="reference internal" href="#installing-pig">Installing PIG</a></li>
+<li><a class="reference internal" href="#useful-pig-latin-commands">Useful PIG Latin commands</a><ul>
+<li><a class="reference internal" href="#operators-for-pig-latin">Operators for Pig Latin</a></li>
+<li><a class="reference internal" href="#commands-for-pig-latin">Commands for Pig Latin</a></li>
+<li><a class="reference internal" href="#expressions-for-pig-latin">Expressions for Pig Latin</a></li>
+<li><a class="reference internal" href="#functions-for-pig-latin">Functions for Pig Latin</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#useful-hdfs-commands">Useful HDFS commands</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Data Science at Regis University!</a><ul>
+      <li>Previous: <a href="week4hive.html" title="previous chapter">Week4 HIVE</a></li>
+      <li>Next: <a href="week6spark.html" title="next chapter">Week6 Spark</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataEngineering/week5pig.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Josh Peterson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/dataEngineering/week5pig.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

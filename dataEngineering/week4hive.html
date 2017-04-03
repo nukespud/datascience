@@ -1,0 +1,630 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week4 HIVE &#8212; Data Science 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week5 PIG" href="week5pig.html" />
+    <link rel="prev" title="Week 3 Hbase" href="week3hbase.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week4-hive">
+<h1>Week4 HIVE<a class="headerlink" href="#week4-hive" title="Permalink to this headline">¶</a></h1>
+<p>by Josh Peterson</p>
+<div class="section" id="installing-centos-and-vmfusion">
+<h2>Installing CentOS and VMFusion<a class="headerlink" href="#installing-centos-and-vmfusion" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Installed CentOS7 64-bit (minimal install) with networking on, date and time set, and kdump disability</p>
+</li>
+<li><p class="first">I then set a root password and also created a user name.</p>
+</li>
+<li><p class="first">Because I am using just the minimal install there was no user interface so I decided to interact with CentOS7 through ssh from my mac.  I like iterm better on mac then its original terminal so I used that for ssh into the machine.  The first step was to find my ip address using command:</p>
+<blockquote>
+<div><p>ip addr</p>
+</div></blockquote>
+</li>
+</ul>
+<p>This is used to determine my ip address was “192.168.112.135:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="mf">192.168</span><span class="o">.</span><span class="mf">112.135</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">Once I was able to ssh to the CentOS7 vitural machine I installed the OS updates doing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span>
+<span class="n">yum</span> <span class="n">update</span>
+<span class="n">yum</span> <span class="n">install</span> <span class="n">wget</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-java">
+<h2>Installing Java<a class="headerlink" href="#installing-java" title="Permalink to this headline">¶</a></h2>
+<p>I installed java by doing the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span>
+<span class="n">wget</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cookies</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">check</span><span class="o">-</span><span class="n">certificate</span> <span class="o">--</span><span class="n">header</span> <span class="s2">&quot;Cookie: gpw_e24=http%3A</span><span class="si">%2F%2F</span><span class="s2">www.oracle.com</span><span class="si">%2F</span><span class="s2">; oraclelicense=accept-securebackup-cookie&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">oracle</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">otn</span><span class="o">-</span><span class="n">pub</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">jdk</span><span class="o">/</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">b14</span><span class="o">/</span><span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">root</span><span class="p">:</span><span class="n">root</span> <span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>I then used alternative to install java doing the following: (Alternative allows for softlinks to the desired location of the executable so as different version of java are released they can be installed and then alternatives used to link to a new one without having to uninstall the old.  This allows for the user to also test the new release and easily go back to the previous one if problems occur):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="o">.</span><span class="mi">111</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="n">java</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">config</span> <span class="n">java</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span>
+</pre></div>
+</div>
+<p>The next step is to create the Hadoop user with commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">useradd</span> <span class="n">hadoop</span>
+<span class="n">passwd</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>To allow me the ability for password-less login in using ssh-keygen I do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span>
+<span class="n">cat</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+<span class="n">chmod</span> <span class="mi">0600</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+</pre></div>
+</div>
+<p>Once I have established the new user I need to add some environment variables before installing Hadoop.  These are created by modifying the .bashrc file for Hadoop.  This is accomplished by adding the following to the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export JAVA_HOME=/opt/jdk1.8.0_111
+export JRE_HOME=/opt/jdk1.8.0_111/jre
+export PATH=$PATH:$JAVA_HOME/bin
+</pre></div>
+</div>
+<p>I then source the .bashrc to restart it so I do not need to log out and log back in to get access to it
+To edit the .bashrc I like to use vi instead of nano.  I also use ultraedit for mac to edit longer files through ssh instead</p>
+</div>
+<div class="section" id="installing-hadoop">
+<h2>Installing Hadoop<a class="headerlink" href="#installing-hadoop" title="Permalink to this headline">¶</a></h2>
+<p>First I login as the Hadoop user using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="o">.</span><span class="n">claz</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mf">3.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mf">3.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">mv</span> <span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>I then rename the hadoop-2.7.3 folder to hadoop and then add the following variables to the .bashrc and once added restart the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export HADOOP_HOME=/home/hadoop/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+</pre></div>
+</div>
+<p>I then change directories:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cd $HADOOP_HOME/etc/hadoop
+</pre></div>
+</div>
+<p>In this directory there are five main xml files that need to be customized.</p>
+<ul>
+<li><p class="first">core-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">fs</span><span class="o">.</span><span class="n">defaultFS</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9000</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">hdfs.site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">replication</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">dir</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoopdata</span><span class="o">/</span><span class="n">hdfs</span><span class="o">/</span><span class="n">namenode</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dir</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoopdata</span><span class="o">/</span><span class="n">hdfs</span><span class="o">/</span><span class="n">datanode</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">mapred-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">mapreduce</span><span class="o">.</span><span class="n">framework</span><span class="o">.</span><span class="n">name</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">yarn</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">yarn-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">yarn</span><span class="o">.</span><span class="n">nodemanager</span><span class="o">.</span><span class="n">aux</span><span class="o">-</span><span class="n">services</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">mapreduce_shuffle</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>After editing the xml then I format the namenode (namenode is the centerpiece of the HDFS file system and is also known as master.  It is a single point of failure and if it goes down all of the system goes down):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hdfs</span> <span class="n">namenode</span> <span class="o">-</span><span class="nb">format</span>
+</pre></div>
+</div>
+<p>I then start HDFS, YARN, and HistoryServer using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">start</span><span class="o">-</span><span class="n">dfs</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">start</span><span class="o">-</span><span class="n">yarn</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">mr</span><span class="o">-</span><span class="n">jobhistory</span><span class="o">-</span><span class="n">daemon</span><span class="o">.</span><span class="n">sh</span> <span class="n">start</span> <span class="n">historyserver</span>
+</pre></div>
+</div>
+<p>To see all of the java jobs running I type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">jps</span>
+</pre></div>
+</div>
+<p>The following java scripts should be seen:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">32034</span> <span class="n">Jps</span>
+<span class="mi">31303</span> <span class="n">DataNode</span>
+<span class="mi">31449</span> <span class="n">SecondaryNameNode</span>
+<span class="mi">31594</span> <span class="n">ResourceManager</span>
+<span class="mi">31695</span> <span class="n">NodeManager</span>
+<span class="mi">31999</span> <span class="n">JobHistoryServer</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>I then disabled the firewall using the command::</dt>
+<dd>su
+systemctl stop firewalld</dd>
+</dl>
+<p>I then disabled the IPV6 by adding these lines to /etc/sysctl.conf:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">disable_ipv6</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">disable_ipv6</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-hive">
+<h2>Installing HIVE<a class="headerlink" href="#installing-hive" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>I create the user hive with the commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span>
+<span class="n">useradd</span> <span class="n">hive</span>
+<span class="n">passwd</span> <span class="n">hive</span>
+</pre></div>
+</div>
+<p>To allow me the ability for password-less login in using ssh-keygen I do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hive</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span>
+<span class="n">cat</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+<span class="n">chmod</span> <span class="mi">0600</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+</pre></div>
+</div>
+<p>I then add the following to the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export JAVA_HOME=/opt/jdk1.8.0_111
+export JRE_HOME=/opt/jdk1.8.0_111/jre
+export PATH=$PATH:$JAVA_HOME/bin
+
+
+export HADOOP_HOME=/home/hadoop/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+</pre></div>
+</div>
+</div></blockquote>
+<p>I then get the file using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">mirror</span><span class="o">.</span><span class="n">metrocast</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">apache</span><span class="o">/</span><span class="n">hive</span><span class="o">/</span><span class="n">hive</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">hive</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">1</span><span class="o">-</span><span class="nb">bin</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xzvf</span> <span class="n">apache</span><span class="o">-</span><span class="n">hive</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">1</span><span class="o">-</span><span class="nb">bin</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+<p>I then add the following to my .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export PATH=/home/hadoop/apache-hive-2.1.1-bin/bin:$PATH
+</pre></div>
+</div>
+<p>My new .bashrc file looks like the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span># User specific aliases and functions
+
+export JAVA_HOME=/opt/jdk1.8.0_111
+export JRE_HOME=/opt/jdk1.8.0_111/jre
+export PATH=$PATH:$JAVA_HOME/bin
+
+
+export HADOOP_HOME=/home/hadoop/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+
+export HIVE_HOME=/home/hadoop/apache-hive-2.1.1-bin
+export PATH=$HIVE_HOME/bin:$PATH
+</pre></div>
+</div>
+<p>I then run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>I then create folders in hdfs using the commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="o">/</span><span class="n">tmp</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="o">/</span><span class="n">user</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hive</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hive</span><span class="o">/</span><span class="n">warehouse</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">chmod</span> <span class="n">g</span><span class="o">+</span><span class="n">w</span> <span class="o">/</span><span class="n">tmp</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">chmod</span> <span class="n">g</span><span class="o">+</span><span class="n">w</span> <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hive</span><span class="o">/</span><span class="n">warehouse</span>
+</pre></div>
+</div>
+<p>Then i run hive using command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">schematool</span> <span class="o">-</span><span class="n">dbType</span> <span class="n">derby</span> <span class="o">-</span><span class="n">initSchema</span>
+
+<span class="n">hive</span>
+</pre></div>
+</div>
+<p>The output from this command is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[hadoop@localhost ~]$     schematool -dbType derby -initSchema
+which: no hbase in (/home/hadoop/apache-hive-2.1.1-bin/bin:/home/hadoop/apache-hive-2.1.1-bin/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/jdk1.8.0_111/bin:/home/hadoop/hadoop/sbin:/home/hadoop/hadoop/bin:/home/hadoop/.local/bin:/home/hadoop/bin:/opt/jdk1.8.0_111/bin:/home/hadoop/hadoop/sbin:/home/hadoop/hadoop/bin:/opt/jdk1.8.0_111/bin:/home/hadoop/hadoop/sbin:/home/hadoop/hadoop/bin)
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/hadoop/apache-hive-2.1.1-bin/lib/log4j-slf4j-impl-2.4.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/hadoop/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+Metastore connection URL:    jdbc:derby:;databaseName=metastore_db;create=true
+Metastore Connection Driver :        org.apache.derby.jdbc.EmbeddedDriver
+Metastore connection User:   APP
+Starting metastore schema initialization to 2.1.0
+Initialization script hive-schema-2.1.0.derby.sql
+Initialization script completed
+schemaTool completed
+</pre></div>
+</div>
+<p>The output from running hive is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[hadoop@localhost ~]$ hive
+which: no hbase in (/home/hadoop/apache-hive-2.1.1-bin/bin:/home/hadoop/apache-hive-2.1.1-bin/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/jdk1.8.0_111/bin:/home/hadoop/hadoop/sbin:/home/hadoop/hadoop/bin:/home/hadoop/.local/bin:/home/hadoop/bin:/opt/jdk1.8.0_111/bin:/home/hadoop/hadoop/sbin:/home/hadoop/hadoop/bin:/opt/jdk1.8.0_111/bin:/home/hadoop/hadoop/sbin:/home/hadoop/hadoop/bin)
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/home/hadoop/apache-hive-2.1.1-bin/lib/log4j-slf4j-impl-2.4.1.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/home/hadoop/hadoop/share/hadoop/common/lib/slf4j-log4j12-1.7.10.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [org.apache.logging.slf4j.Log4jLoggerFactory]
+
+Logging initialized using configuration in jar:file:/home/hadoop/apache-hive-2.1.1-bin/lib/hive-common-2.1.1.jar!/hive-log4j2.properties Async: true
+Hive-on-MR is deprecated in Hive 2 and may not be available in the future versions. Consider using a different execution engine (i.e. spark, tez) or using Hive 1.X releases.
+</pre></div>
+</div>
+</div>
+<div class="section" id="ddl-operations">
+<h2>DDL Operations<a class="headerlink" href="#ddl-operations" title="Permalink to this headline">¶</a></h2>
+<p>I used the following commands to create HIVE tables:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">pokes</span> <span class="p">(</span><span class="n">foo</span> <span class="n">INT</span><span class="p">,</span> <span class="n">bar</span> <span class="n">STRING</span><span class="p">);</span>
+<span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">invites</span> <span class="p">(</span><span class="n">foo</span> <span class="n">INT</span><span class="p">,</span> <span class="n">bar</span> <span class="n">STRING</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The output of the  command are:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hive</span><span class="o">&gt;</span> <span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">pokes</span> <span class="p">(</span><span class="n">foo</span> <span class="n">INT</span><span class="p">,</span> <span class="n">bar</span> <span class="n">STRING</span><span class="p">);</span>
+<span class="n">OK</span>
+<span class="n">Time</span> <span class="n">taken</span><span class="p">:</span> <span class="mf">1.783</span> <span class="n">seconds</span>
+<span class="n">hive</span><span class="o">&gt;</span> <span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">invites</span> <span class="p">(</span><span class="n">foo</span> <span class="n">INT</span><span class="p">,</span> <span class="n">bar</span> <span class="n">STRING</span><span class="p">)</span>
+    <span class="o">&gt;</span> <span class="p">;</span>
+<span class="n">OK</span>
+<span class="n">Time</span> <span class="n">taken</span><span class="p">:</span> <span class="mf">0.144</span> <span class="n">seconds</span>
+</pre></div>
+</div>
+<p>I used the following commands to brows tables:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">SHOW</span> <span class="n">TABLES</span><span class="p">;</span>
+<span class="n">SHOW</span> <span class="n">TABLES</span> <span class="s1">&#39;.*s&#39;</span><span class="p">;</span>
+<span class="n">DESCRIBE</span> <span class="n">invites</span><span class="p">;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>The output is sas follows::</dt>
+<dd>hive&gt; SHOW TABLES;
+OK
+invites
+pokes
+Time taken: 0.199 seconds, Fetched: 2 row(s)
+hive&gt; SHOW TABLES &#8216;.*s&#8217;;
+OK
+invites
+pokes
+Time taken: 0.035 seconds, Fetched: 2 row(s)</dd>
+</dl>
+</div>
+<div class="section" id="sql-operations">
+<h2>SQL Operations<a class="headerlink" href="#sql-operations" title="Permalink to this headline">¶</a></h2>
+<p>The commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">files</span><span class="o">.</span><span class="n">grouplens</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">datasets</span><span class="o">/</span><span class="n">movielens</span><span class="o">/</span><span class="n">ml</span><span class="o">-</span><span class="mi">100</span><span class="n">k</span><span class="o">.</span><span class="n">zip</span>
+
+<span class="n">su</span>
+<span class="n">yum</span> <span class="n">install</span> <span class="n">unzip</span>
+<span class="n">exit</span>
+
+<span class="n">unzip</span> <span class="n">ml</span><span class="o">-</span><span class="mi">100</span><span class="n">k</span>
+
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">moveFromLocal</span>  <span class="n">ml</span><span class="o">-</span><span class="mi">100</span><span class="n">k</span>  <span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hive</span>
+</pre></div>
+</div>
+<p>The hive command is</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">LOAD</span> <span class="n">DATA</span>  <span class="n">INPATH</span> <span class="s1">&#39;/user/hive/ml-100k/u.data&#39;</span>  <span class="n">OVERWRITE</span> <span class="n">INTO</span> <span class="n">TABLE</span> <span class="n">u_data</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The output is</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hive</span><span class="o">&gt;</span> <span class="n">LOAD</span> <span class="n">DATA</span>  <span class="n">INPATH</span> <span class="s1">&#39;/user/hive/ml-100k/u.data&#39;</span>  <span class="n">OVERWRITE</span> <span class="n">INTO</span> <span class="n">TABLE</span> <span class="n">u_data</span><span class="p">;</span>
+<span class="n">Loading</span> <span class="n">data</span> <span class="n">to</span> <span class="n">table</span> <span class="n">default</span><span class="o">.</span><span class="n">u_data</span>
+<span class="n">OK</span>
+<span class="n">Time</span> <span class="n">taken</span><span class="p">:</span> <span class="mf">1.077</span> <span class="n">seconds</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>The hive command is ::</dt>
+<dd>select count(*) from u_data;</dd>
+</dl>
+<p>The output is</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hive</span><span class="o">&gt;</span> <span class="n">select</span> <span class="n">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">u_data</span><span class="p">;</span>
+<span class="n">WARNING</span><span class="p">:</span> <span class="n">Hive</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">MR</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="ow">in</span> <span class="n">Hive</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">future</span> <span class="n">versions</span><span class="o">.</span> <span class="n">Consider</span> <span class="n">using</span> <span class="n">a</span> <span class="n">different</span> <span class="n">execution</span> <span class="n">engine</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">spark</span><span class="p">,</span> <span class="n">tez</span><span class="p">)</span> <span class="ow">or</span> <span class="n">using</span> <span class="n">Hive</span> <span class="mf">1.</span><span class="n">X</span> <span class="n">releases</span><span class="o">.</span>
+<span class="n">Query</span> <span class="n">ID</span> <span class="o">=</span> <span class="n">hadoop_20170208214539_e5edf74e</span><span class="o">-</span><span class="n">d4c1</span><span class="o">-</span><span class="mi">4557</span><span class="o">-</span><span class="mi">81</span><span class="n">d3</span><span class="o">-</span><span class="n">ab42aac6d647</span>
+<span class="n">Total</span> <span class="n">jobs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">Launching</span> <span class="n">Job</span> <span class="mi">1</span> <span class="n">out</span> <span class="n">of</span> <span class="mi">1</span>
+<span class="n">Number</span> <span class="n">of</span> <span class="n">reduce</span> <span class="n">tasks</span> <span class="n">determined</span> <span class="n">at</span> <span class="nb">compile</span> <span class="n">time</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">change</span> <span class="n">the</span> <span class="n">average</span> <span class="n">load</span> <span class="k">for</span> <span class="n">a</span> <span class="n">reducer</span> <span class="p">(</span><span class="ow">in</span> <span class="nb">bytes</span><span class="p">):</span>
+  <span class="nb">set</span> <span class="n">hive</span><span class="o">.</span><span class="n">exec</span><span class="o">.</span><span class="n">reducers</span><span class="o">.</span><span class="n">bytes</span><span class="o">.</span><span class="n">per</span><span class="o">.</span><span class="n">reducer</span><span class="o">=&lt;</span><span class="n">number</span><span class="o">&gt;</span>
+<span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">limit</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">reducers</span><span class="p">:</span>
+  <span class="nb">set</span> <span class="n">hive</span><span class="o">.</span><span class="n">exec</span><span class="o">.</span><span class="n">reducers</span><span class="o">.</span><span class="n">max</span><span class="o">=&lt;</span><span class="n">number</span><span class="o">&gt;</span>
+<span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="nb">set</span> <span class="n">a</span> <span class="n">constant</span> <span class="n">number</span> <span class="n">of</span> <span class="n">reducers</span><span class="p">:</span>
+  <span class="nb">set</span> <span class="n">mapreduce</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">reduces</span><span class="o">=&lt;</span><span class="n">number</span><span class="o">&gt;</span>
+<span class="n">Starting</span> <span class="n">Job</span> <span class="o">=</span> <span class="n">job_1486604270841_0001</span><span class="p">,</span> <span class="n">Tracking</span> <span class="n">URL</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8088</span><span class="o">/</span><span class="n">proxy</span><span class="o">/</span><span class="n">application_1486604270841_0001</span><span class="o">/</span>
+<span class="n">Kill</span> <span class="n">Command</span> <span class="o">=</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">hadoop</span> <span class="n">job</span>  <span class="o">-</span><span class="n">kill</span> <span class="n">job_1486604270841_0001</span>
+<span class="n">Hadoop</span> <span class="n">job</span> <span class="n">information</span> <span class="k">for</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">number</span> <span class="n">of</span> <span class="n">mappers</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span> <span class="n">number</span> <span class="n">of</span> <span class="n">reducers</span><span class="p">:</span> <span class="mi">1</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">08</span> <span class="mi">21</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">03</span><span class="p">,</span><span class="mi">621</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span> <span class="nb">map</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span><span class="p">,</span>  <span class="n">reduce</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">08</span> <span class="mi">21</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span><span class="mi">538</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span> <span class="nb">map</span> <span class="o">=</span> <span class="mi">100</span><span class="o">%</span><span class="p">,</span>  <span class="n">reduce</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span><span class="p">,</span> <span class="n">Cumulative</span> <span class="n">CPU</span> <span class="mf">2.54</span> <span class="n">sec</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">08</span> <span class="mi">21</span><span class="p">:</span><span class="mi">46</span><span class="p">:</span><span class="mi">24</span><span class="p">,</span><span class="mi">710</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span> <span class="nb">map</span> <span class="o">=</span> <span class="mi">100</span><span class="o">%</span><span class="p">,</span>  <span class="n">reduce</span> <span class="o">=</span> <span class="mi">100</span><span class="o">%</span><span class="p">,</span> <span class="n">Cumulative</span> <span class="n">CPU</span> <span class="mf">5.11</span> <span class="n">sec</span>
+<span class="n">MapReduce</span> <span class="n">Total</span> <span class="n">cumulative</span> <span class="n">CPU</span> <span class="n">time</span><span class="p">:</span> <span class="mi">5</span> <span class="n">seconds</span> <span class="mi">110</span> <span class="n">msec</span>
+<span class="n">Ended</span> <span class="n">Job</span> <span class="o">=</span> <span class="n">job_1486604270841_0001</span>
+<span class="n">MapReduce</span> <span class="n">Jobs</span> <span class="n">Launched</span><span class="p">:</span>
+<span class="n">Stage</span><span class="o">-</span><span class="n">Stage</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">Map</span><span class="p">:</span> <span class="mi">1</span>  <span class="n">Reduce</span><span class="p">:</span> <span class="mi">1</span>   <span class="n">Cumulative</span> <span class="n">CPU</span><span class="p">:</span> <span class="mf">5.11</span> <span class="n">sec</span>   <span class="n">HDFS</span> <span class="n">Read</span><span class="p">:</span> <span class="mi">1987008</span> <span class="n">HDFS</span> <span class="n">Write</span><span class="p">:</span> <span class="mi">106</span> <span class="n">SUCCESS</span>
+<span class="n">Total</span> <span class="n">MapReduce</span> <span class="n">CPU</span> <span class="n">Time</span> <span class="n">Spent</span><span class="p">:</span> <span class="mi">5</span> <span class="n">seconds</span> <span class="mi">110</span> <span class="n">msec</span>
+<span class="n">OK</span>
+<span class="mi">100000</span>
+<span class="n">Time</span> <span class="n">taken</span><span class="p">:</span> <span class="mf">47.154</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">Fetched</span><span class="p">:</span> <span class="mi">1</span> <span class="n">row</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Another operation from the example is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hive</span><span class="o">&gt;</span> <span class="n">CREATE</span> <span class="n">TABLE</span> <span class="n">u_data_new</span> <span class="p">(</span>
+    <span class="o">&gt;</span>   <span class="n">userid</span> <span class="n">INT</span><span class="p">,</span>
+    <span class="o">&gt;</span>   <span class="n">movieid</span> <span class="n">INT</span><span class="p">,</span>
+    <span class="o">&gt;</span>   <span class="n">rating</span> <span class="n">INT</span><span class="p">,</span>
+    <span class="o">&gt;</span>   <span class="n">weekday</span> <span class="n">INT</span><span class="p">)</span>
+    <span class="o">&gt;</span> <span class="n">ROW</span> <span class="n">FORMAT</span> <span class="n">DELIMITED</span>
+    <span class="o">&gt;</span> <span class="n">FIELDS</span> <span class="n">TERMINATED</span> <span class="n">BY</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">;</span>
+<span class="n">OK</span>
+<span class="n">Time</span> <span class="n">taken</span><span class="p">:</span> <span class="mf">6.581</span> <span class="n">seconds</span>
+<span class="n">hive</span><span class="o">&gt;</span>
+    <span class="o">&gt;</span> <span class="n">add</span> <span class="n">FILE</span> <span class="n">weekday_mapper</span><span class="o">.</span><span class="n">py</span><span class="p">;</span>
+<span class="n">Added</span> <span class="n">resources</span><span class="p">:</span> <span class="p">[</span><span class="n">weekday_mapper</span><span class="o">.</span><span class="n">py</span><span class="p">]</span>
+<span class="n">hive</span><span class="o">&gt;</span>
+    <span class="o">&gt;</span> <span class="n">INSERT</span> <span class="n">OVERWRITE</span> <span class="n">TABLE</span> <span class="n">u_data_new</span>
+    <span class="o">&gt;</span> <span class="n">SELECT</span>
+    <span class="o">&gt;</span>   <span class="n">TRANSFORM</span> <span class="p">(</span><span class="n">userid</span><span class="p">,</span> <span class="n">movieid</span><span class="p">,</span> <span class="n">rating</span><span class="p">,</span> <span class="n">unixtime</span><span class="p">)</span>
+    <span class="o">&gt;</span>   <span class="n">USING</span> <span class="s1">&#39;python weekday_mapper.py&#39;</span>
+    <span class="o">&gt;</span>   <span class="n">AS</span> <span class="p">(</span><span class="n">userid</span><span class="p">,</span> <span class="n">movieid</span><span class="p">,</span> <span class="n">rating</span><span class="p">,</span> <span class="n">weekday</span><span class="p">)</span>
+    <span class="o">&gt;</span> <span class="n">FROM</span> <span class="n">u_data</span><span class="p">;</span>
+<span class="n">WARNING</span><span class="p">:</span> <span class="n">Hive</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">MR</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="ow">in</span> <span class="n">Hive</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">future</span> <span class="n">versions</span><span class="o">.</span> <span class="n">Consider</span> <span class="n">using</span> <span class="n">a</span> <span class="n">different</span> <span class="n">execution</span> <span class="n">engine</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">spark</span><span class="p">,</span> <span class="n">tez</span><span class="p">)</span> <span class="ow">or</span> <span class="n">using</span> <span class="n">Hive</span> <span class="mf">1.</span><span class="n">X</span> <span class="n">releases</span><span class="o">.</span>
+<span class="n">Query</span> <span class="n">ID</span> <span class="o">=</span> <span class="n">hadoop_20170209055039_2b0302c0</span><span class="o">-</span><span class="mi">8879</span><span class="o">-</span><span class="mi">4466</span><span class="o">-</span><span class="mi">854</span><span class="n">d</span><span class="o">-</span><span class="mi">2</span><span class="n">b68ffcf1e9d</span>
+<span class="n">Total</span> <span class="n">jobs</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">Launching</span> <span class="n">Job</span> <span class="mi">1</span> <span class="n">out</span> <span class="n">of</span> <span class="mi">3</span>
+<span class="n">Number</span> <span class="n">of</span> <span class="n">reduce</span> <span class="n">tasks</span> <span class="ow">is</span> <span class="nb">set</span> <span class="n">to</span> <span class="mi">0</span> <span class="n">since</span> <span class="n">there</span><span class="s1">&#39;s no reduce operator</span>
+<span class="n">Starting</span> <span class="n">Job</span> <span class="o">=</span> <span class="n">job_1486604270841_0002</span><span class="p">,</span> <span class="n">Tracking</span> <span class="n">URL</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8088</span><span class="o">/</span><span class="n">proxy</span><span class="o">/</span><span class="n">application_1486604270841_0002</span><span class="o">/</span>
+<span class="n">Kill</span> <span class="n">Command</span> <span class="o">=</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">hadoop</span> <span class="n">job</span>  <span class="o">-</span><span class="n">kill</span> <span class="n">job_1486604270841_0002</span>
+<span class="n">Hadoop</span> <span class="n">job</span> <span class="n">information</span> <span class="k">for</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">number</span> <span class="n">of</span> <span class="n">mappers</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span> <span class="n">number</span> <span class="n">of</span> <span class="n">reducers</span><span class="p">:</span> <span class="mi">0</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">09</span> <span class="mi">05</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span><span class="mi">902</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span> <span class="nb">map</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span><span class="p">,</span>  <span class="n">reduce</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">09</span> <span class="mi">05</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span><span class="mi">543</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span> <span class="nb">map</span> <span class="o">=</span> <span class="mi">100</span><span class="o">%</span><span class="p">,</span>  <span class="n">reduce</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span><span class="p">,</span> <span class="n">Cumulative</span> <span class="n">CPU</span> <span class="mf">4.86</span> <span class="n">sec</span>
+<span class="n">MapReduce</span> <span class="n">Total</span> <span class="n">cumulative</span> <span class="n">CPU</span> <span class="n">time</span><span class="p">:</span> <span class="mi">4</span> <span class="n">seconds</span> <span class="mi">860</span> <span class="n">msec</span>
+<span class="n">Ended</span> <span class="n">Job</span> <span class="o">=</span> <span class="n">job_1486604270841_0002</span>
+<span class="n">Stage</span><span class="o">-</span><span class="mi">4</span> <span class="ow">is</span> <span class="n">selected</span> <span class="n">by</span> <span class="n">condition</span> <span class="n">resolver</span><span class="o">.</span>
+<span class="n">Stage</span><span class="o">-</span><span class="mi">3</span> <span class="ow">is</span> <span class="n">filtered</span> <span class="n">out</span> <span class="n">by</span> <span class="n">condition</span> <span class="n">resolver</span><span class="o">.</span>
+<span class="n">Stage</span><span class="o">-</span><span class="mi">5</span> <span class="ow">is</span> <span class="n">filtered</span> <span class="n">out</span> <span class="n">by</span> <span class="n">condition</span> <span class="n">resolver</span><span class="o">.</span>
+<span class="n">Moving</span> <span class="n">data</span> <span class="n">to</span> <span class="n">directory</span> <span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9000</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">hive</span><span class="o">/</span><span class="n">warehouse</span><span class="o">/</span><span class="n">u_data_new</span><span class="o">/.</span><span class="n">hive</span><span class="o">-</span><span class="n">staging_hive_2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">09</span><span class="n">_05</span><span class="o">-</span><span class="mi">50</span><span class="o">-</span><span class="mi">39</span><span class="n">_371_3480982628034436200</span><span class="o">-</span><span class="mi">1</span><span class="o">/-</span><span class="n">ext</span><span class="o">-</span><span class="mi">10000</span>
+<span class="n">Loading</span> <span class="n">data</span> <span class="n">to</span> <span class="n">table</span> <span class="n">default</span><span class="o">.</span><span class="n">u_data_new</span>
+<span class="n">MapReduce</span> <span class="n">Jobs</span> <span class="n">Launched</span><span class="p">:</span>
+<span class="n">Stage</span><span class="o">-</span><span class="n">Stage</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">Map</span><span class="p">:</span> <span class="mi">1</span>   <span class="n">Cumulative</span> <span class="n">CPU</span><span class="p">:</span> <span class="mf">4.86</span> <span class="n">sec</span>   <span class="n">HDFS</span> <span class="n">Read</span><span class="p">:</span> <span class="mi">1984289</span> <span class="n">HDFS</span> <span class="n">Write</span><span class="p">:</span> <span class="mi">1179256</span> <span class="n">SUCCESS</span>
+<span class="n">Total</span> <span class="n">MapReduce</span> <span class="n">CPU</span> <span class="n">Time</span> <span class="n">Spent</span><span class="p">:</span> <span class="mi">4</span> <span class="n">seconds</span> <span class="mi">860</span> <span class="n">msec</span>
+<span class="n">OK</span>
+<span class="n">Time</span> <span class="n">taken</span><span class="p">:</span> <span class="mf">56.406</span> <span class="n">seconds</span>
+<span class="n">hive</span><span class="o">&gt;</span>
+    <span class="o">&gt;</span> <span class="n">SELECT</span> <span class="n">weekday</span><span class="p">,</span> <span class="n">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+    <span class="o">&gt;</span> <span class="n">FROM</span> <span class="n">u_data_new</span>
+    <span class="o">&gt;</span> <span class="n">GROUP</span> <span class="n">BY</span> <span class="n">weekday</span><span class="p">;</span>
+<span class="n">WARNING</span><span class="p">:</span> <span class="n">Hive</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">MR</span> <span class="ow">is</span> <span class="n">deprecated</span> <span class="ow">in</span> <span class="n">Hive</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">available</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">future</span> <span class="n">versions</span><span class="o">.</span> <span class="n">Consider</span> <span class="n">using</span> <span class="n">a</span> <span class="n">different</span> <span class="n">execution</span> <span class="n">engine</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">e</span><span class="o">.</span> <span class="n">spark</span><span class="p">,</span> <span class="n">tez</span><span class="p">)</span> <span class="ow">or</span> <span class="n">using</span> <span class="n">Hive</span> <span class="mf">1.</span><span class="n">X</span> <span class="n">releases</span><span class="o">.</span>
+<span class="n">Query</span> <span class="n">ID</span> <span class="o">=</span> <span class="n">hadoop_20170209055154_08bfca1c</span><span class="o">-</span><span class="mf">01e5</span><span class="o">-</span><span class="mi">4</span><span class="n">f7a</span><span class="o">-</span><span class="n">b6c5</span><span class="o">-</span><span class="mi">8</span><span class="n">eed26f1331a</span>
+<span class="n">Total</span> <span class="n">jobs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">Launching</span> <span class="n">Job</span> <span class="mi">1</span> <span class="n">out</span> <span class="n">of</span> <span class="mi">1</span>
+<span class="n">Number</span> <span class="n">of</span> <span class="n">reduce</span> <span class="n">tasks</span> <span class="ow">not</span> <span class="n">specified</span><span class="o">.</span> <span class="n">Estimated</span> <span class="kn">from</span> <span class="nn">input</span> <span class="n">data</span> <span class="n">size</span><span class="p">:</span> <span class="mi">1</span>
+<span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">change</span> <span class="n">the</span> <span class="n">average</span> <span class="n">load</span> <span class="k">for</span> <span class="n">a</span> <span class="n">reducer</span> <span class="p">(</span><span class="ow">in</span> <span class="nb">bytes</span><span class="p">):</span>
+  <span class="nb">set</span> <span class="n">hive</span><span class="o">.</span><span class="n">exec</span><span class="o">.</span><span class="n">reducers</span><span class="o">.</span><span class="n">bytes</span><span class="o">.</span><span class="n">per</span><span class="o">.</span><span class="n">reducer</span><span class="o">=&lt;</span><span class="n">number</span><span class="o">&gt;</span>
+<span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">limit</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">number</span> <span class="n">of</span> <span class="n">reducers</span><span class="p">:</span>
+  <span class="nb">set</span> <span class="n">hive</span><span class="o">.</span><span class="n">exec</span><span class="o">.</span><span class="n">reducers</span><span class="o">.</span><span class="n">max</span><span class="o">=&lt;</span><span class="n">number</span><span class="o">&gt;</span>
+<span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="nb">set</span> <span class="n">a</span> <span class="n">constant</span> <span class="n">number</span> <span class="n">of</span> <span class="n">reducers</span><span class="p">:</span>
+  <span class="nb">set</span> <span class="n">mapreduce</span><span class="o">.</span><span class="n">job</span><span class="o">.</span><span class="n">reduces</span><span class="o">=&lt;</span><span class="n">number</span><span class="o">&gt;</span>
+<span class="n">Starting</span> <span class="n">Job</span> <span class="o">=</span> <span class="n">job_1486604270841_0003</span><span class="p">,</span> <span class="n">Tracking</span> <span class="n">URL</span> <span class="o">=</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8088</span><span class="o">/</span><span class="n">proxy</span><span class="o">/</span><span class="n">application_1486604270841_0003</span><span class="o">/</span>
+<span class="n">Kill</span> <span class="n">Command</span> <span class="o">=</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">hadoop</span> <span class="n">job</span>  <span class="o">-</span><span class="n">kill</span> <span class="n">job_1486604270841_0003</span>
+<span class="n">Hadoop</span> <span class="n">job</span> <span class="n">information</span> <span class="k">for</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">number</span> <span class="n">of</span> <span class="n">mappers</span><span class="p">:</span> <span class="mi">1</span><span class="p">;</span> <span class="n">number</span> <span class="n">of</span> <span class="n">reducers</span><span class="p">:</span> <span class="mi">1</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">09</span> <span class="mi">05</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="mi">506</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span> <span class="nb">map</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span><span class="p">,</span>  <span class="n">reduce</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">09</span> <span class="mi">05</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">23</span><span class="p">,</span><span class="mi">354</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span> <span class="nb">map</span> <span class="o">=</span> <span class="mi">100</span><span class="o">%</span><span class="p">,</span>  <span class="n">reduce</span> <span class="o">=</span> <span class="mi">0</span><span class="o">%</span><span class="p">,</span> <span class="n">Cumulative</span> <span class="n">CPU</span> <span class="mf">2.26</span> <span class="n">sec</span>
+<span class="mi">2017</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">09</span> <span class="mi">05</span><span class="p">:</span><span class="mi">52</span><span class="p">:</span><span class="mi">34</span><span class="p">,</span><span class="mi">530</span> <span class="n">Stage</span><span class="o">-</span><span class="mi">1</span> <span class="nb">map</span> <span class="o">=</span> <span class="mi">100</span><span class="o">%</span><span class="p">,</span>  <span class="n">reduce</span> <span class="o">=</span> <span class="mi">100</span><span class="o">%</span><span class="p">,</span> <span class="n">Cumulative</span> <span class="n">CPU</span> <span class="mf">4.68</span> <span class="n">sec</span>
+<span class="n">MapReduce</span> <span class="n">Total</span> <span class="n">cumulative</span> <span class="n">CPU</span> <span class="n">time</span><span class="p">:</span> <span class="mi">4</span> <span class="n">seconds</span> <span class="mi">680</span> <span class="n">msec</span>
+<span class="n">Ended</span> <span class="n">Job</span> <span class="o">=</span> <span class="n">job_1486604270841_0003</span>
+<span class="n">MapReduce</span> <span class="n">Jobs</span> <span class="n">Launched</span><span class="p">:</span>
+<span class="n">Stage</span><span class="o">-</span><span class="n">Stage</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">Map</span><span class="p">:</span> <span class="mi">1</span>  <span class="n">Reduce</span><span class="p">:</span> <span class="mi">1</span>   <span class="n">Cumulative</span> <span class="n">CPU</span><span class="p">:</span> <span class="mf">4.68</span> <span class="n">sec</span>   <span class="n">HDFS</span> <span class="n">Read</span><span class="p">:</span> <span class="mi">1187554</span> <span class="n">HDFS</span> <span class="n">Write</span><span class="p">:</span> <span class="mi">227</span> <span class="n">SUCCESS</span>
+<span class="n">Total</span> <span class="n">MapReduce</span> <span class="n">CPU</span> <span class="n">Time</span> <span class="n">Spent</span><span class="p">:</span> <span class="mi">4</span> <span class="n">seconds</span> <span class="mi">680</span> <span class="n">msec</span>
+<span class="n">OK</span>
+<span class="mi">1</span>   <span class="mi">13278</span>
+<span class="mi">2</span>   <span class="mi">14816</span>
+<span class="mi">3</span>   <span class="mi">15426</span>
+<span class="mi">4</span>   <span class="mi">13774</span>
+<span class="mi">5</span>   <span class="mi">17964</span>
+<span class="mi">6</span>   <span class="mi">12318</span>
+<span class="mi">7</span>   <span class="mi">12424</span>
+<span class="n">Time</span> <span class="n">taken</span><span class="p">:</span> <span class="mf">45.767</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">Fetched</span><span class="p">:</span> <span class="mi">7</span> <span class="n">row</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="useful-hive-commands">
+<h2>Useful HIVE commands.<a class="headerlink" href="#useful-hive-commands" title="Permalink to this headline">¶</a></h2>
+<p>Here are some useful commands.  Some information taken from book <strong>Apache Hive Essentials</strong>  By: Dayong Du</p>
+<p>Data Definition Language (DDL )( DDL statements are used to build and modify the tables and other objects in the database.):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">CREATE</span><span class="p">,</span> <span class="n">DROP</span><span class="p">,</span> <span class="n">TRUNCATE</span><span class="p">,</span> <span class="n">ALTER</span><span class="p">,</span> <span class="n">SHOW</span><span class="p">,</span> <span class="n">DESCRIBE</span> <span class="n">Statements</span><span class="o">.</span>
+<span class="n">USE</span> <span class="n">database</span><span class="p">;</span> <span class="c1">#Select a database</span>
+<span class="n">SHOW</span> <span class="n">DATABASES</span><span class="p">;</span>
+<span class="n">SHOW</span> <span class="n">TABLES</span><span class="p">;</span>  <span class="c1">#List tables</span>
+<span class="n">DESCRIBE</span> <span class="p">(</span><span class="n">FORMATTED</span><span class="o">|</span><span class="n">EXTENDED</span><span class="p">)</span> <span class="n">table</span><span class="p">;</span> <span class="c1">#Describing format of table</span>
+<span class="n">CREATE</span> <span class="n">DATABASE</span> <span class="n">db_name</span><span class="p">;</span> <span class="c1">#Creating a database</span>
+<span class="n">DROP</span> <span class="n">DATABASE</span> <span class="n">db_name</span> <span class="p">(</span><span class="n">CASCADE</span><span class="p">);</span> <span class="c1">#Dropping a database</span>
+</pre></div>
+</div>
+<p>Data Manipulation Language (DML )(DML statements are used to retrieve, store, modify, delete, insert and update data in the database.):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">LOAD</span><span class="p">,</span> <span class="n">INSERT</span> <span class="n">Statements</span><span class="o">.</span>
+
+<span class="n">LOAD</span> <span class="n">data</span> <span class="o">&lt;</span><span class="n">LOCAL</span><span class="o">&gt;</span> <span class="n">inpath</span> <span class="o">&lt;</span><span class="n">file</span> <span class="n">path</span><span class="o">&gt;</span> <span class="n">into</span> <span class="n">table</span> <span class="p">[</span><span class="n">tablename</span><span class="p">]</span>
+<span class="n">ADD</span> <span class="p">{</span> <span class="n">FILE</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">|</span> <span class="n">JAR</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">|</span> <span class="n">ARCHIVE</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="p">}</span> <span class="o">&lt;</span><span class="n">filepath1</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">filepath2</span><span class="o">&gt;</span><span class="p">]</span><span class="o">*</span>
+<span class="n">LIST</span> <span class="p">{</span> <span class="n">FILE</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">|</span> <span class="n">JAR</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">|</span> <span class="n">ARCHIVE</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="p">}</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">filepath1</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">filepath2</span><span class="o">&gt;</span> <span class="o">..</span><span class="p">]</span>
+<span class="n">DELETE</span> <span class="p">{</span> <span class="n">FILE</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">|</span> <span class="n">JAR</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">|</span> <span class="n">ARCHIVE</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="p">}</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">filepath1</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">filepath2</span><span class="o">&gt;</span> <span class="o">..</span><span class="p">]</span>
+<span class="n">EXPORT</span>
+<span class="n">IMPORT</span>
+<span class="n">ORDER</span>
+<span class="n">SORT</span>
+</pre></div>
+</div>
+<div class="figure" id="id1">
+<img alt="../_images/sqlcompat2.png" src="../_images/sqlcompat2.png" />
+<p class="caption"><span class="caption-text">List of sql commands for HIVE</span></p>
+</div>
+</div>
+<div class="section" id="useful-hdfs-commands">
+<h2>Useful HDFS commands<a class="headerlink" href="#useful-hdfs-commands" title="Permalink to this headline">¶</a></h2>
+<p>Here is a list of usefull commands taken from website:  <a class="reference external" href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html">https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">bin</span><span class="o">/</span><span class="n">hadoop</span> <span class="n">fs</span> <span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">appendToFile</span> <span class="o">&lt;</span><span class="n">localsrc</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">dst</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">cat</span> <span class="p">[</span><span class="o">-</span><span class="n">ignoreCrc</span><span class="p">]</span> <span class="n">URI</span> <span class="p">[</span><span class="n">URI</span> <span class="o">...</span><span class="p">]</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyFromLocal</span> <span class="o">&lt;</span><span class="n">localsrc</span><span class="o">&gt;</span> <span class="n">URI</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyToLocal</span> <span class="p">[</span><span class="o">-</span><span class="n">ignorecrc</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">crc</span><span class="p">]</span> <span class="n">URI</span> <span class="o">&lt;</span><span class="n">localdst</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">find</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">expression</span><span class="o">&gt;</span> <span class="o">...</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">ls</span> <span class="p">[</span><span class="o">-</span><span class="n">C</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">R</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">S</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">u</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">paths</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">tail</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span><span class="p">]</span> <span class="n">URI</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week4 HIVE</a><ul>
+<li><a class="reference internal" href="#installing-centos-and-vmfusion">Installing CentOS and VMFusion</a></li>
+<li><a class="reference internal" href="#installing-java">Installing Java</a></li>
+<li><a class="reference internal" href="#installing-hadoop">Installing Hadoop</a></li>
+<li><a class="reference internal" href="#installing-hive">Installing HIVE</a></li>
+<li><a class="reference internal" href="#ddl-operations">DDL Operations</a></li>
+<li><a class="reference internal" href="#sql-operations">SQL Operations</a></li>
+<li><a class="reference internal" href="#useful-hive-commands">Useful HIVE commands.</a></li>
+<li><a class="reference internal" href="#useful-hdfs-commands">Useful HDFS commands</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Data Science at Regis University!</a><ul>
+      <li>Previous: <a href="week3hbase.html" title="previous chapter">Week 3 Hbase</a></li>
+      <li>Next: <a href="week5pig.html" title="next chapter">Week5 PIG</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataEngineering/week4hive.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Josh Peterson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/dataEngineering/week4hive.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,213 @@
+.. Week 3 documentation master file, created by
+   sphinx-quickstart on Wed Feb  1 21:27:50 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+
+============
+Week 3 Hbase 
+============
+
+by Josh Peterson (created on Sphinx)
+
+The goal of this week is to install, configure, and test HBase.  This will be accomplished by following section B.4 direction on the Apached HBase Reference Guide FAQ and the complete the activites described under - procedure: Download, Configure, and Start HBase in Standalone Mode.
+
+This was accomplished by first:
+
+* creating a new VM for the assignment
+* create a user for Hbase and the installation.
+    
+New VM
+======
+
+The same steps for creating the new VM for other other projects was followed.  This includes installing CentOS minimual on VMFussionWare and then determining the ip address with the command ::
+
+    ip addr
+    
+I then use **iterm2** to log into the node and do the following
+
+
+The ip address for the machines was the following::
+
+    192.168.112.133 
+
+
+I then used **item2** to ssh into the node. Then on the node I updated them using the following commands::
+
+    su 
+    yum update
+    yum provides wget
+    yum install wget
+     
+I then created hbase user (on each of the node)::
+
+    useradd hbase
+    passwd hbase 
+   
+
+
+The next step is to install java on the machines by doing the following::
+
+
+    cd /opt    
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz
+    tar xzf jdk-8u111-linux-x64.tar.gz
+    chown R root:root jdk1.8.0_111
+    alternatives --install /usr/bin/java java /opt/jdk1.8.0_111/bin/java 2
+    alternatives --config java
+    alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_111/bin/jar 2
+    alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_111/bin/javac 2
+    alternatives --set jar /opt/jdk1.8.0_111/bin/jar
+    alternatives --set javac /opt/jdk1.8.0_111/bin/javac
+
+Now I exited root user and switched to the hadoop user::
+       
+    exit
+    su - hbase
+
+Then I *vi* into the .bashrc on the node and added the following to the end of the .bashrc file::
+
+    export JAVA_HOME=/opt/jdk1.8.0_111
+    export JRE_HOME=/opt/jdk1.8.0_111/jre
+    export PATH=$PATH:$JAVA_HOME/bin
+
+
+
+Installing hbase
+================
+
+Just like the java code hadoop can be downloaded onto the manager node and then coped to the other nodes /opt location.  This is accomplished with the command::
+
+    su - hbase
+    wget http://mirror.synyx.de/apache/hbase/stable/hbase-1.2.4-bin.tar.gz
+    tar xzvf hbase-1.2.4-bin.tar.gz
+    cd hbase_1.2.4
+
+.. note::  The wget command took to long so I manual downloaded the file onto my computer and then scp it to my virtual machine
+    
+Then I edited the **conf/hbase-site.xml** which is the main HBase configuration file::  
+
+    <configuration>
+      <property>
+        <name>hbase.rootdir</name>
+        <value>file:///home/hbase/hbase</value>
+      </property>
+      <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>/home/hbase/zookeeper</value>
+      </property>
+    </configuration>
+    
+Then i ran the command below to startup hbase::
+
+    bin/start-hbase.sh
+
+When running start-hbase.sh the output is ::
+
+    [hbase@localhost hbase-1.2.4]$ bin/start-hbase.sh
+    starting master, logging to /home/hbase/hbase-1.2.4/bin/../logs/hbase-hbase-master-localhost.localdomain.out
+    Java HotSpot(TM) 64-Bit Server VM warning: ignoring option PermSize=128m; support was removed in 8.0
+    Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=128m; support was removed in 8.0
+    
+You can use the command **jps** to view that it is running::
+
+    [hbase@localhost hbase-1.2.4]$ jps
+    36864 HMaster
+    37185 Jps
+
+Also you can view http://192.168.112.133:16010 to view the HBase Web UI.
+
+.. note::  To view the HBASe remotely I turned off the firewall using the command "    systemctl stop firewalld"
+
+
+The view of the HBase Web user interface can be seen below:
+
+.. image:: _static/hbaseWebBrowser.png
+
+
+The following commands can be used with HBase
+=============================================
+
+#. Connect to HBase ::
+   
+    ./bin/hbase shell
+    [hbase@localhost hbase-1.2.4]$ bin/hbase shell
+    2017-02-01 22:25:43,823 WARN  [main] util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+    HBase Shell; enter 'help<RETURN>' for list of supported commands.
+    Type "exit<RETURN>" to leave the HBase Shell
+    Version 1.2.4, r67592f3d062743907f8c5ae00dbbe1ae4f69e5af, Tue Oct 25 18:10:20 CDT 2016
+   
+#. Display help::
+
+    help
+    
+#. Create table (To do this I need to specify name and column family name)::
+
+    create "homework3", "cf"
+    
+    0 row(s) in 1.6330 seconds
+    => Hbase::Table - homework3   
+ 
+#. List Information::
+
+    list 'homework3'
+
+    hbase(main):003:0> list "homework3"
+    TABLE
+    homework3
+    1 row(s) in 0.0290 seconds
+    
+    => ["homework3"]    
+
+#. Put data into my table::
+
+    put 'homework3', 'row1', 'cf:a', '100'
+    put 'homework3', 'row2', 'cf:b', '100'
+    put 'homework3', 'row3', 'cf:c', '100'
+
+    
+#. Scan data for all data at once::
+
+    scan "homework3"
+    ROW            COLUMN+CELL
+    row1          column=cf:a, timestamp=1486006339324, value=100
+    row2          column=cf:b, timestamp=1486006345554, value=100
+    row3          column=cf:c, timestamp=1486006346530, value=100
+    3 row(s) in 0.0620 seconds
+  
+#. Get single row of data::
+
+    get "homework3", "row1"
+    
+    COLUMN         CELL
+     cf:a          timestamp=1486006339324, value=100
+    1 row(s) in 0.0400 seconds
+    
+#. Disable a table (if you want to delete or change you first need to *disable* and you can renable with *enable*::
+
+    disable "homework3"
+    enable "homework3"
+    disable "homework3"
+    
+#. Drop a table (can only be droped after disable) ::
+
+    drop "homework3"    
+    0 row(s) in 1.2820 seconds
+    
+
+#. Exit the HBase shell::
+
+    quit
+  
+Stopping Hbase
+==============
+
+To stop hbase use command::
+
+    ./bin/stop_hbase.sh   
+    
+    stopping hbase......................
+    
+    
+
+     

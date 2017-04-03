@@ -1,0 +1,510 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week6 Spark &#8212; Data Science 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 6+ SparkOnMac" href="SparkOnMac.html" />
+    <link rel="prev" title="Week5 PIG" href="week5pig.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week6-spark">
+<h1>Week6 Spark<a class="headerlink" href="#week6-spark" title="Permalink to this headline">¶</a></h1>
+<p>by Josh Peterson</p>
+<div class="section" id="installing-centos-and-vmfusion">
+<h2>Installing CentOS and VMFusion<a class="headerlink" href="#installing-centos-and-vmfusion" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Installed CentOS7 64-bit (minimal install) with networking on, date and time set, and kdump disability</p>
+</li>
+<li><p class="first">I then set a root password and also created a user name.</p>
+</li>
+<li><p class="first">Because I am using just the minimal install there was no user interface so I decided to interact with CentOS7 through ssh from my mac.  I like iterm better on mac then its original terminal so I used that for ssh into the machine.  The first step was to find my ip address using command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ip</span> <span class="n">addr</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>This is used to determine my ip address was <em>172.16.84.129</em>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">84.129</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">Once I was able to ssh to the CentOS7 vitural machine I installed the OS updates doing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span>
+<span class="n">yum</span> <span class="n">update</span>
+<span class="n">yum</span> <span class="n">install</span> <span class="n">wget</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-java">
+<h2>Installing Java<a class="headerlink" href="#installing-java" title="Permalink to this headline">¶</a></h2>
+<p>I installed java by doing the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span>
+<span class="n">wget</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cookies</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">check</span><span class="o">-</span><span class="n">certificate</span> <span class="o">--</span><span class="n">header</span> <span class="s2">&quot;Cookie: gpw_e24=http%3A</span><span class="si">%2F%2F</span><span class="s2">www.oracle.com</span><span class="si">%2F</span><span class="s2">; oraclelicense=accept-securebackup-cookie&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">oracle</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">otn</span><span class="o">-</span><span class="n">pub</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">jdk</span><span class="o">/</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">b14</span><span class="o">/</span><span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">root</span><span class="p">:</span><span class="n">root</span> <span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>I then used alternative to install java doing the following: (Alternative allows for softlinks to the desired location of the executable so as different version of java are released they can be installed and then alternatives used to link to a new one without having to uninstall the old.  This allows for the user to also test the new release and easily go back to the previous one if problems occur):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="o">.</span><span class="mi">111</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="n">java</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">config</span> <span class="n">java</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span>
+</pre></div>
+</div>
+<p>The next step is to create the Hadoop user with commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">useradd</span> <span class="n">hadoop</span>
+<span class="n">passwd</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>To allow me the ability for password-less login in using ssh-keygen I do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span>
+<span class="n">cat</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+<span class="n">chmod</span> <span class="mi">0600</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+</pre></div>
+</div>
+<p>Once I have established the new user I need to add some environment variables before installing Hadoop.  These are created by modifying the .bashrc file for Hadoop.  This is accomplished by adding the following to the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export JAVA_HOME=/opt/jdk1.8.0_111
+export JRE_HOME=/opt/jdk1.8.0_111/jre
+export PATH=$PATH:$JAVA_HOME/bin
+</pre></div>
+</div>
+<p>I then source the .bashrc to restart it so I do not need to log out and log back in to get access to it
+To edit the .bashrc I like to use vi instead of nano.  I also use ultraedit for mac to edit longer files through ssh instead</p>
+</div>
+<div class="section" id="install-scala">
+<h2>Install Scala<a class="headerlink" href="#install-scala" title="Permalink to this headline">¶</a></h2>
+<p>Scala is needed for installing spark.  The commands for installing scala is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">downloads</span><span class="o">.</span><span class="n">lightbend</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">scala</span><span class="o">/</span><span class="mf">2.11</span><span class="o">.</span><span class="mi">8</span><span class="o">/</span><span class="n">scala</span><span class="o">-</span><span class="mf">2.11</span><span class="o">.</span><span class="mf">8.</span><span class="n">rpm</span>
+<span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">scala</span><span class="o">-</span><span class="mf">2.11</span><span class="o">.</span><span class="mf">8.</span><span class="n">rpm</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These directions for installing scala come from website <a class="reference external" href="https://www.vultr.com/docs/how-to-install-scala-on-centos-7">https://www.vultr.com/docs/how-to-install-scala-on-centos-7</a></p>
+</div>
+<p>When installing scala the following output is seen:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[root@localhost hadoop]#     sudo yum install scala-2.11.8.rpm
+Loaded plugins: fastestmirror
+Examining scala-2.11.8.rpm: scala-2.11.8-0.noarch
+Marking scala-2.11.8.rpm to be installed
+Resolving Dependencies
+--&gt; Running transaction check
+---&gt; Package scala.noarch 0:2.11.8-0 will be installed
+--&gt; Finished Dependency Resolution
+
+Dependencies Resolved
+
+=====================================================================================================
+ Package             Arch                 Version                  Repository                   Size
+=====================================================================================================
+Installing:
+ scala               noarch               2.11.8-0                 /scala-2.11.8               471 M
+
+Transaction Summary
+=====================================================================================================
+Install  1 Package
+
+Total size: 471 M
+Installed size: 471 M
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : scala-2.11.8-0.noarch                                                             1/1
+  Verifying  : scala-2.11.8-0.noarch                                                             1/1
+
+Installed:
+  scala.noarch 0:2.11.8-0
+
+Complete!
+</pre></div>
+</div>
+<p>Scala is installed in the bin directory</p>
+</div>
+<div class="section" id="installing-hadoop">
+<h2>Installing Hadoop<a class="headerlink" href="#installing-hadoop" title="Permalink to this headline">¶</a></h2>
+<p>First I login as the Hadoop user using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="o">.</span><span class="n">claz</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span><span class="o">/</span><span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mf">3.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mf">3.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">mv</span> <span class="n">hadoop</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">3</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>I then rename the hadoop-2.7.3 folder to hadoop and then add the following variables to the .bashrc and once added restart the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export HADOOP_HOME=/home/hadoop/hadoop
+export HADOOP_INSTALL=$HADOOP_HOME
+export HADOOP_MAPRED_HOME=$HADOOP_HOME
+export HADOOP_COMMON_HOME=$HADOOP_HOME
+export HADOOP_HDFS_HOME=$HADOOP_HOME
+export YARN_HOME=$HADOOP_HOME
+export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+</pre></div>
+</div>
+<p>I then run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>I then change directories:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>cd $HADOOP_HOME/etc/hadoop
+</pre></div>
+</div>
+<p>In this directory there are five main xml files that need to be customized.</p>
+<ul>
+<li><p class="first">core-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">fs</span><span class="o">.</span><span class="n">defaultFS</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">hdfs</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">9000</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">hdfs.site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">replication</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="mi">1</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">dir</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoopdata</span><span class="o">/</span><span class="n">hdfs</span><span class="o">/</span><span class="n">namenode</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">dfs</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">dir</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">file</span><span class="p">:</span><span class="o">///</span><span class="n">home</span><span class="o">/</span><span class="n">hadoop</span><span class="o">/</span><span class="n">hadoopdata</span><span class="o">/</span><span class="n">hdfs</span><span class="o">/</span><span class="n">datanode</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">mapred-site.xml(cp map-site.xml.tempalte to map-sit.xml):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">mapreduce</span><span class="o">.</span><span class="n">framework</span><span class="o">.</span><span class="n">name</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">yarn</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">yarn-site.xml:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">configuration</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="nb">property</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">name</span><span class="o">&gt;</span><span class="n">yarn</span><span class="o">.</span><span class="n">nodemanager</span><span class="o">.</span><span class="n">aux</span><span class="o">-</span><span class="n">services</span><span class="o">&lt;/</span><span class="n">name</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">value</span><span class="o">&gt;</span><span class="n">mapreduce_shuffle</span><span class="o">&lt;/</span><span class="n">value</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="nb">property</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">configuration</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>After editing the xml then I format the namenode (namenode is the centerpiece of the HDFS file system and is also known as master.  It is a single point of failure and if it goes down all of the system goes down):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">hdfs</span> <span class="n">namenode</span> <span class="o">-</span><span class="nb">format</span>
+</pre></div>
+</div>
+<p>I then start HDFS, YARN, and HistoryServer using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">start</span><span class="o">-</span><span class="n">dfs</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">start</span><span class="o">-</span><span class="n">yarn</span><span class="o">.</span><span class="n">sh</span>
+<span class="n">mr</span><span class="o">-</span><span class="n">jobhistory</span><span class="o">-</span><span class="n">daemon</span><span class="o">.</span><span class="n">sh</span> <span class="n">start</span> <span class="n">historyserver</span>
+</pre></div>
+</div>
+<p>To see all of the java jobs running I type:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">jps</span>
+</pre></div>
+</div>
+<p>The following java scripts should be seen:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">32034</span> <span class="n">Jps</span>
+<span class="mi">31303</span> <span class="n">DataNode</span>
+<span class="mi">31449</span> <span class="n">SecondaryNameNode</span>
+<span class="mi">31594</span> <span class="n">ResourceManager</span>
+<span class="mi">31695</span> <span class="n">NodeManager</span>
+<span class="mi">31999</span> <span class="n">JobHistoryServer</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>I then disabled the firewall using the command::</dt>
+<dd>su
+systemctl stop firewalld</dd>
+</dl>
+<p>I then disabled the IPV6 by adding these lines to /etc/sysctl.conf:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">disable_ipv6</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">net</span><span class="o">.</span><span class="n">ipv6</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">default</span><span class="o">.</span><span class="n">disable_ipv6</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="install-spark">
+<h2>Install Spark<a class="headerlink" href="#install-spark" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Steps for installing spark come frome the following website.  <a class="reference external" href="https://www.tutorialspoint.com/apache_spark/apache_spark_installation.htm">https://www.tutorialspoint.com/apache_spark/apache_spark_installation.htm</a></p>
+</div>
+<p>To install spark I use the following commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">d3kbcqa49mib13</span><span class="o">.</span><span class="n">cloudfront</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="nb">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="o">.</span><span class="mf">7.</span><span class="n">tgz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">spark</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="nb">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="o">.</span><span class="mf">7.</span><span class="n">tgz</span>
+<span class="n">mv</span> <span class="n">spark</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="nb">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="o">.</span><span class="mi">7</span> <span class="n">spark</span>
+</pre></div>
+</div>
+<p>I then edit the .bashrc and add the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export PATH=$PATH:/home/hadoop/spark/bin
+</pre></div>
+</div>
+<p>I then do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>To run spark I do the following command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">-</span><span class="n">shell</span>
+</pre></div>
+</div>
+<p>The output is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[hadoop@localhost bin]$ spark-shell
+Using Spark&#39;s default log4j profile: org/apache/spark/log4j-defaults.properties
+Setting default log level to &quot;WARN&quot;.
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+17/02/19 20:08:14 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/02/19 20:08:14 WARN Utils: Your hostname, localhost.localdomain resolves to a loopback address: 127.0.0.1; using 172.16.84.129 instead (on interface ens33)
+17/02/19 20:08:14 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+17/02/19 20:08:23 WARN ObjectStore: Version information not found in metastore. hive.metastore.schema.verification is not enabled so recording the schema version 1.2.0
+17/02/19 20:08:23 WARN ObjectStore: Failed to get database default, returning NoSuchObjectException
+17/02/19 20:08:24 WARN ObjectStore: Failed to get database global_temp, returning NoSuchObjectException
+Spark context Web UI available at http://172.16.84.129:4040
+Spark context available as &#39;sc&#39; (master = local[*], app id = local-1487552895739).
+Spark session available as &#39;spark&#39;.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  &#39;_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.1.0
+      /_/
+
+Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_111)
+Type in expressions to have them evaluated.
+Type :help for more information.
+</pre></div>
+</div>
+<p>The website for spark can be found at <a class="reference external" href="http://172.16.84.129:4040">http://172.16.84.129:4040</a></p>
+<div class="figure">
+<img alt="../_images/sparkwebpage.png" src="../_images/sparkwebpage.png" />
+</div>
+</div>
+<div class="section" id="testing-spark">
+<h2>Testing Spark<a class="headerlink" href="#testing-spark" title="Permalink to this headline">¶</a></h2>
+<p>To test spark I first create the file input.txt:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">people</span> <span class="n">are</span> <span class="ow">not</span> <span class="k">as</span> <span class="n">beautiful</span> <span class="k">as</span> <span class="n">they</span> <span class="n">look</span><span class="p">,</span>
+<span class="k">as</span> <span class="n">they</span> <span class="n">walk</span> <span class="ow">or</span> <span class="k">as</span> <span class="n">they</span> <span class="n">talk</span><span class="o">.</span>
+<span class="n">they</span> <span class="n">are</span> <span class="n">only</span> <span class="k">as</span> <span class="n">beautiful</span>  <span class="k">as</span> <span class="n">they</span> <span class="n">love</span><span class="p">,</span>
+<span class="k">as</span> <span class="n">they</span> <span class="n">care</span> <span class="k">as</span> <span class="n">they</span> <span class="n">share</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Then I run spark-shell.  Then I creat an Resilient Distributed Datasets (RDD) using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="n">inputfile</span> <span class="o">=</span><span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="p">(</span><span class="s2">&quot;input.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then I split the words by a space and then give each word 1 point and then command all of the common words to reducedByKey and add each associated pair.  All of this in just one command</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">inputfile</span><span class="o">.</span><span class="n">flatMap</span><span class="p">(</span><span class="n">line</span> <span class="o">=&gt;</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">word</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">reduceByKey</span><span class="p">(</span><span class="n">_</span><span class="o">+</span><span class="n">_</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Then applying the action and save the output</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">counts</span><span class="o">.</span><span class="n">saveAsTextFile</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then you can check the output and view it which shows the following unger part-0000 of the file output vi part-00000:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">talk</span><span class="o">.</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">are</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="ow">not</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">people</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">share</span><span class="o">.</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="ow">or</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">only</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="k">as</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+<span class="p">(,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">care</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">they</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="p">(</span><span class="n">beautiful</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">walk</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">love</span><span class="p">,,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">look</span><span class="p">,,</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="useful-spark-commands">
+<h2>Useful Spark Commands<a class="headerlink" href="#useful-spark-commands" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This information was taken from website <a class="reference external" href="https://www.tutorialspoint.com/apache_spark/apache_spark_core_programming.htm">https://www.tutorialspoint.com/apache_spark/apache_spark_core_programming.htm</a></p>
+</div>
+<p>Transformation and Meaning:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="nb">filter</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">flatMap</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">mapPartitions</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">mapPartitionsWithIndex</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">(</span><span class="n">withReplacement</span><span class="p">,</span><span class="n">fraction</span><span class="p">,</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">union</span><span class="p">(</span><span class="n">otherDatatset</span><span class="p">)</span>
+<span class="n">intersection</span><span class="p">(</span><span class="n">otherDataset</span><span class="p">)</span>
+<span class="n">distinct</span><span class="p">([</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">groupByKey</span><span class="p">([</span><span class="n">numTaks</span><span class="p">])</span>
+<span class="n">reducedByKey</span><span class="p">(</span><span class="n">func</span><span class="p">,[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">aggregatedByKey</span><span class="p">(</span><span class="n">zeroValue</span><span class="p">)(</span><span class="n">seqOp</span><span class="p">,</span><span class="n">combOp</span><span class="p">,[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">sortByKey</span><span class="p">([</span><span class="n">ascending</span><span class="p">],[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">join</span><span class="p">(</span><span class="n">otherDataset</span><span class="p">,[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">cogroup</span><span class="p">(</span><span class="n">otherDataset</span><span class="p">,[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">cartesian</span><span class="p">(</span><span class="n">otherDataset</span><span class="p">)</span>
+<span class="n">pipe</span><span class="p">(</span><span class="n">command</span><span class="p">,[</span><span class="n">envVars</span><span class="p">])</span>
+<span class="n">coalesce</span><span class="p">(</span><span class="n">numPartitions</span><span class="p">)</span>
+<span class="n">rapartition</span><span class="p">(</span><span class="n">numPartitions</span><span class="p">)</span>
+<span class="n">repartitionAndSortWithinPartitions</span><span class="p">(</span><span class="n">partitioner</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Actions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">reduce</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">collect</span><span class="p">()</span>
+<span class="n">count</span><span class="p">()</span>
+<span class="n">first</span><span class="p">()</span>
+<span class="n">taken</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">takeSample</span><span class="p">(</span><span class="n">withReplacement</span><span class="p">,</span><span class="n">num</span><span class="p">,[</span><span class="n">seed</span><span class="p">])</span>
+<span class="n">takeOrdered</span><span class="p">(</span><span class="n">n</span><span class="p">,[</span><span class="n">ordering</span><span class="p">])</span>
+<span class="n">saveAsTestFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">saveAsSequenceFile</span><span class="p">(</span><span class="n">path</span><span class="p">)(</span><span class="n">Java</span> <span class="ow">and</span> <span class="n">Scala</span><span class="p">)</span>
+<span class="n">saveAsObjectFile</span><span class="p">(</span><span class="n">path</span><span class="p">)(</span><span class="n">Java</span> <span class="ow">and</span> <span class="n">Scala</span><span class="p">)</span>
+<span class="n">countByKey</span><span class="p">()</span>
+<span class="n">foreach</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="useful-hdfs-commands">
+<h2>Useful HDFS commands<a class="headerlink" href="#useful-hdfs-commands" title="Permalink to this headline">¶</a></h2>
+<p>Here is a list of usefull commands taken from website:  <a class="reference external" href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html">https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">bin</span><span class="o">/</span><span class="n">hadoop</span> <span class="n">fs</span> <span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">appendToFile</span> <span class="o">&lt;</span><span class="n">localsrc</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">dst</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">cat</span> <span class="p">[</span><span class="o">-</span><span class="n">ignoreCrc</span><span class="p">]</span> <span class="n">URI</span> <span class="p">[</span><span class="n">URI</span> <span class="o">...</span><span class="p">]</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyFromLocal</span> <span class="o">&lt;</span><span class="n">localsrc</span><span class="o">&gt;</span> <span class="n">URI</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyToLocal</span> <span class="p">[</span><span class="o">-</span><span class="n">ignorecrc</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">crc</span><span class="p">]</span> <span class="n">URI</span> <span class="o">&lt;</span><span class="n">localdst</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">find</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">expression</span><span class="o">&gt;</span> <span class="o">...</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">ls</span> <span class="p">[</span><span class="o">-</span><span class="n">C</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">R</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">S</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">u</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">paths</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">tail</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span><span class="p">]</span> <span class="n">URI</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week6 Spark</a><ul>
+<li><a class="reference internal" href="#installing-centos-and-vmfusion">Installing CentOS and VMFusion</a></li>
+<li><a class="reference internal" href="#installing-java">Installing Java</a></li>
+<li><a class="reference internal" href="#install-scala">Install Scala</a></li>
+<li><a class="reference internal" href="#installing-hadoop">Installing Hadoop</a></li>
+<li><a class="reference internal" href="#install-spark">Install Spark</a></li>
+<li><a class="reference internal" href="#testing-spark">Testing Spark</a></li>
+<li><a class="reference internal" href="#useful-spark-commands">Useful Spark Commands</a></li>
+<li><a class="reference internal" href="#useful-hdfs-commands">Useful HDFS commands</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Data Science at Regis University!</a><ul>
+      <li>Previous: <a href="week5pig.html" title="previous chapter">Week5 PIG</a></li>
+      <li>Next: <a href="SparkOnMac.html" title="next chapter">Week 6+ SparkOnMac</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataEngineering/week6spark.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Josh Peterson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/dataEngineering/week6spark.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

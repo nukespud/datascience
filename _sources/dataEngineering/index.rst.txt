@@ -1,0 +1,31 @@
+.. Week 3 documentation master file, created by
+   sphinx-quickstart on Wed Feb  1 21:27:50 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Data Science at Regis University!
+==================================
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   
+   
+   week1hadoop.rst
+   week2hadoop_cluster.rst
+   week3hbase.rst
+   week4hive.rst
+   week5pig.rst
+   week6spark.rst
+   SparkOnMac.rst
+   week7mahout.rst
+   week8.rst
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+

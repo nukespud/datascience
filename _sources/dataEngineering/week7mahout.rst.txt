@@ -1,0 +1,502 @@
+
+==============
+Week 7 Mahout
+==============
+by Josh Peterson
+
+
+Overview of Mahout
+=====================
+
+.. note::  Information in this section was taken from the book Manhout in action on Safari Online 
+
+* Hini word that refers to an elephant driver
+* Inital three areas of maturity:
+    * recommender engines
+    * Clustering
+    * Classificaiton
+* Built with Hadoop in mind to help deal with large amount of data
+* Dependences include: 
+    * Java
+    * Maven (online tool that manages dependencies, compiles code, packages, releases, generates documents, and publishes formal releases (store typically at /usr/local/maven
+    * Mahout
+    * Hadoop
+
+.. note:: Following informaiton comes from "Learning Apache Mahout"
+
+* Mahout built upon Apache's Hadoop distrubted project using MapReduce
+* Future work involves writing Mahout for Apache Spark
+* Community and license make it a highly desirable code
+* When to use Mahout:
+    * Data to large
+    * Data already on Hadoop
+    * Mahout has the desired algorithms for project
+* Install mahout requires:
+    * Java
+    * Maven
+    * Hadoop
+    * Mahout
+
+
+
+Installing CentOS and VMFusion
+===============================
+
+* Installed CentOS7 64-bit (minimal install) with networking on, date and time set, and kdump disability
+
+* I then set a root password and also created a user name.  
+
+ 
+
+* Because I am using just the minimal install there was no user interface so I decided to interact with CentOS7 through ssh from my mac.  I like iterm better on mac then its original terminal so I used that for ssh into the machine.  The first step was to find my ip address using command::
+
+    ip addr
+    
+This is used to determine my ip address was *172.16.84.130*::
+
+    ssh 172.16.84.130
+
+* Once I was able to ssh to the CentOS7 vitural machine I installed the OS updates doing::
+
+    su
+    yum update
+    yum install wget 
+
+
+
+Installing Java
+===============
+
+I installed java by doing the following::
+    
+    cd /opt
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz     
+    tar xzf jdk-8u111-linux-x64.tar.gz   
+    chown -R root:root jdk1.8.0_111/   
+    
+I then used alternative to install java doing the following: (Alternative allows for softlinks to the desired location of the executable so as different version of java are released they can be installed and then alternatives used to link to a new one without having to uninstall the old.  This allows for the user to also test the new release and easily go back to the previous one if problems occur):: 
+ 
+    cd /opt/jdk1.8.0.111
+    alternatives --install /usr/bin/java java /opt/jdk1.8.0_111/bin/java 2    
+    alternatives --config java
+    alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_111/bin/jar 2
+    alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_111/bin/javac 2
+    alternatives --set jar /opt/jdk1.8.0_111/bin/jar
+    alternatives --set javac /opt/jdk1.8.0_111/bin/javac
+
+The next step is to create the Hadoop user with commands::
+   
+
+    useradd hadoop
+    passwd hadoop
+
+To allow me the ability for password-less login in using ssh-keygen I do the following::
+
+    su - hadoop
+    ssh-keygen -t rsa
+    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+    chmod 0600 ~/.ssh/authorized_keys
+
+Once I have established the new user I need to add some environment variables before installing Hadoop.  These are created by modifying the .bashrc file for Hadoop.  This is accomplished by adding the following to the .bashrc::
+
+    export JAVA_HOME=/opt/jdk1.8.0_111
+    export JRE_HOME=/opt/jdk1.8.0_111/jre
+    export PATH=$PATH:$JAVA_HOME/bin
+
+I then source the .bashrc to restart it so I do not need to log out and log back in to get access to it
+To edit the .bashrc I like to use vi instead of nano.  I also use ultraedit for mac to edit longer files through ssh instead 
+
+
+
+Installing Hadoop
+=================
+
+First I login as the Hadoop user using::
+
+    su - hadoop
+    wget http://apache.claz.org/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
+    tar xzf hadoop-2.7.3.tar.gz
+    mv hadoop-2.7.3 hadoop
+
+
+I then rename the hadoop-2.7.3 folder to hadoop and then add the following variables to the .bashrc and once added restart the .bashrc::
+
+    #  Info for HADOOP 
+    export HADOOP_HOME=/home/hadoop/hadoop
+    export HADOOP_INSTALL=$HADOOP_HOME
+    export HADOOP_MAPRED_HOME=$HADOOP_HOME
+    export HADOOP_COMMON_HOME=$HADOOP_HOME
+    export HADOOP_HDFS_HOME=$HADOOP_HOME
+    export YARN_HOME=$HADOOP_HOME
+    export PATH=$PATH:$HADOOP_HOME/sbin:$HADOOP_HOME/bin
+
+I then run::
+
+	source ~/.bashrc
+	
+I then change directories::
+
+    cd $HADOOP_HOME/etc/hadoop
+
+In this directory there are five main xml files that need to be customized.
+
+* core-site.xml::
+
+    <configuration>
+    <property>
+    <name>fs.defaultFS</name>
+    <value>hdfs://localhost:9000</value>
+    </property>
+    </configuration>
+
+
+* hdfs.site.xml::
+
+    <configuration>
+    <property>
+    <name>dfs.replication</name>
+    <value>1</value>
+    </property>
+    
+    <property>
+    <name>dfs.name.dir</name>
+    
+    <value>file:///home/hadoop/hadoopdata/hdfs/namenode</value>
+    </property>
+    
+    <property>
+    <name>dfs.data.dir</name>
+    <value>file:///home/hadoop/hadoopdata/hdfs/datanode</value>
+    </property>
+    </configuration>
+    
+* mapred-site.xml(**cp mapred-site.xml.template mapred-site.xml**)::
+
+    <configuration>
+    <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+    </property>
+    </configuration>
+    
+* yarn-site.xml::
+
+    <configuration>
+    <property>
+      <name>yarn.nodemanager.aux-services</name>
+      <value>mapreduce_shuffle</value>
+    </property>
+    </configuration>
+
+After editing the xml then I format the namenode (namenode is the centerpiece of the HDFS file system and is also known as master.  It is a single point of failure and if it goes down all of the system goes down)::
+
+    hdfs namenode -format
+    
+I then start HDFS, YARN, and HistoryServer using the command::
+
+    start-dfs.sh
+    start-yarn.sh
+    mr-jobhistory-daemon.sh start historyserver
+
+To see all of the java jobs running I type::
+
+    jps
+
+The following java scripts should be seen::
+
+    28112 DataNode
+    28883 NodeManager
+    29155 JobHistoryServer
+    28774 ResourceManager
+    29208 Jps
+    27818 NameNode
+    28269 SecondaryNameNode
+
+I then disabled the firewall using the command::
+    su
+    systemctl stop firewalld
+
+I then disabled the IPV6 by adding these lines to /etc/sysctl.conf::
+
+    net.ipv6.conf.all.disable_ipv6 = 1
+    net.ipv6.conf.default.disable_ipv6 = 1
+    
+    
+
+Installing Maven 
+================
+Maven is an online tool that manages dependencies, compiles code, packages, releases, generates documents, and publishes formal releases.  It is required so running mahout
+
+.. note::
+
+    Some of this information was taken from the book Learning Apache Mahout
+
+Get the code::
+
+    wget http://mirror.cogentco.com/pub/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
+    tar -xvf apache-maven-3.3.9-bin.tar.gz    
+    mv apache-maven-3.3.9 maven
+    vi ~/.bashrc
+    
+Add the following to the .bashrc::
+    
+    export MAVEN_HOME=/home/hadoop/maven
+    export PATH=$PATH:$MAVEN_HOME/bin
+
+Then run the command::
+
+    source ~/.bashrc
+
+Test that maven is installed correcting using the command::
+
+    mvn -v
+    
+The output should be::
+
+    Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-10T11:41:47-05:00)
+    Maven home: /home/hadoop/maven
+    Java version: 1.8.0_111, vendor: Oracle Corporation
+    Java home: /opt/jdk1.8.0_111/jre
+    Default locale: en_US, platform encoding: UTF-8
+    OS name: "linux", version: "3.10.0-514.el7.x86_64", arch: "amd64", family: "unix"
+   
+
+Installing Mahout
+=================
+
+.. note::
+
+    Some of this information was taken from the book Learning Apache Mahout
+
+
+Do the following::
+
+    cd
+    wget http://apache.claz.org/mahout/0.12.2/apache-mahout-distribution-0.12.2.tar.gz
+    tar -xvf mahout-distribution-0.12.2.tar.gz
+    mv apache-mahout-distribution-0.12.2 mahout
+    vi .bashrc
+
+Change .bashrc::
+
+    #Statements related to Mahout
+    export MAHOUT_HOME=/home/hadoop/mahout
+    export PATH=$PATH:$MAHOUT_HOME/bin
+    ###end of mahout statement
+
+Then do the following::
+    
+    source ~/.bashrc    
+    mvn -version
+    mahout    
+
+The output is as follows::
+
+    [hadoop@localhost ~]$ mvn -version
+    Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-10T11:41:47-05:00)
+    Maven home: /home/hadoop/maven
+    Java version: 1.8.0_111, vendor: Oracle Corporation
+    Java home: /opt/jdk1.8.0_111/jre
+    Default locale: en_US, platform encoding: UTF-8
+    OS name: "linux", version: "3.10.0-514.el7.x86_64", arch: "amd64", family: "unix"
+    [hadoop@localhost ~]$ mahout
+    Running on hadoop, using /home/hadoop/hadoop/bin/hadoop and HADOOP_CONF_DIR=
+    MAHOUT-JOB: /home/hadoop/mahout/mahout-examples-0.12.2-job.jar
+    An example program must be given as the first argument.
+    Valid program names are:
+      arff.vector: : Generate Vectors from an ARFF file or directory
+      baumwelch: : Baum-Welch algorithm for unsupervised HMM training
+      canopy: : Canopy clustering
+      cat: : Print a file or resource as the logistic regression models would see it
+      cleansvd: : Cleanup and verification of SVD output
+      clusterdump: : Dump cluster output to text
+      clusterpp: : Groups Clustering Output In Clusters
+      cmdump: : Dump confusion matrix in HTML or text formats
+      cvb: : LDA via Collapsed Variation Bayes (0th deriv. approx)
+      cvb0_local: : LDA via Collapsed Variation Bayes, in memory locally.
+      describe: : Describe the fields and target variable in a data set
+      evaluateFactorization: : compute RMSE and MAE of a rating matrix factorization against probes
+      fkmeans: : Fuzzy K-means clustering
+      hmmpredict: : Generate random sequence of observations by given HMM
+      itemsimilarity: : Compute the item-item-similarities for item-based collaborative filtering
+      kmeans: : K-means clustering
+      lucene.vector: : Generate Vectors from a Lucene index
+      matrixdump: : Dump matrix in CSV format
+      matrixmult: : Take the product of two matrices
+      parallelALS: : ALS-WR factorization of a rating matrix
+      qualcluster: : Runs clustering experiments and summarizes results in a CSV
+      recommendfactorized: : Compute recommendations using the factorization of a rating matrix
+      recommenditembased: : Compute recommendations using item-based collaborative filtering
+      regexconverter: : Convert text files on a per line basis based on regular expressions
+      resplit: : Splits a set of SequenceFiles into a number of equal splits
+      rowid: : Map SequenceFile<Text,VectorWritable> to {SequenceFile<IntWritable,VectorWritable>, SequenceFile<IntWritable,Text>}
+      rowsimilarity: : Compute the pairwise similarities of the rows of a matrix
+      runAdaptiveLogistic: : Score new production data using a probably trained and validated AdaptivelogisticRegression model
+      runlogistic: : Run a logistic regression model against CSV data
+      seq2encoded: : Encoded Sparse Vector generation from Text sequence files
+      seq2sparse: : Sparse Vector generation from Text sequence files
+      seqdirectory: : Generate sequence files (of Text) from a directory
+      seqdumper: : Generic Sequence File dumper
+      seqmailarchives: : Creates SequenceFile from a directory containing gzipped mail archives
+      seqwiki: : Wikipedia xml dump to sequence file
+      spectralkmeans: : Spectral k-means clustering
+      split: : Split Input data into test and train sets
+      splitDataset: : split a rating dataset into training and probe parts
+      ssvd: : Stochastic SVD
+      streamingkmeans: : Streaming k-means clustering
+      svd: : Lanczos Singular Value Decomposition
+      testnb: : Test the Vector-based Bayes classifier
+      trainAdaptiveLogistic: : Train an AdaptivelogisticRegression model
+      trainlogistic: : Train a logistic regression using stochastic gradient descent
+      trainnb: : Train the Vector-based Bayes classifier
+      transpose: : Take the transpose of a matrix
+      validateAdaptiveLogistic: : Validate an AdaptivelogisticRegression model against hold-out data set
+      vecdist: : Compute the distances between a set of Vectors (or Cluster or Canopy, they must fit in memory) and a list of Vectors
+      vectordump: : Dump vectors from a sequence file to text
+      viterbi: : Viterbi decoding of hidden states from given output states sequence
+    
+
+
+Testing Mahout
+==============
+
+Do the following::
+
+    cd $MAHOUT_HOME
+    cd examples/bin
+    ls --ltr
+    ./cluster-reuters.sh
+    
+The end of output is as follows::
+
+        	resources                               =>   4.837392330169678
+    		41                                      =>   4.762823581695557
+    		gas                                     =>   4.651492595672607
+    		09.81                                   =>    4.59383487701416
+    		low                                     =>   4.493268966674805
+    		sees                                    =>    4.45147180557251
+    		declined                                =>   4.445640563964844
+    	Weight : [props - optional]:  Point:
+    
+    :{"identifier":"VL-19355","r":[{"06":1.798},{"1":1.196},{"11":1.175},{"11.33":4.154},{"110":2.815},{"
+    	Top Terms:
+    		burlington                              =>  27.376057624816895
+    		samjens                                 =>  16.805683135986328
+    		edelman                                 =>  16.628662943840027
+    		dominion                                =>  15.947927713394165
+    		ammeen                                  =>   10.81406545639038
+    		takeover                                =>   8.852294206619263
+    		bur                                     =>   8.494523048400879
+    		textile                                 =>    8.20582389831543
+    		asher                                   =>    8.14621639251709
+    		lawyers                                 =>   7.981342911720276
+    		injunction                              =>  6.6086156368255615
+    		stanley                                 =>   6.207991242408752
+    		information                             =>   5.840623617172241
+    		lawyer                                  =>   5.754413366317749
+    		morgan                                  =>   5.620885014533997
+    		denim                                   =>   5.523544788360596
+    		offer                                   =>   5.326757371425629
+    		gormley                                 =>   5.143141269683838
+    		gordon                                  =>   5.104058742523193
+    		painewebber                             =>   5.081052780151367
+    	Weight : [props - optional]:  Point:
+    
+    :{"identifier":"VL-16751","r":[],"c":[{"05":4.189},{"17":3.052},{"1985":3.678},{"27":3.793},{"50,000"
+    	Top Terms:
+    		chit                                    =>   14.54699993133545
+    		rubber                                  =>  12.708913803100586
+    		teck                                    =>   12.13612174987793
+    		thai                                    =>  12.076025009155273
+    		69,952                                  =>   9.880817413330078
+    		60,296                                  =>   9.880817413330078
+    		56.73                                   =>   9.369991302490234
+    		sheet                                   =>   8.698991775512695
+    		venture                                 =>   8.661195755004883
+    		chinese                                 =>    8.63268756866455
+    		china                                   =>    7.46561336517334
+    		tonnes                                  =>   7.303538799285889
+    		soon                                    =>   6.968311786651611
+    		exporter                                =>   6.868555545806885
+    		joint                                   =>   6.497229099273682
+    		auto                                    =>   6.208745002746582
+    		50,000                                  =>   6.074154853820801
+    		imported                                =>   6.059448719024658
+    		annually                                =>   5.995822906494141
+    		registered                              =>   5.820374488830566
+    	Weight : [props - optional]:  Point:
+    
+    
+    Inter-Cluster Density: 0.45886739446111874
+    Intra-Cluster Density: 0.5966193459389921
+    CDbw Inter-Cluster Density: 0.0
+    CDbw Intra-Cluster Density: 17.88264903791789
+    CDbw Separation: 28288.037114682844
+    
+
+Run the following::
+
+    ./classify-20newsgroups.sh    
+    
+The end of output is as follows::
+
+    =======================================================
+    Summary
+    -------------------------------------------------------
+    Correctly Classified Instances          :       6767	   89.8911%
+    Incorrectly Classified Instances        :        761	   10.1089%
+    Total Classified Instances              :       7528
+    
+    =======================================================
+    Confusion Matrix
+    -------------------------------------------------------
+    a    	b    	c    	d    	e    	f    	g    	h    	i    	j    	k    	l    	m    n    	o    	p    	q    	r    	s    	t    	<--Classified as
+    290  	0    	0    	0    	0    	0    	0    	0    	0    	0    	0    	0    	0    1    	0    	5    	0    	0    	2    	8    	 |  306   	a     = alt.atheism
+    2    	330  	4    	15   	10   	6    	4    	0    	0    	0    	0    	3    	8    2    	4    	0    	0    	0    	0    	0    	 |  388   	b     = comp.graphics
+    0    	30   	220  	92   	18   	16   	5    	1    	0    	0    	0    	1    	3    0    	4    	0    	1    	0    	2    	0    	 |  393   	c     = comp.os.ms-windows.misc
+    1    	11   	0    	351  	24   	1    	8    	2    	0    	0    	1    	0    	11   0    	0    	0    	0    	0    	0    	0    	 |  410   	d     = comp.sys.ibm.pc.hardware
+    0    	4    	0    	15   	349  	2    	2    	1    	1    	0    	0    	0    	7    0    	0    	0    	0    	0    	2    	0    	 |  383   	e     = comp.sys.mac.hardware
+    0    	29   	1    	4    	3    	351  	1    	1    	0    	1    	0    	1    	1    0    	1    	0    	1    	0    	0    	0    	 |  395   	f     = comp.windows.x
+    1    	0    	1    	24   	9    	0    	314  	14   	1    	3    	2    	3    	15   1    	1    	0    	0    	0    	0    	0    	 |  389   	g     = misc.forsale
+    0    	0    	0    	1    	2    	1    	3    	374  	2    	0    	0    	0    	4    0    	0    	0    	1    	0    	3    	0    	 |  391   	h     = rec.autos
+    0    	0    	0    	1    	0    	0    	4    	7    	365  	0    	1    	0    	1    1    	0    	0    	1    	0    	0    	0    	 |  381   	i     = rec.motorcycles
+    0    	0    	0    	1    	1    	0    	1    	1    	2    	357  	9    	0    	0    1    	0    	0    	0    	0    	0    	0    	 |  373   	j     = rec.sport.baseball
+    0    	1    	0    	0    	0    	0    	0    	1    	1    	4    	380  	0    	0    0    	0    	1    	0    	0    	1    	0    	 |  389   	k     = rec.sport.hockey
+    0    	3    	0    	0    	1    	4    	0    	1    	0    	0    	0    	381  	0    1    	1    	0    	6    	0    	2    	2    	 |  402   	l     = sci.crypt
+    0    	4    	0    	10   	9    	0    	7    	3    	1    	1    	0    	1    	348  1    	2    	0    	1    	0    	1    	0    	 |  389   	m     = sci.electronics
+    1    	5    	1    	1    	1    	0    	1    	0    	1    	1    	0    	2    	2    341  	3    	0    	2    	0    	5    	1    	 |  368   	n     = sci.med
+    0    	2    	0    	1    	3    	2    	1    	0    	0    	0    	0    	0    	3    3    	370  	0    	0    	0    	0    	1    	 |  386   	o     = sci.space
+    6    	1    	0    	2    	0    	0    	0    	1    	0    	1    	0    	1    	1    4    	1    	394  	0    	1    	1    	5    	 |  419   	p     = soc.religion.christian
+    0    	0    	1    	0    	0    	0    	0    	0    	0    	0    	0    	1    	0    0    	0    	0    	357  	1    	10   	2    	 |  372   	q     = talk.politics.guns
+    3    	0    	0    	0    	0    	0    	0    	0    	0    	0    	0    	0    	0    0    	1    	1    	1    	383  	4    	0    	 |  393   	r     = talk.politics.mideast
+    1    	0    	0    	0    	0    	0    	0    	0    	1    	2    	0    	2    	2    0    	1    	0    	18   	1    	315  	1    	 |  344   	s     = talk.politics.misc
+    30   	3    	0    	0    	0    	0    	1    	0    	0    	0    	0    	0    	0    0    	2    	9    	6    	2    	7    	197  	 |  257   	t     = talk.religion.misc
+    
+    =======================================================
+    Statistics
+    -------------------------------------------------------
+    Kappa                                       0.8701
+    Accuracy                                   89.8911%
+    Reliability                                85.4952%
+    Reliability (standard deviation)            0.2179
+    Weighted precision                          0.9051
+    Weighted recall                             0.8989
+    Weighted F1 score                           0.8979
+
+
+
+
+    
+Ports for HADOOP
+=================
+
+Here are some ports for HADOOP::
+
+    Daemon	Default Port	Configuration Parameter
+    HDFS	Namenode	            50070	dfs.http.address
+            Datanodes	            50075	dfs.datanode.http.address
+            Secondarynamenode	    50090	dfs.secondary.http.address
+            Backup/Checkpoint node?	50105	dfs.backup.http.address
+    
+           
+            Resource manager        8088

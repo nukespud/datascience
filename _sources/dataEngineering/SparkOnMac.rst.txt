@@ -1,0 +1,385 @@
+
+==================
+Week 6+ SparkOnMac
+==================
+by Josh Peterson
+
+
+
+    
+
+Installing hadoop
+=================
+
+.. note::
+
+    Directiosn came from https://dtflaneur.wordpress.com/2015/10/02/installing-hadoop-on-mac-osx-el-capitan/
+
+Do the following::
+
+     brew search hadoop
+     brew install hadoop
+
+
+
+STEP 3: Configure Hadoop:
+
+Edit hadoop-env.sh, the file can be located at //usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop/ where 2.6.0 is the hadoop version. Change the line::
+
+    cd /usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop/
+    export HADOOP_OPTS="$HADOOP_OPTS -Djava.net.preferIPv4Stack=true"
+
+    to
+
+
+    export HADOOP_OPTS="$HADOOP_OPTS -Djava.net.preferIPv4Stack=true -Djava.security.krb5.realm= -Djava.security.krb5.kdc="
+    
+    
+Edit Core-site.xml, The file can be located at /usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop/core-site.xml add below config::
+
+
+    <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/usr/local/Cellar/hadoop/hdfs/tmp</value>
+    <description>A base for other temporary directories.</description>
+    </property>
+    <property>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost:9000</value>
+    </property>
+    
+Edit mapred-site.xml, The file can be located at /usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop/mapred-site.xml and by default will be blank  add below config::
+
+
+    <configuration>
+     <property>
+      <name>mapred.job.tracker</name>
+      <value>localhost:9010</value>
+     </property>
+    </configuration>
+    
+Edit hdfs-site.xml, The file can be located at /usr/local/Cellar/hadoop/2.7.3/libexec/etc/hadoop/hdfs-site.xml add::
+
+
+    <configuration>
+     <property>
+      <name>dfs.replication</name>
+      <value></value>
+     </property>
+    </configuration>
+    
+To simplify life edit a ~/.base_profile and add the following commands. By default ~/.bash_profile might not exist::
+
+
+    alias hstart=<"/usr/local/Cellar/hadoop/2.7.3/sbin/start-dfs.sh;/usr/local/Cellar/hadoop/2.6.0/sbin/start-yarn.sh">
+    alias hstop=<"/usr/local/Cellar/hadoop/2.7.3/sbin/stop-yarn.sh;/usr/local/Cellar/hadoop/2.6.0/sbin/stop-dfs.sh">
+    
+and source it:
+
+
+    source ~/.bash_profile
+    
+Before running Hadoop format HDFS::
+
+    hdfs namenode -format
+    
+STEP 4: To verify if SSH Localhost is working check for files ~/.ssh/id_rsa and the ~/.ssh/id_rsa.pub files. If they dont exist generate the keys using below command::
+
+
+    ssh-keygen -t rsa
+    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+
+    ssh localhost
+    exit
+
+STEP 5: Run Hadoop::
+
+    hstart
+
+
+and stop using::
+
+    hstop
+
+STEP 6: Access Hadoop web interface by connecting to::
+
+    Resource Manager: http://localhost:50070
+    JobTracker: http://localhost:8088/
+    Node Specific Info: http://localhost:8042/
+     
+     
+Command::
+
+    jps
+    
+    7379 DataNode
+    7459 SecondaryNameNode
+    7316 NameNode
+    7636 NodeManager
+    7562 ResourceManager
+    7676 Jps 
+ 
+    yarn // For resource management more information than the web interface.
+    mapred // Detailed information about jobs
+
+
+Installing spark
+=================
+
+ .. note:: 
+
+    Directions came from http://genomegeek.blogspot.com/2014/11/how-to-install-apache-spark-on-mac-os-x.html
+    
+       
+Install Java
+
+* Download Oracle Java SE Development Kit 7 or 8 at Oracle JDK downloads page.
+* Double click on .dmg file to start the installation
+* Open up the terminal.
+* Type java -version, should display the following 
+
+java version "1.7.0_71" 
+Java(TM) SE Runtime Environment (build 1.7.0_71-b14) 
+Java HotSpot(TM) 64-Bit Server VM (build 24.71-b01, mixed mode)  
+
+
+
+Set JAVA_HOME ::
+
+    export JAVA_HOME=$(/usr/libexec/java_home) 
+
+
+ 
+Install Homebrew ::
+  
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" 
+
+
+
+Install Scala ::
+
+    brew install scala 
+
+
+
+Set SCALA_HOME ::
+
+    export SCALA_HOME=/usr/local/bin/scala  
+    export PATH=$PATH:$SCALA_HOME/bin 
+
+
+.. warning:: 
+
+    Said to to this but did not work  
+    Download Spark from https://spark.apache.org/downloads.html  ::
+    
+        tar -xvzf spark-1.1.1.tar 
+        cd spark-1.1.1  
+
+
+
+
+
+
+Fire up the Spark 
+
+For the Scala shell:: 
+
+    ./bin/spark-shell 
+
+For the Python shell::
+ 
+    ./bin/pyspark 
+
+
+
+Run Examples 
+
+Calculate Pi: 
+
+./bin/run-example org.apache.spark.examples.SparkPi 
+
+MLlib Correlations example: 
+
+./bin/run-example org.apache.spark.examples.mllib.Correlations 
+
+MLlib Linear Regression example: 
+
+./bin/spark-submit 
+--class org.apache.spark.examples.mllib.LinearRegression 
+examples/target/scala-*/spark-*.jar data/mllib/sample_linear_regression_data.txt 
+
+
+Added to path:
+
+    export PATH=$PATH:py/Users/f4p/spark-2.1.0-bin-hadoop2.7/bin
+
+
+
+
+    
+    
+Install Spark
+==============
+
+.. note:: 
+
+    Steps for installing spark come frome the following website.  https://www.tutorialspoint.com/apache_spark/apache_spark_installation.htm
+
+To install spark I use the following commands::
+
+    wget http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz
+    tar -xvf spark-2.1.0-bin-hadoop2.7.tgz
+    mv spark-2.1.0-bin-hadoop2.7 spark
+    
+I then edit the .bashrc and add the following::
+
+    export PATH=$PATH:/home/hadoop/spark/bin
+
+I then do the following::
+
+    source ~/.bashrc
+    
+To run spark I do the following command::
+
+    spark-shell
+    
+The output is as follows::
+
+    [hadoop@localhost bin]$ spark-shell
+    Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+    Setting default log level to "WARN".
+    To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+    17/02/19 20:08:14 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+    17/02/19 20:08:14 WARN Utils: Your hostname, localhost.localdomain resolves to a loopback address: 127.0.0.1; using 172.16.84.129 instead (on interface ens33)
+    17/02/19 20:08:14 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+    17/02/19 20:08:23 WARN ObjectStore: Version information not found in metastore. hive.metastore.schema.verification is not enabled so recording the schema version 1.2.0
+    17/02/19 20:08:23 WARN ObjectStore: Failed to get database default, returning NoSuchObjectException
+    17/02/19 20:08:24 WARN ObjectStore: Failed to get database global_temp, returning NoSuchObjectException
+    Spark context Web UI available at http://172.16.84.129:4040
+    Spark context available as 'sc' (master = local[*], app id = local-1487552895739).
+    Spark session available as 'spark'.
+    Welcome to
+          ____              __
+         / __/__  ___ _____/ /__
+        _\ \/ _ \/ _ `/ __/  '_/
+       /___/ .__/\_,_/_/ /_/\_\   version 2.1.0
+          /_/
+    
+    Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_111)
+    Type in expressions to have them evaluated.
+    Type :help for more information.  
+
+
+
+The website for spark can be found at http://localhost:8080
+
+.. figure:: _static/sparkwebpage.png
+    
+
+Testing Spark
+=============
+
+To test spark I first create the file input.txt::
+
+    people are not as beautiful as they look, 
+    as they walk or as they talk.
+    they are only as beautiful  as they love, 
+    as they care as they share.
+    
+
+Then I run spark-shell.  Then I creat an Resilient Distributed Datasets (RDD) using the command::
+
+    val inputfile =sc.textFile("input.txt")
+
+Then I split the words by a space and then give each word 1 point and then command all of the common words to reducedByKey and add each associated pair.  All of this in just one command  :: 
+
+    val counts = inputfile.flatMap(line => line.split(" ")).map(word => (word, 1)).reduceByKey(_+_);
+    
+Then applying the action and save the output ::
+
+    counts.saveAsTextFile("output")
+    
+Then you can check the output and view it which shows the following unger part-0000 of the file output vi part-00000::
+
+    (talk.,1)
+    (are,2)
+    (not,1)
+    (people,1)
+    (share.,1)
+    (or,1)
+    (only,1)
+    (as,8)
+    (,1)
+    (care,1)
+    (they,7)
+    (beautiful,2)
+    (walk,1)
+    (love,,1)
+    (look,,1)   
+
+
+
+    
+
+
+Useful Spark Commands
+=====================
+
+.. note::  This information was taken from website https://www.tutorialspoint.com/apache_spark/apache_spark_core_programming.htm
+
+Transformation and Meaning::
+
+    map(func)
+    filter(func)
+    flatMap(func)
+    mapPartitions(func)
+    mapPartitionsWithIndex(func)
+    sample(withReplacement,fraction,seed)
+    union(otherDatatset)
+    intersection(otherDataset)
+    distinct([numTasks])
+    groupByKey([numTaks])
+    reducedByKey(func,[numTasks])
+    aggregatedByKey(zeroValue)(seqOp,combOp,[numTasks])
+    sortByKey([ascending],[numTasks])
+    join(otherDataset,[numTasks])
+    cogroup(otherDataset,[numTasks])
+    cartesian(otherDataset)
+    pipe(command,[envVars])
+    coalesce(numPartitions)
+    rapartition(numPartitions)
+    repartitionAndSortWithinPartitions(partitioner)
+    
+Actions::
+    
+    reduce(func)
+    collect()
+    count()
+    first()
+    taken(n)
+    takeSample(withReplacement,num,[seed])
+    takeOrdered(n,[ordering])
+    saveAsTestFile(path)
+    saveAsSequenceFile(path)(Java and Scala)
+    saveAsObjectFile(path)(Java and Scala)
+    countByKey()
+    foreach(func)
+    
+
+ 
+    
+Useful HDFS commands
+=====================
+
+Here is a list of usefull commands taken from website:  https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html::
+
+    bin/hadoop fs <args>
+    hadoop fs -appendToFile <localsrc> ... <dst>
+    hadoop fs -cat [-ignoreCrc] URI [URI ...]
+    hadoop fs -copyFromLocal <localsrc> URI
+    hadoop fs -copyToLocal [-ignorecrc] [-crc] URI <localdst>
+    hadoop fs -find <path> ... <expression> ...
+    hadoop fs -ls [-C] [-d] [-h] [-q] [-R] [-t] [-S] [-r] [-u] <args>
+    hadoop fs -mkdir [-p] <paths>
+    hadoop fs -tail [-f] URI

@@ -1,0 +1,751 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 8 Spark Outlier detector &#8212; Data Science 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Week 7 Mahout" href="week7mahout.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-8-spark-outlier-detector">
+<h1>Week 8 Spark Outlier detector<a class="headerlink" href="#week-8-spark-outlier-detector" title="Permalink to this headline">¶</a></h1>
+<p>by Josh Peterson</p>
+<div class="section" id="installing-centos-and-vmfusion">
+<h2>Installing CentOS and VMFusion<a class="headerlink" href="#installing-centos-and-vmfusion" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Installed CentOS7 64-bit (minimal install) with networking on, date and time set, and kdump disability</p>
+</li>
+<li><p class="first">I then set a root password and also created a user name.</p>
+</li>
+<li><p class="first">Because I am using just the minimal install there was no user interface so I decided to interact with CentOS7 through ssh from my mac.  I like iterm better on mac then its original terminal so I used that for ssh into the machine.  The first step was to find my ip address using command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ip</span> <span class="n">addr</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>This is used to determine my ip address was <em>172.16.84.129</em>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="mf">172.16</span><span class="o">.</span><span class="mf">84.129</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first">Once I was able to ssh to the CentOS7 virtual machine I installed the OS updates doing:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span>
+<span class="n">yum</span> <span class="n">update</span>
+<span class="n">yum</span> <span class="n">install</span> <span class="n">wget</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+<div class="section" id="installing-java">
+<h2>Installing Java<a class="headerlink" href="#installing-java" title="Permalink to this headline">¶</a></h2>
+<p>I installed java by doing the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span>
+<span class="n">wget</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">cookies</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">check</span><span class="o">-</span><span class="n">certificate</span> <span class="o">--</span><span class="n">header</span> <span class="s2">&quot;Cookie: gpw_e24=http%3A</span><span class="si">%2F%2F</span><span class="s2">www.oracle.com</span><span class="si">%2F</span><span class="s2">; oraclelicense=accept-securebackup-cookie&quot;</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">oracle</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">otn</span><span class="o">-</span><span class="n">pub</span><span class="o">/</span><span class="n">java</span><span class="o">/</span><span class="n">jdk</span><span class="o">/</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">b14</span><span class="o">/</span><span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">tar</span> <span class="n">xzf</span> <span class="n">jdk</span><span class="o">-</span><span class="mi">8</span><span class="n">u111</span><span class="o">-</span><span class="n">linux</span><span class="o">-</span><span class="n">x64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">chown</span> <span class="o">-</span><span class="n">R</span> <span class="n">root</span><span class="p">:</span><span class="n">root</span> <span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span>
+</pre></div>
+</div>
+<p>I then used alternative to install java doing the following: (Alternative allows for softlinks to the desired location of the executable so as different version of java are released they can be installed and then alternatives used to link to a new one without having to uninstall the old.  This allows for the user to also test the new release and easily go back to the previous one if problems occur):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="o">.</span><span class="mi">111</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="n">java</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">java</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">config</span> <span class="n">java</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="n">install</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span> <span class="mi">2</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">jar</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">jar</span>
+<span class="n">alternatives</span> <span class="o">--</span><span class="nb">set</span> <span class="n">javac</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">jdk1</span><span class="o">.</span><span class="mf">8.0</span><span class="n">_111</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">javac</span>
+</pre></div>
+</div>
+<p>The next step is to create the Hadoop user with commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">useradd</span> <span class="n">hadoop</span>
+<span class="n">passwd</span> <span class="n">hadoop</span>
+</pre></div>
+</div>
+<p>To allow me the ability for password-less login in using ssh-keygen I do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span> <span class="n">hadoop</span>
+<span class="n">ssh</span><span class="o">-</span><span class="n">keygen</span> <span class="o">-</span><span class="n">t</span> <span class="n">rsa</span>
+<span class="n">cat</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span> <span class="o">&gt;&gt;</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+<span class="n">chmod</span> <span class="mi">0600</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">authorized_keys</span>
+</pre></div>
+</div>
+<p>Once I have established the new user I need to add some environment variables before installing Hadoop.  These are created by modifying the .bashrc file for Hadoop.  This is accomplished by adding the following to the .bashrc:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export JAVA_HOME=/opt/jdk1.8.0_111
+export JRE_HOME=/opt/jdk1.8.0_111/jre
+export PATH=$PATH:$JAVA_HOME/bin
+</pre></div>
+</div>
+<p>I then source the .bashrc to restart it so I do not need to log out and log back in to get access to it
+To edit the .bashrc I like to use vi instead of nano.  I also use ultraedit for mac to edit longer files through ssh instead</p>
+</div>
+<div class="section" id="install-scala">
+<h2>Install Scala<a class="headerlink" href="#install-scala" title="Permalink to this headline">¶</a></h2>
+<p>Scala is needed for installing spark.  The commands for installing scala is:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~</span>
+<span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">downloads</span><span class="o">.</span><span class="n">lightbend</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">scala</span><span class="o">/</span><span class="mf">2.11</span><span class="o">.</span><span class="mi">8</span><span class="o">/</span><span class="n">scala</span><span class="o">-</span><span class="mf">2.11</span><span class="o">.</span><span class="mf">8.</span><span class="n">rpm</span>
+<span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">scala</span><span class="o">-</span><span class="mf">2.11</span><span class="o">.</span><span class="mf">8.</span><span class="n">rpm</span>
+<span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">openssl</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">These directions for installing scala come from website <a class="reference external" href="https://www.vultr.com/docs/how-to-install-scala-on-centos-7">https://www.vultr.com/docs/how-to-install-scala-on-centos-7</a></p>
+</div>
+<p>When installing scala the following output is seen:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>[root@localhost hadoop]#     sudo yum install scala-2.11.8.rpm
+Loaded plugins: fastestmirror
+Examining scala-2.11.8.rpm: scala-2.11.8-0.noarch
+Marking scala-2.11.8.rpm to be installed
+Resolving Dependencies
+--&gt; Running transaction check
+---&gt; Package scala.noarch 0:2.11.8-0 will be installed
+--&gt; Finished Dependency Resolution
+
+Dependencies Resolved
+
+=====================================================================================================
+ Package             Arch                 Version                  Repository                   Size
+=====================================================================================================
+Installing:
+ scala               noarch               2.11.8-0                 /scala-2.11.8               471 M
+
+Transaction Summary
+=====================================================================================================
+Install  1 Package
+
+Total size: 471 M
+Installed size: 471 M
+Is this ok [y/d/N]: y
+Downloading packages:
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : scala-2.11.8-0.noarch                                                             1/1
+  Verifying  : scala-2.11.8-0.noarch                                                             1/1
+
+Installed:
+  scala.noarch 0:2.11.8-0
+
+Complete!
+</pre></div>
+</div>
+<p>Scala is installed in the bin directory</p>
+</div>
+<div class="section" id="install-spark">
+<h2>Install Spark<a class="headerlink" href="#install-spark" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Steps for installing spark come frome the following website.  <a class="reference external" href="https://www.tutorialspoint.com/apache_spark/apache_spark_installation.htm">https://www.tutorialspoint.com/apache_spark/apache_spark_installation.htm</a></p>
+</div>
+<p>To install spark I use the following commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">d3kbcqa49mib13</span><span class="o">.</span><span class="n">cloudfront</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">spark</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="nb">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="o">.</span><span class="mf">7.</span><span class="n">tgz</span>
+<span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">spark</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="nb">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="o">.</span><span class="mf">7.</span><span class="n">tgz</span>
+<span class="n">mv</span> <span class="n">spark</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="nb">bin</span><span class="o">-</span><span class="n">hadoop2</span><span class="o">.</span><span class="mi">7</span> <span class="n">spark</span>
+</pre></div>
+</div>
+<p>I then edit the .bashrc and add the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>export PATH=$PATH:/home/hadoop/spark/bin
+</pre></div>
+</div>
+<p>I then do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">source</span> <span class="o">~/.</span><span class="n">bashrc</span>
+</pre></div>
+</div>
+<p>To run spark I do the following command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">-</span><span class="n">shell</span>
+</pre></div>
+</div>
+<p>The output is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>Using Spark&#39;s default log4j profile: org/apache/spark/log4j-defaults.properties
+Setting default log level to &quot;WARN&quot;.
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+17/02/26 10:09:19 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+17/02/26 10:09:20 WARN Utils: Your hostname, localhost.localdomain resolves to a loopback address: 127.0.0.1; using 172.16.84.129 instead (on interface ens33)
+17/02/26 10:09:20 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+17/02/26 10:09:27 WARN ObjectStore: Failed to get database global_temp, returning NoSuchObjectException
+Spark context Web UI available at http://172.16.84.129:4040
+Spark context available as &#39;sc&#39; (master = local[*], app id = local-1488121761230).
+Spark session available as &#39;spark&#39;.
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  &#39;_/
+   /___/ .__/\_,_/_/ /_/\_\   version 2.1.0
+      /_/
+
+Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_111)
+Type in expressions to have them evaluated.
+Type :help for more information.
+</pre></div>
+</div>
+<p>The website for spark can be found at <a class="reference external" href="http://172.16.84.129:4040">http://172.16.84.129:4040</a></p>
+</div>
+<div class="section" id="anomaly-detection-with-spark">
+<h2>Anomaly Detection with Spark<a class="headerlink" href="#anomaly-detection-with-spark" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="background">
+<h3>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Anomaly detection is finding the unknowns unknowns</li>
+<li>Find fraud, detect network attacks, or discover problems in server or sensor equipped machinery</li>
+<li>K-means clustering is best-known unsupervised learning</li>
+</ul>
+</div>
+<div class="section" id="steps">
+<h3>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h3>
+<p>In this project I am working through chapter 5 of the book &#8220;Advanced Analytics with Spark&#8221;I first get and unzip the data needed for chapter 5:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">kdd</span><span class="o">.</span><span class="n">ics</span><span class="o">.</span><span class="n">uci</span><span class="o">.</span><span class="n">edu</span><span class="o">/</span><span class="n">databases</span><span class="o">/</span><span class="n">kddcup99</span><span class="o">/</span><span class="n">kddcup</span><span class="o">.</span><span class="n">data_10_percent</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">gunzip</span> <span class="n">kddcup</span><span class="o">.</span><span class="n">data_10_percent</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">spark</span><span class="o">-</span><span class="n">shell</span>
+</pre></div>
+</div>
+<p>I then look at all of the distinct labels to see which is the most common one for which in this data set it is smurf followed by neptune</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="c1">// import the data</span>
+<span class="k">val</span> <span class="n">rawData</span> <span class="k">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="o">(</span><span class="s">&quot;kddcup.data_10_percent&quot;</span><span class="o">)</span>
+<span class="c1">// count the values and sort by largest to smallest</span>
+<span class="n">rawData</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">split</span><span class="o">(</span><span class="sc">&#39;,&#39;</span><span class="o">).</span><span class="n">last</span><span class="o">).</span><span class="n">countByValue</span><span class="o">().</span><span class="n">toSeq</span><span class="o">.</span> <span class="n">sortBy</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">_2</span><span class="o">).</span><span class="n">reverse</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">println</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>Doing this I get the following output:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">Stage</span> <span class="mi">0</span><span class="p">:</span><span class="o">&gt;</span>                                       <span class="p">[</span><span class="n">Stage</span> <span class="mi">0</span><span class="p">:</span><span class="o">&gt;</span>                                       <span class="p">[</span><span class="n">Stage</span> <span class="mi">0</span><span class="p">:</span><span class="o">&gt;</span>                                       <span class="p">[</span><span class="n">Stage</span> <span class="mi">0</span><span class="p">:</span><span class="o">===================&gt;</span>                    <span class="p">[</span><span class="n">Stage</span> <span class="mi">0</span><span class="p">:</span><span class="o">=======================================&gt;</span>                                 <span class="p">(</span><span class="n">smurf</span><span class="o">.</span><span class="p">,</span><span class="mi">280790</span><span class="p">)</span>
+<span class="p">(</span><span class="n">neptune</span><span class="o">.</span><span class="p">,</span><span class="mi">107201</span><span class="p">)</span>
+<span class="p">(</span><span class="n">normal</span><span class="o">.</span><span class="p">,</span><span class="mi">97278</span><span class="p">)</span>
+<span class="p">(</span><span class="n">back</span><span class="o">.</span><span class="p">,</span><span class="mi">2203</span><span class="p">)</span>
+<span class="p">(</span><span class="n">satan</span><span class="o">.</span><span class="p">,</span><span class="mi">1589</span><span class="p">)</span>
+<span class="p">(</span><span class="n">ipsweep</span><span class="o">.</span><span class="p">,</span><span class="mi">1247</span><span class="p">)</span>
+<span class="p">(</span><span class="n">portsweep</span><span class="o">.</span><span class="p">,</span><span class="mi">1040</span><span class="p">)</span>
+<span class="p">(</span><span class="n">warezclient</span><span class="o">.</span><span class="p">,</span><span class="mi">1020</span><span class="p">)</span>
+<span class="p">(</span><span class="n">teardrop</span><span class="o">.</span><span class="p">,</span><span class="mi">979</span><span class="p">)</span>
+<span class="p">(</span><span class="n">pod</span><span class="o">.</span><span class="p">,</span><span class="mi">264</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nmap</span><span class="o">.</span><span class="p">,</span><span class="mi">231</span><span class="p">)</span>
+<span class="p">(</span><span class="n">guess_passwd</span><span class="o">.</span><span class="p">,</span><span class="mi">53</span><span class="p">)</span>
+<span class="p">(</span><span class="n">buffer_overflow</span><span class="o">.</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="p">(</span><span class="n">land</span><span class="o">.</span><span class="p">,</span><span class="mi">21</span><span class="p">)</span>
+<span class="p">(</span><span class="n">warezmaster</span><span class="o">.</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="p">(</span><span class="n">imap</span><span class="o">.</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span>
+<span class="p">(</span><span class="n">rootkit</span><span class="o">.</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="n">loadmodule</span><span class="o">.</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span>
+<span class="p">(</span><span class="n">ftp_write</span><span class="o">.</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+<span class="p">(</span><span class="n">multihop</span><span class="o">.</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="p">(</span><span class="n">phf</span><span class="o">.</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="n">perl</span><span class="o">.</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">spy</span><span class="o">.</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>K-means requires only numerical data so the first, second and last line are removed</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">import</span> <span class="nn">org.apache.spark.mllib.linalg._</span>
+
+<span class="c1">// Removing 1,3 and last line and splitting by comma (to Buffer creates a mutable list Buffer)</span>
+<span class="k">val</span> <span class="n">labelsAndData</span> <span class="k">=</span> <span class="n">rawData</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="n">line</span><span class="k">=&gt;</span>
+            <span class="k">val</span> <span class="n">buffer</span> <span class="k">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="o">(</span><span class="sc">&#39;,&#39;</span><span class="o">).</span><span class="n">toBuffer</span>
+            <span class="n">buffer</span><span class="o">.</span><span class="n">remove</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">)</span>
+            <span class="k">val</span> <span class="n">label</span> <span class="k">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">remove</span><span class="o">(</span><span class="n">buffer</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="o">)</span>
+            <span class="k">val</span> <span class="n">vector</span> <span class="k">=</span> <span class="nc">Vectors</span><span class="o">.</span><span class="n">dense</span><span class="o">(</span><span class="n">buffer</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toDouble</span><span class="o">).</span><span class="n">toArray</span><span class="o">)</span>
+            <span class="o">(</span><span class="n">label</span><span class="o">,</span> <span class="n">vector</span><span class="o">)</span>
+            <span class="o">}</span>
+<span class="c1">// Cashing the data</span>
+
+<span class="k">val</span> <span class="n">data</span> <span class="k">=</span> <span class="n">labelsAndData</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">cache</span><span class="o">()</span>
+
+<span class="c1">// Importing the KMeans implementation of the clustering algorithm and then running it on the previously defined data</span>
+<span class="k">import</span> <span class="nn">org.apache.spark.mllib.clustering._</span>
+
+<span class="k">val</span> <span class="n">kmeans</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">KMeans</span><span class="o">()</span>
+
+<span class="k">val</span> <span class="n">model</span> <span class="k">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="n">data</span><span class="o">)</span>
+<span class="c1">// Printing out the results</span>
+<span class="n">model</span><span class="o">.</span><span class="n">clusterCenters</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">println</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>I then get the following output:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="mf">47.979395571029514</span><span class="p">,</span><span class="mf">1622.078830816566</span><span class="p">,</span><span class="mf">868.5341828266062</span><span class="p">,</span><span class="mf">4.453261001578883E-5</span><span class="p">,</span><span class="mf">0.006432937937735314</span><span class="p">,</span><span class="mf">1.4169466823205539E-5</span><span class="p">,</span><span class="mf">0.03451682118132869</span><span class="p">,</span><span class="mf">1.5181571596291647E-4</span><span class="p">,</span><span class="mf">0.14824703453301485</span><span class="p">,</span><span class="mf">0.01021213716043885</span><span class="p">,</span><span class="mf">1.1133152503947209E-4</span><span class="p">,</span><span class="mf">3.6435771831099954E-5</span><span class="p">,</span><span class="mf">0.011351767134933808</span><span class="p">,</span><span class="mf">0.0010829521072021374</span><span class="p">,</span><span class="mf">1.0930731549329986E-4</span><span class="p">,</span><span class="mf">0.0010080563539937655</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0013865835391279706</span><span class="p">,</span><span class="mf">332.2862475203433</span><span class="p">,</span><span class="mf">292.9071434354884</span><span class="p">,</span><span class="mf">0.1766854175944295</span><span class="p">,</span><span class="mf">0.1766078094004292</span><span class="p">,</span><span class="mf">0.05743309987449898</span><span class="p">,</span><span class="mf">0.05771839196793656</span><span class="p">,</span><span class="mf">0.7915488441762849</span><span class="p">,</span><span class="mf">0.020981640419416685</span><span class="p">,</span><span class="mf">0.028996862475203982</span><span class="p">,</span><span class="mf">232.4707319541719</span><span class="p">,</span><span class="mf">188.6660459090725</span><span class="p">,</span><span class="mf">0.7537812031901855</span><span class="p">,</span><span class="mf">0.030905611108874582</span><span class="p">,</span><span class="mf">0.6019355289259479</span><span class="p">,</span><span class="mf">0.0066835148374550625</span><span class="p">,</span><span class="mf">0.17675395732965873</span><span class="p">,</span><span class="mf">0.17644162179668482</span><span class="p">,</span><span class="mf">0.05811762681672762</span><span class="p">,</span><span class="mf">0.05741111695882669</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">6.9337564E8</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">57.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">0.79</span><span class="p">,</span><span class="mf">0.67</span><span class="p">,</span><span class="mf">0.21</span><span class="p">,</span><span class="mf">0.33</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.39</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">255.0</span><span class="p">,</span><span class="mf">3.0</span><span class="p">,</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.09</span><span class="p">,</span><span class="mf">0.22</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.18</span><span class="p">,</span><span class="mf">0.67</span><span class="p">,</span><span class="mf">0.05</span><span class="p">,</span><span class="mf">0.33</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Two vectors are printed which means K-means was fitted for two clusters.  However for this complex data higher k is needed</p>
+<p>Adding a label to the data makes it easier to understand the results</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">clusterLabelCount</span> <span class="k">=</span> <span class="n">labelsAndData</span><span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">label</span><span class="o">,</span><span class="n">datum</span><span class="o">)</span> <span class="k">=&gt;</span>
+  <span class="k">val</span> <span class="n">cluster</span> <span class="k">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="o">(</span><span class="n">datum</span><span class="o">)</span>
+  <span class="o">(</span><span class="n">cluster</span><span class="o">,</span> <span class="n">label</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">countByValue</span>
+
+
+
+<span class="n">clusterLabelCount</span><span class="o">.</span><span class="n">toSeq</span><span class="o">.</span><span class="n">sorted</span><span class="o">.</span><span class="n">foreach</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="o">((</span><span class="n">cluster</span><span class="o">,</span><span class="n">label</span><span class="o">),</span><span class="n">count</span><span class="o">)</span> <span class="k">=&gt;</span>
+      <span class="n">println</span><span class="o">(</span><span class="s">f&quot;</span><span class="si">$cluster</span><span class="s">%1s</span><span class="si">$label</span><span class="s">%18s</span><span class="si">$count</span><span class="s">%8s&quot;</span><span class="o">)</span>
+      <span class="o">}</span>
+</pre></div>
+</div>
+<p>For which I get the following output.  It should be noted that only one value was in cluster 1 (portsweep) which really is not telling us much:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="mi">0</span>             <span class="n">back</span><span class="o">.</span>    <span class="mi">2203</span>
+<span class="mi">0</span>  <span class="n">buffer_overflow</span><span class="o">.</span>      <span class="mi">30</span>
+<span class="mi">0</span>        <span class="n">ftp_write</span><span class="o">.</span>       <span class="mi">8</span>
+<span class="mi">0</span>     <span class="n">guess_passwd</span><span class="o">.</span>      <span class="mi">53</span>
+<span class="mi">0</span>             <span class="n">imap</span><span class="o">.</span>      <span class="mi">12</span>
+<span class="mi">0</span>          <span class="n">ipsweep</span><span class="o">.</span>    <span class="mi">1247</span>
+<span class="mi">0</span>             <span class="n">land</span><span class="o">.</span>      <span class="mi">21</span>
+<span class="mi">0</span>       <span class="n">loadmodule</span><span class="o">.</span>       <span class="mi">9</span>
+<span class="mi">0</span>         <span class="n">multihop</span><span class="o">.</span>       <span class="mi">7</span>
+<span class="mi">0</span>          <span class="n">neptune</span><span class="o">.</span>  <span class="mi">107201</span>
+<span class="mi">0</span>             <span class="n">nmap</span><span class="o">.</span>     <span class="mi">231</span>
+<span class="mi">0</span>           <span class="n">normal</span><span class="o">.</span>   <span class="mi">97278</span>
+<span class="mi">0</span>             <span class="n">perl</span><span class="o">.</span>       <span class="mi">3</span>
+<span class="mi">0</span>              <span class="n">phf</span><span class="o">.</span>       <span class="mi">4</span>
+<span class="mi">0</span>              <span class="n">pod</span><span class="o">.</span>     <span class="mi">264</span>
+<span class="mi">0</span>        <span class="n">portsweep</span><span class="o">.</span>    <span class="mi">1039</span>
+<span class="mi">0</span>          <span class="n">rootkit</span><span class="o">.</span>      <span class="mi">10</span>
+<span class="mi">0</span>            <span class="n">satan</span><span class="o">.</span>    <span class="mi">1589</span>
+<span class="mi">0</span>            <span class="n">smurf</span><span class="o">.</span>  <span class="mi">280790</span>
+<span class="mi">0</span>              <span class="n">spy</span><span class="o">.</span>       <span class="mi">2</span>
+<span class="mi">0</span>         <span class="n">teardrop</span><span class="o">.</span>     <span class="mi">979</span>
+<span class="mi">0</span>      <span class="n">warezclient</span><span class="o">.</span>    <span class="mi">1020</span>
+<span class="mi">0</span>      <span class="n">warezmaster</span><span class="o">.</span>      <span class="mi">20</span>
+<span class="mi">1</span>        <span class="n">portsweep</span><span class="o">.</span>       <span class="mi">1</span>
+</pre></div>
+</div>
+<p>To determine the best k value to use we define a Euclidean distance function and return the distance from a data point to the cluster&#8217;s centroid.</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span> <span class="c1">//  Euclidean distance function</span>
+
+ <span class="k">def</span> <span class="n">distance</span><span class="o">(</span><span class="n">a</span><span class="k">:</span> <span class="kt">Vector</span><span class="o">,</span> <span class="n">b</span><span class="k">:</span> <span class="kt">Vector</span><span class="o">)</span> <span class="k">=</span>
+   <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="n">toArray</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">b</span><span class="o">.</span><span class="n">toArray</span><span class="o">).</span>
+   <span class="n">map</span><span class="o">(</span><span class="n">p</span> <span class="k">=&gt;</span> <span class="n">p</span><span class="o">.</span><span class="n">_1</span> <span class="o">-</span> <span class="n">p</span><span class="o">.</span><span class="n">_2</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">d</span> <span class="k">=&gt;</span> <span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="o">).</span><span class="n">sum</span><span class="o">)</span>
+
+
+ <span class="k">def</span> <span class="n">distToCentroid</span><span class="o">(</span><span class="n">datum</span><span class="k">:</span> <span class="kt">Vector</span><span class="o">,</span> <span class="n">model</span><span class="k">:</span> <span class="kt">KMeansModel</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+       <span class="k">val</span> <span class="n">cluster</span> <span class="k">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="o">(</span><span class="n">datum</span><span class="o">)</span>
+       <span class="k">val</span> <span class="n">centroid</span> <span class="k">=</span> <span class="n">model</span><span class="o">.</span><span class="n">clusterCenters</span><span class="o">(</span><span class="n">cluster</span><span class="o">)</span>
+       <span class="n">distance</span><span class="o">(</span><span class="n">centroid</span><span class="o">,</span> <span class="n">datum</span><span class="o">)</span>
+       <span class="o">}</span>
+
+ <span class="c1">// This is a function that measures average distance to centroid and using this by looking at different k values</span>
+
+ <span class="k">import</span> <span class="nn">org.apache.spark.rdd._</span>
+
+<span class="k">def</span> <span class="n">clusteringScore</span><span class="o">(</span><span class="n">data</span><span class="k">:</span> <span class="kt">RDD</span><span class="o">[</span><span class="kt">Vector</span><span class="o">],</span> <span class="n">k</span><span class="k">:</span> <span class="kt">Int</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+   <span class="k">val</span> <span class="n">kmeans</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">KMeans</span><span class="o">()</span>
+   <span class="n">kmeans</span><span class="o">.</span><span class="n">setK</span><span class="o">(</span><span class="n">k</span><span class="o">)</span>
+   <span class="k">val</span> <span class="n">model</span> <span class="k">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">run</span><span class="o">(</span><span class="n">data</span><span class="o">)</span>
+   <span class="n">data</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">datum</span> <span class="k">=&gt;</span> <span class="n">distToCentroid</span><span class="o">(</span><span class="n">datum</span><span class="o">,</span> <span class="n">model</span><span class="o">)).</span><span class="n">mean</span><span class="o">()</span>
+   <span class="o">}</span>
+
+ <span class="o">(</span><span class="mi">5</span> <span class="n">to</span> <span class="mi">40</span> <span class="n">by</span> <span class="mi">5</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">k</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">clusteringScore</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="n">k</span><span class="o">))).</span>
+   <span class="n">foreach</span><span class="o">(</span><span class="n">println</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>I then get the following output which shoes the Euclidean distance decreases over time:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mf">1749.4955121516966</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">1619.362070190486</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mf">1635.5658226105024</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mf">1693.9299193264505</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mf">1600.714214532261</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mf">1592.929577587605</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mf">1243.1788321433953</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mf">1539.626375713087</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then I run in parallel with a decreased Epsilon:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="n">kmeans</span><span class="o">.</span><span class="n">setRuns</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+
+<span class="n">kmeans</span><span class="o">.</span><span class="n">setEpsilon</span><span class="o">(</span><span class="mf">1.0e-6</span><span class="o">)</span>
+<span class="c1">// Run for a different data set</span>
+<span class="o">(</span><span class="mi">30</span> <span class="n">to</span> <span class="mi">100</span> <span class="n">by</span> <span class="mi">10</span><span class="o">).</span><span class="n">par</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">k</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">clusteringScore</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="n">k</span><span class="o">))).</span>
+  <span class="n">toList</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">println</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>For this run I get the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mf">1575.7856869793948</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mf">1242.2277647532821</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mf">1002.2273883448219</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mf">1540.0415245328945</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">70</span><span class="p">,</span><span class="mf">1530.9731478562514</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="mf">1260.954770506731</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mf">1245.3337344823926</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mf">874.4907227080233</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>I can then export the data using the commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="n">sample</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">datum</span> <span class="o">=&gt;</span>
+<span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">datum</span><span class="o">.</span><span class="n">toArray</span><span class="o">.</span><span class="n">mkString</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">false</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+
+<span class="n">sample</span><span class="o">.</span><span class="n">saveAsTextFile</span><span class="p">(</span><span class="s2">&quot;sample&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Standard scores can be calculated using the following code:</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">dataAsArray</span> <span class="k">=</span> <span class="n">data</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">toArray</span><span class="o">)</span>
+<span class="k">val</span> <span class="n">numCols</span> <span class="k">=</span> <span class="n">dataAsArray</span><span class="o">.</span><span class="n">first</span><span class="o">().</span><span class="n">length</span>
+<span class="k">val</span> <span class="n">n</span> <span class="k">=</span> <span class="n">dataAsArray</span><span class="o">.</span><span class="n">count</span><span class="o">()</span>
+<span class="k">val</span> <span class="n">sums</span> <span class="k">=</span> <span class="n">dataAsArray</span><span class="o">.</span><span class="n">reduce</span><span class="o">(</span>
+    <span class="o">(</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">b</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">t</span> <span class="k">=&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">_1</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">_2</span><span class="o">))</span>
+
+<span class="k">val</span> <span class="n">sumSquares</span> <span class="k">=</span> <span class="n">dataAsArray</span><span class="o">.</span><span class="n">fold</span><span class="o">(</span>
+    <span class="k">new</span> <span class="nc">Array</span><span class="o">[</span><span class="kt">Double</span><span class="o">](</span><span class="n">numCols</span><span class="o">)</span>
+<span class="o">)(</span>
+    <span class="o">(</span><span class="n">a</span><span class="o">,</span><span class="n">b</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">b</span><span class="o">).</span><span class="n">map</span><span class="o">(</span><span class="n">t</span> <span class="k">=&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">_1</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">_2</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">_2</span><span class="o">)</span>
+<span class="o">)</span>
+<span class="k">val</span> <span class="n">stdevs</span> <span class="k">=</span> <span class="n">sumSquares</span><span class="o">.</span><span class="n">zip</span><span class="o">(</span><span class="n">sums</span><span class="o">).</span><span class="n">map</span> <span class="o">{</span>
+    <span class="k">case</span><span class="o">(</span><span class="n">sumSq</span><span class="o">,</span><span class="n">sum</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="o">(</span><span class="n">n</span><span class="o">*</span><span class="n">sumSq</span> <span class="o">-</span> <span class="n">sum</span><span class="o">*</span><span class="n">sum</span><span class="o">)/</span><span class="n">n</span>
+    <span class="o">}</span>
+<span class="k">val</span> <span class="n">means</span> <span class="k">=</span> <span class="n">sums</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span> <span class="o">/</span> <span class="n">n</span><span class="o">)</span>
+
+
+<span class="k">def</span> <span class="n">normalize</span><span class="o">(</span><span class="n">datum</span><span class="k">:</span> <span class="kt">Vector</span><span class="o">)</span> <span class="k">=</span> <span class="o">{</span>
+    <span class="k">val</span> <span class="n">normalizedArray</span> <span class="k">=</span> <span class="o">(</span><span class="n">datum</span><span class="o">.</span><span class="n">toArray</span><span class="o">,</span> <span class="n">means</span><span class="o">,</span> <span class="n">stdevs</span><span class="o">).</span><span class="n">zipped</span><span class="o">.</span><span class="n">map</span><span class="o">(</span>
+        <span class="o">(</span><span class="n">value</span><span class="o">,</span> <span class="n">mean</span><span class="o">,</span> <span class="n">stdev</span><span class="o">)</span> <span class="k">=&gt;</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">stdev</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">(</span><span class="n">value</span> <span class="o">-</span> <span class="n">mean</span><span class="o">)</span> <span class="k">else</span> <span class="o">(</span><span class="n">value</span> <span class="o">-</span> <span class="n">mean</span><span class="o">)</span> <span class="o">/</span> <span class="n">stdev</span>
+<span class="o">)</span>
+<span class="nc">Vectors</span><span class="o">.</span><span class="n">dense</span><span class="o">(</span><span class="n">normalizedArray</span><span class="o">)</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The same test can then be ran with the normalized data to look at the effect of higher range of k</p>
+<div class="highlight-scala"><div class="highlight"><pre><span></span><span class="k">val</span> <span class="n">normalizedData</span> <span class="k">=</span> <span class="n">data</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">normalize</span><span class="o">).</span><span class="n">cache</span><span class="o">()</span>
+<span class="o">(</span><span class="mi">60</span> <span class="n">to</span> <span class="mi">120</span> <span class="n">by</span> <span class="mi">10</span><span class="o">).</span><span class="n">par</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">k</span> <span class="k">=&gt;</span>
+    <span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="n">clusteringScore</span><span class="o">(</span><span class="n">normalizedData</span><span class="o">,</span> <span class="n">k</span><span class="o">))).</span><span class="n">toList</span><span class="o">.</span><span class="n">foreach</span><span class="o">(</span><span class="n">println</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>The results are as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mf">0.004118646622714536</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">70</span><span class="p">,</span><span class="mf">0.003740116506195756</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="mf">0.0035581265582007955</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="mf">0.003482091757247882</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mf">0.0032731711581223126</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">110</span><span class="p">,</span><span class="mf">0.003558617998430712</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">120</span><span class="p">,</span><span class="mf">0.003299601197658152</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For the larger data set I do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">kdd</span><span class="o">.</span><span class="n">ics</span><span class="o">.</span><span class="n">uci</span><span class="o">.</span><span class="n">edu</span><span class="o">/</span><span class="n">databases</span><span class="o">/</span><span class="n">kddcup99</span><span class="o">/</span><span class="n">kddcup</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">gunzip</span> <span class="n">kddcup</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+<p>Then I run:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spark</span><span class="o">-</span><span class="n">shell</span>
+</pre></div>
+</div>
+<p>The final list of commands for the large data set are:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span> <span class="n">val</span> <span class="n">rawData</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="p">(</span><span class="s2">&quot;kddcup.data&quot;</span><span class="p">)</span>
+
+ <span class="n">rawData</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="p">)</span><span class="o">.</span><span class="n">countByValue</span><span class="p">()</span><span class="o">.</span><span class="n">toSeq</span><span class="o">.</span> <span class="n">sortBy</span><span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">_2</span><span class="p">)</span><span class="o">.</span><span class="n">reverse</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="n">println</span><span class="p">)</span>
+
+
+ <span class="kn">import</span> <span class="nn">org.apache.spark.mllib.linalg._</span>
+
+ <span class="o">//</span> <span class="n">Removing</span> <span class="mi">1</span><span class="p">,</span><span class="mi">3</span> <span class="ow">and</span> <span class="n">last</span> <span class="n">line</span> <span class="ow">and</span> <span class="n">splitting</span> <span class="n">by</span> <span class="n">comma</span> <span class="p">(</span><span class="n">to</span> <span class="n">Buffer</span> <span class="n">creates</span> <span class="n">a</span> <span class="n">mutable</span> <span class="nb">list</span> <span class="n">Buffer</span><span class="p">)</span>
+ <span class="n">val</span> <span class="n">labelsAndData</span> <span class="o">=</span> <span class="n">rawData</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">line</span><span class="o">=&gt;</span>
+             <span class="n">val</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">toBuffer</span>
+             <span class="n">buffer</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+             <span class="n">val</span> <span class="n">label</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">buffer</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+             <span class="n">val</span> <span class="n">vector</span> <span class="o">=</span> <span class="n">Vectors</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">buffer</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_</span><span class="o">.</span><span class="n">toDouble</span><span class="p">)</span><span class="o">.</span><span class="n">toArray</span><span class="p">)</span>
+             <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">vector</span><span class="p">)</span>
+             <span class="p">}</span>
+ <span class="o">//</span> <span class="n">Cashing</span> <span class="n">the</span> <span class="n">data</span>
+
+ <span class="n">val</span> <span class="n">data</span> <span class="o">=</span> <span class="n">labelsAndData</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">cache</span><span class="p">()</span>
+
+ <span class="o">//</span> <span class="n">Importing</span> <span class="n">the</span> <span class="n">KMeans</span> <span class="n">implementation</span> <span class="n">of</span> <span class="n">the</span> <span class="n">clustering</span> <span class="n">algorithm</span> <span class="ow">and</span> <span class="n">then</span> <span class="n">running</span> <span class="n">it</span> <span class="n">on</span> <span class="n">the</span> <span class="n">previously</span> <span class="n">defined</span> <span class="n">data</span>
+ <span class="kn">import</span> <span class="nn">org.apache.spark.mllib.clustering._</span>
+
+ <span class="n">val</span> <span class="n">kmeans</span> <span class="o">=</span> <span class="n">new</span> <span class="n">KMeans</span><span class="p">()</span>
+
+ <span class="n">val</span> <span class="n">model</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+ <span class="o">//</span> <span class="n">Printing</span> <span class="n">out</span> <span class="n">the</span> <span class="n">results</span>
+ <span class="n">model</span><span class="o">.</span><span class="n">clusterCenters</span><span class="o">.</span><span class="n">foreach</span><span class="p">(</span><span class="n">println</span><span class="p">)</span>
+
+
+ <span class="n">val</span> <span class="n">clusterLabelCount</span> <span class="o">=</span> <span class="n">labelsAndData</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">case</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span><span class="n">datum</span><span class="p">)</span> <span class="o">=&gt;</span>
+   <span class="n">val</span> <span class="n">cluster</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+   <span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+   <span class="p">}</span><span class="o">.</span><span class="n">countByValue</span>
+
+
+ <span class="n">clusterLabelCount</span><span class="o">.</span><span class="n">toSeq</span><span class="o">.</span><span class="n">sorted</span><span class="o">.</span><span class="n">foreach</span> <span class="p">{</span>
+       <span class="n">case</span> <span class="p">((</span><span class="n">cluster</span><span class="p">,</span><span class="n">label</span><span class="p">),</span><span class="n">count</span><span class="p">)</span> <span class="o">=&gt;</span>
+       <span class="n">println</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;$cluster</span><span class="si">%1s</span><span class="s2">$label</span><span class="si">%18s</span><span class="s2">$count</span><span class="si">%8s</span><span class="s2">&quot;</span><span class="p">)</span>
+       <span class="p">}</span>
+
+ <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Vector</span><span class="p">)</span> <span class="o">=</span>
+   <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">toArray</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">toArray</span><span class="p">)</span><span class="o">.</span>
+   <span class="nb">map</span><span class="p">(</span><span class="n">p</span> <span class="o">=&gt;</span> <span class="n">p</span><span class="o">.</span><span class="n">_1</span> <span class="o">-</span> <span class="n">p</span><span class="o">.</span><span class="n">_2</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">d</span> <span class="o">=&gt;</span> <span class="n">d</span><span class="o">*</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">)</span>
+
+
+ <span class="k">def</span> <span class="nf">distToCentroid</span><span class="p">(</span><span class="n">datum</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">KMeansModel</span><span class="p">)</span> <span class="o">=</span> <span class="p">{</span>
+       <span class="n">val</span> <span class="n">cluster</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+       <span class="n">val</span> <span class="n">centroid</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">clusterCenters</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+       <span class="n">distance</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">datum</span><span class="p">)</span>
+       <span class="p">}</span>
+
+ <span class="k">def</span> <span class="nf">distToCentroid</span><span class="p">(</span><span class="n">datum</span><span class="p">:</span> <span class="n">Vector</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">KMeansModel</span><span class="p">)</span> <span class="o">=</span> <span class="p">{</span>
+       <span class="n">val</span> <span class="n">cluster</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span>
+       <span class="n">val</span> <span class="n">centroid</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">clusterCenters</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+       <span class="n">distance</span><span class="p">(</span><span class="n">centroid</span><span class="p">,</span> <span class="n">datum</span><span class="p">)</span>
+       <span class="p">}</span>
+
+ <span class="kn">import</span> <span class="nn">org.apache.spark.rdd._</span>
+
+<span class="k">def</span> <span class="nf">clusteringScore</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">RDD</span><span class="p">[</span><span class="n">Vector</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="n">Int</span><span class="p">)</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="n">val</span> <span class="n">kmeans</span> <span class="o">=</span> <span class="n">new</span> <span class="n">KMeans</span><span class="p">()</span>
+   <span class="n">kmeans</span><span class="o">.</span><span class="n">setK</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+   <span class="n">val</span> <span class="n">model</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+   <span class="n">data</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">datum</span> <span class="o">=&gt;</span> <span class="n">distToCentroid</span><span class="p">(</span><span class="n">datum</span><span class="p">,</span> <span class="n">model</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+   <span class="p">}</span>
+
+ <span class="p">(</span><span class="mi">5</span> <span class="n">to</span> <span class="mi">40</span> <span class="n">by</span> <span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">k</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">clusteringScore</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">k</span><span class="p">)))</span><span class="o">.</span>
+   <span class="n">foreach</span><span class="p">(</span><span class="n">println</span><span class="p">)</span>
+
+
+ <span class="n">kmeans</span><span class="o">.</span><span class="n">setRuns</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+ <span class="n">kmeans</span><span class="o">.</span><span class="n">setEpsilon</span><span class="p">(</span><span class="mf">1.0e-6</span><span class="p">)</span>
+
+ <span class="n">val</span> <span class="n">sample</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">datum</span> <span class="o">=&gt;</span>
+ <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">datum</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">datum</span><span class="o">.</span><span class="n">toArray</span><span class="o">.</span><span class="n">mkString</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+ <span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">false</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>
+
+ <span class="n">sample</span><span class="o">.</span><span class="n">saveAsTextFile</span><span class="p">(</span><span class="s2">&quot;sample_large&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Some of the outputs for the large data file include:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">smurf</span><span class="o">.</span><span class="p">,</span><span class="mi">2807886</span><span class="p">)</span>
+<span class="p">(</span><span class="n">neptune</span><span class="o">.</span><span class="p">,</span><span class="mi">1072017</span><span class="p">)</span>
+<span class="p">(</span><span class="n">normal</span><span class="o">.</span><span class="p">,</span><span class="mi">972781</span><span class="p">)</span>
+<span class="p">(</span><span class="n">satan</span><span class="o">.</span><span class="p">,</span><span class="mi">15892</span><span class="p">)</span>
+<span class="p">(</span><span class="n">ipsweep</span><span class="o">.</span><span class="p">,</span><span class="mi">12481</span><span class="p">)</span>
+<span class="p">(</span><span class="n">portsweep</span><span class="o">.</span><span class="p">,</span><span class="mi">10413</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nmap</span><span class="o">.</span><span class="p">,</span><span class="mi">2316</span><span class="p">)</span>
+<span class="p">(</span><span class="n">back</span><span class="o">.</span><span class="p">,</span><span class="mi">2203</span><span class="p">)</span>
+<span class="p">(</span><span class="n">warezclient</span><span class="o">.</span><span class="p">,</span><span class="mi">1020</span><span class="p">)</span>
+<span class="p">(</span><span class="n">teardrop</span><span class="o">.</span><span class="p">,</span><span class="mi">979</span><span class="p">)</span>
+<span class="p">(</span><span class="n">pod</span><span class="o">.</span><span class="p">,</span><span class="mi">264</span><span class="p">)</span>
+<span class="p">(</span><span class="n">guess_passwd</span><span class="o">.</span><span class="p">,</span><span class="mi">53</span><span class="p">)</span>
+<span class="p">(</span><span class="n">buffer_overflow</span><span class="o">.</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="p">(</span><span class="n">land</span><span class="o">.</span><span class="p">,</span><span class="mi">21</span><span class="p">)</span>
+<span class="p">(</span><span class="n">warezmaster</span><span class="o">.</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="p">(</span><span class="n">imap</span><span class="o">.</span><span class="p">,</span><span class="mi">12</span><span class="p">)</span>
+<span class="p">(</span><span class="n">rootkit</span><span class="o">.</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="n">loadmodule</span><span class="o">.</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span>
+<span class="p">(</span><span class="n">ftp_write</span><span class="o">.</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+<span class="p">(</span><span class="n">multihop</span><span class="o">.</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+<span class="p">(</span><span class="n">phf</span><span class="o">.</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="n">perl</span><span class="o">.</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">spy</span><span class="o">.</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="p">[</span><span class="mf">48.34019491959669</span><span class="p">,</span><span class="mf">1834.6215497618625</span><span class="p">,</span><span class="mf">826.2031900016945</span><span class="p">,</span><span class="mf">5.7161172049003456E-6</span><span class="p">,</span><span class="mf">6.487793027561892E-4</span><span class="p">,</span><span class="mf">7.961734678254053E-6</span><span class="p">,</span><span class="mf">0.012437658596734055</span><span class="p">,</span><span class="mf">3.205108575604837E-5</span><span class="p">,</span><span class="mf">0.14352904910348827</span><span class="p">,</span><span class="mf">0.00808830584493399</span><span class="p">,</span><span class="mf">6.818511237273984E-5</span><span class="p">,</span><span class="mf">3.6746467745787934E-5</span><span class="p">,</span><span class="mf">0.012934960793560386</span><span class="p">,</span><span class="mf">0.0011887482315762398</span><span class="p">,</span><span class="mf">7.430952366370449E-5</span><span class="p">,</span><span class="mf">0.0010211435092468404</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">4.082940860643104E-7</span><span class="p">,</span><span class="mf">8.351655530445469E-4</span><span class="p">,</span><span class="mf">334.9735084506668</span><span class="p">,</span><span class="mf">295.26714620807076</span><span class="p">,</span><span class="mf">0.17797031701994304</span><span class="p">,</span><span class="mf">0.17803698940272675</span><span class="p">,</span><span class="mf">0.05766489875327384</span><span class="p">,</span><span class="mf">0.05772990937912762</span><span class="p">,</span><span class="mf">0.7898841322627527</span><span class="p">,</span><span class="mf">0.021179610609915762</span><span class="p">,</span><span class="mf">0.02826081009629794</span><span class="p">,</span><span class="mf">232.98107822302248</span><span class="p">,</span><span class="mf">189.21428335201279</span><span class="p">,</span><span class="mf">0.753713389800417</span><span class="p">,</span><span class="mf">0.030710978823818437</span><span class="p">,</span><span class="mf">0.6050519309247937</span><span class="p">,</span><span class="mf">0.006464107887632785</span><span class="p">,</span><span class="mf">0.1780911843182427</span><span class="p">,</span><span class="mf">0.17788589813471198</span><span class="p">,</span><span class="mf">0.05792761150001037</span><span class="p">,</span><span class="mf">0.05765922142400437</span><span class="p">]</span>
+<span class="p">[</span><span class="mf">10999.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.309937401E9</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">255.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.65</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">]</span>
+
+<span class="mi">0</span>             <span class="n">back</span><span class="o">.</span>    <span class="mi">2203</span>
+<span class="mi">0</span>  <span class="n">buffer_overflow</span><span class="o">.</span>      <span class="mi">30</span>
+<span class="mi">0</span>        <span class="n">ftp_write</span><span class="o">.</span>       <span class="mi">8</span>
+<span class="mi">0</span>     <span class="n">guess_passwd</span><span class="o">.</span>      <span class="mi">53</span>
+<span class="mi">0</span>             <span class="n">imap</span><span class="o">.</span>      <span class="mi">12</span>
+<span class="mi">0</span>          <span class="n">ipsweep</span><span class="o">.</span>   <span class="mi">12481</span>
+<span class="mi">0</span>             <span class="n">land</span><span class="o">.</span>      <span class="mi">21</span>
+<span class="mi">0</span>       <span class="n">loadmodule</span><span class="o">.</span>       <span class="mi">9</span>
+<span class="mi">0</span>         <span class="n">multihop</span><span class="o">.</span>       <span class="mi">7</span>
+<span class="mi">0</span>          <span class="n">neptune</span><span class="o">.</span> <span class="mi">1072017</span>
+<span class="mi">0</span>             <span class="n">nmap</span><span class="o">.</span>    <span class="mi">2316</span>
+<span class="mi">0</span>           <span class="n">normal</span><span class="o">.</span>  <span class="mi">972781</span>
+<span class="mi">0</span>             <span class="n">perl</span><span class="o">.</span>       <span class="mi">3</span>
+<span class="mi">0</span>              <span class="n">phf</span><span class="o">.</span>       <span class="mi">4</span>
+<span class="mi">0</span>              <span class="n">pod</span><span class="o">.</span>     <span class="mi">264</span>
+<span class="mi">0</span>        <span class="n">portsweep</span><span class="o">.</span>   <span class="mi">10412</span>
+<span class="mi">0</span>          <span class="n">rootkit</span><span class="o">.</span>      <span class="mi">10</span>
+<span class="mi">0</span>            <span class="n">satan</span><span class="o">.</span>   <span class="mi">15892</span>
+<span class="mi">0</span>            <span class="n">smurf</span><span class="o">.</span> <span class="mi">2807886</span>
+<span class="mi">0</span>              <span class="n">spy</span><span class="o">.</span>       <span class="mi">2</span>
+<span class="mi">0</span>         <span class="n">teardrop</span><span class="o">.</span>     <span class="mi">979</span>
+<span class="mi">0</span>      <span class="n">warezclient</span><span class="o">.</span>    <span class="mi">1020</span>
+<span class="mi">0</span>      <span class="n">warezmaster</span><span class="o">.</span>      <span class="mi">20</span>
+<span class="mi">1</span>        <span class="n">portsweep</span><span class="o">.</span>       <span class="mi">1</span>
+
+<span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mf">1938.8583418059204</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mf">1722.082230207309</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mf">1623.2169139841926</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mf">1335.5880211159965</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mf">1704.9007782782512</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mf">1284.8475511193783</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mf">1432.7665396867967</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mf">1293.158652800046</span><span class="p">)</span>
+
+
+<span class="n">sumSquares</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="mf">1.8251053254220875E24</span><span class="p">,</span> <span class="mf">1.5028691047454614E37</span><span class="p">,</span> <span class="mf">4.147926058342171E36</span><span class="p">,</span> <span class="mf">312.0</span><span class="p">,</span> <span class="mf">1.9033906E7</span><span class="p">,</span> <span class="mf">39947.0</span><span class="p">,</span> <span class="mf">2.05624051113E11</span><span class="p">,</span> <span class="mf">16281.0</span><span class="p">,</span> <span class="mf">8.9950127857E10</span><span class="p">,</span> <span class="mf">3.762433849743412E15</span><span class="p">,</span> <span class="mf">21030.0</span><span class="p">,</span> <span class="mf">14032.0</span><span class="p">,</span> <span class="mf">3.826441296269735E15</span><span class="p">,</span> <span class="mf">8.30640425E8</span><span class="p">,</span> <span class="mf">22302.0</span><span class="p">,</span> <span class="mf">5498526.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2468835.0</span><span class="p">,</span> <span class="mf">3.650905996542834E22</span><span class="p">,</span> <span class="mf">3.5103146254236926E22</span><span class="p">,</span> <span class="mf">1.276927939442977E11</span><span class="p">,</span> <span class="mf">1.2775150678269179E11</span><span class="p">,</span> <span class="mf">2.420819417185655E10</span><span class="p">,</span> <span class="mf">2.4239238758105E10</span><span class="p">,</span> <span class="mf">7.408489813830631E11</span><span class="p">,</span> <span class="mf">1.998153632374866E8</span><span class="p">,</span> <span class="mf">1.3129891425574625E9</span><span class="p">,</span> <span class="mf">3.8078328154178543E21</span><span class="p">,</span> <span class="mf">2.823049527899696E21</span><span class="p">,</span> <span class="mf">6.878037383317926E11</span><span class="p">,</span> <span class="mf">6.948391005957295E8</span><span class="p">,</span> <span class="mf">5.403300570605621E11</span><span class="p">,</span> <span class="mf">1.4359189363777582E7</span><span class="p">,</span> <span class="mf">1.2779669123687402E11</span><span class="p">,</span> <span class="mf">1.2773926062373058E11</span><span class="p">,</span> <span class="mf">2.4017136249699917E10</span><span class="p">,</span> <span class="mf">2.3831147450289013E10</span><span class="p">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span>     <span class="n">val</span> <span class="n">stdevs</span> <span class="o">=</span> <span class="n">sumSquares</span><span class="o">.</span><span class="n">zip</span><span class="p">(</span><span class="n">sums</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span>
+     <span class="o">|</span>         <span class="n">case</span><span class="p">(</span><span class="n">sumSq</span><span class="p">,</span><span class="nb">sum</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">sumSq</span> <span class="o">-</span> <span class="nb">sum</span><span class="o">*</span><span class="nb">sum</span><span class="p">)</span><span class="o">/</span><span class="n">n</span>
+     <span class="o">|</span>         <span class="p">}</span>
+<span class="n">stdevs</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="mf">6.104013264599401E8</span><span class="p">,</span> <span class="mf">1.751588482391299E15</span><span class="p">,</span> <span class="mf">9.202101209275971E14</span><span class="p">,</span> <span class="mf">0.007980841543918522</span><span class="p">,</span> <span class="mf">1.9712215535247153</span><span class="p">,</span> <span class="mf">0.0903053719320444</span><span class="p">,</span> <span class="mf">204.88419481923705</span><span class="p">,</span> <span class="mf">0.0576516808237867</span><span class="p">,</span> <span class="mf">135.51025154219585</span><span class="p">,</span> <span class="mf">27714.42924229041</span><span class="p">,</span> <span class="mf">0.06552256702321844</span><span class="p">,</span> <span class="mf">0.053521858831015345</span><span class="p">,</span> <span class="mf">27949.177385007828</span><span class="p">,</span> <span class="mf">13.022010234822616</span><span class="p">,</span> <span class="mf">0.06747503910589286</span><span class="p">,</span> <span class="mf">1.0594840971176382</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">6.3897874456691E-4</span><span class="p">,</span> <span class="mf">0.7099327887848896</span><span class="p">,</span> <span class="mf">8.633200515545668E7</span><span class="p">,</span> <span class="mf">8.4653423119692E7</span><span class="p">,</span> <span class="mf">161.45609095074775</span><span class="p">,</span> <span class="mf">161.49320521699835</span><span class="p">,</span> <span class="mf">70.2995513724602</span><span class="p">,</span> <span class="mf">70.34461297681736</span><span class="p">,</span> <span class="mf">388.8977681732042</span><span class="p">,</span> <span class="mf">6.38680347702198</span><span class="p">,</span> <span class="mf">16.37198819915362</span><span class="p">,</span> <span class="mf">2.7881134318366878E7</span><span class="p">,</span> <span class="mf">2.400660525282181E7</span><span class="p">,</span> <span class="mf">374.71656304244476</span><span class="p">,</span> <span class="mf">11.910011571767498</span><span class="p">,</span> <span class="mf">332.1240653785475</span><span class="p">,</span> <span class="mf">1.7121167208594668</span><span class="p">,</span> <span class="mf">161.52176194800637</span><span class="p">,</span> <span class="mf">161.48546488277606</span><span class="p">,</span> <span class="mf">70.02158946287807</span><span class="p">,</span> <span class="mf">69.74993882610025</span><span class="p">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span>     <span class="n">val</span> <span class="n">means</span> <span class="o">=</span> <span class="n">sums</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">means</span><span class="p">:</span> <span class="n">Array</span><span class="p">[</span><span class="n">Double</span><span class="p">]</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="mf">48.34243046395876</span><span class="p">,</span> <span class="mf">1834.6211752293746</span><span class="p">,</span> <span class="mf">1093.6228137132073</span><span class="p">,</span> <span class="mf">5.716116037972159E-6</span><span class="p">,</span> <span class="mf">6.487791703098401E-4</span><span class="p">,</span> <span class="mf">7.961733052889793E-6</span><span class="p">,</span> <span class="mf">0.012437656057623349</span><span class="p">,</span> <span class="mf">3.205107921291532E-5</span><span class="p">,</span> <span class="mf">0.14352901980246327</span><span class="p">,</span> <span class="mf">0.008088304193730605</span><span class="p">,</span> <span class="mf">6.81850984529536E-5</span><span class="p">,</span> <span class="mf">3.674646024410674E-5</span><span class="p">,</span> <span class="mf">0.012934958152926926</span><span class="p">,</span> <span class="mf">0.0011887479888968528</span><span class="p">,</span> <span class="mf">7.430950849363806E-5</span><span class="p">,</span> <span class="mf">0.001021143300783455</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">4.082940027122971E-7</span><span class="p">,</span> <span class="mf">8.351653825480036E-4</span><span class="p">,</span> <span class="mf">334.97344027097654</span><span class="p">,</span> <span class="mf">295.26708613431526</span><span class="p">,</span> <span class="mf">0.1779702806878365</span><span class="p">,</span> <span class="mf">0.1780369530570092</span><span class="p">,</span> <span class="mf">0.05766509112815903</span><span class="p">,</span> <span class="mf">0.05773010174074107</span><span class="p">,</span> <span class="mf">0.789884175157277</span><span class="p">,</span> <span class="mf">0.021179606286161765</span><span class="p">,</span> <span class="mf">0.0282608043269383</span><span class="p">,</span> <span class="mf">232.98108271811932</span><span class="p">,</span> <span class="mf">189.21424492863122</span><span class="p">,</span> <span class="mf">0.7537132359320887</span><span class="p">,</span> <span class="mf">0.030711105249815088</span><span class="p">,</span> <span class="mf">0.6050520115522577</span><span class="p">,</span> <span class="mf">0.006464106568004543</span><span class="p">,</span> <span class="mf">0.17809114796146144</span><span class="p">,</span> <span class="mf">0.17788586181983929</span><span class="p">,</span> <span class="mf">0.05792780382126354</span><span class="p">,</span> <span class="mf">0.057</span><span class="o">...</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="useful-spark-commands">
+<h2>Useful Spark Commands<a class="headerlink" href="#useful-spark-commands" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This information was taken from website <a class="reference external" href="https://www.tutorialspoint.com/apache_spark/apache_spark_core_programming.htm">https://www.tutorialspoint.com/apache_spark/apache_spark_core_programming.htm</a></p>
+</div>
+<p>Transformation and Meaning:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">map</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="nb">filter</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">flatMap</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">mapPartitions</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">mapPartitionsWithIndex</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">sample</span><span class="p">(</span><span class="n">withReplacement</span><span class="p">,</span><span class="n">fraction</span><span class="p">,</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">union</span><span class="p">(</span><span class="n">otherDatatset</span><span class="p">)</span>
+<span class="n">intersection</span><span class="p">(</span><span class="n">otherDataset</span><span class="p">)</span>
+<span class="n">distinct</span><span class="p">([</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">groupByKey</span><span class="p">([</span><span class="n">numTaks</span><span class="p">])</span>
+<span class="n">reducedByKey</span><span class="p">(</span><span class="n">func</span><span class="p">,[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">aggregatedByKey</span><span class="p">(</span><span class="n">zeroValue</span><span class="p">)(</span><span class="n">seqOp</span><span class="p">,</span><span class="n">combOp</span><span class="p">,[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">sortByKey</span><span class="p">([</span><span class="n">ascending</span><span class="p">],[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">join</span><span class="p">(</span><span class="n">otherDataset</span><span class="p">,[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">cogroup</span><span class="p">(</span><span class="n">otherDataset</span><span class="p">,[</span><span class="n">numTasks</span><span class="p">])</span>
+<span class="n">cartesian</span><span class="p">(</span><span class="n">otherDataset</span><span class="p">)</span>
+<span class="n">pipe</span><span class="p">(</span><span class="n">command</span><span class="p">,[</span><span class="n">envVars</span><span class="p">])</span>
+<span class="n">coalesce</span><span class="p">(</span><span class="n">numPartitions</span><span class="p">)</span>
+<span class="n">rapartition</span><span class="p">(</span><span class="n">numPartitions</span><span class="p">)</span>
+<span class="n">repartitionAndSortWithinPartitions</span><span class="p">(</span><span class="n">partitioner</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Actions:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">reduce</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+<span class="n">collect</span><span class="p">()</span>
+<span class="n">count</span><span class="p">()</span>
+<span class="n">first</span><span class="p">()</span>
+<span class="n">taken</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="n">takeSample</span><span class="p">(</span><span class="n">withReplacement</span><span class="p">,</span><span class="n">num</span><span class="p">,[</span><span class="n">seed</span><span class="p">])</span>
+<span class="n">takeOrdered</span><span class="p">(</span><span class="n">n</span><span class="p">,[</span><span class="n">ordering</span><span class="p">])</span>
+<span class="n">saveAsTestFile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">saveAsSequenceFile</span><span class="p">(</span><span class="n">path</span><span class="p">)(</span><span class="n">Java</span> <span class="ow">and</span> <span class="n">Scala</span><span class="p">)</span>
+<span class="n">saveAsObjectFile</span><span class="p">(</span><span class="n">path</span><span class="p">)(</span><span class="n">Java</span> <span class="ow">and</span> <span class="n">Scala</span><span class="p">)</span>
+<span class="n">countByKey</span><span class="p">()</span>
+<span class="n">foreach</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="useful-hdfs-commands">
+<h2>Useful HDFS commands<a class="headerlink" href="#useful-hdfs-commands" title="Permalink to this headline">¶</a></h2>
+<p>Here is a list of useful commands taken from website:  <a class="reference external" href="https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html">https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html</a>:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">bin</span><span class="o">/</span><span class="n">hadoop</span> <span class="n">fs</span> <span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">appendToFile</span> <span class="o">&lt;</span><span class="n">localsrc</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">dst</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">cat</span> <span class="p">[</span><span class="o">-</span><span class="n">ignoreCrc</span><span class="p">]</span> <span class="n">URI</span> <span class="p">[</span><span class="n">URI</span> <span class="o">...</span><span class="p">]</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyFromLocal</span> <span class="o">&lt;</span><span class="n">localsrc</span><span class="o">&gt;</span> <span class="n">URI</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">copyToLocal</span> <span class="p">[</span><span class="o">-</span><span class="n">ignorecrc</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">crc</span><span class="p">]</span> <span class="n">URI</span> <span class="o">&lt;</span><span class="n">localdst</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">find</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span> <span class="o">...</span> <span class="o">&lt;</span><span class="n">expression</span><span class="o">&gt;</span> <span class="o">...</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">ls</span> <span class="p">[</span><span class="o">-</span><span class="n">C</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">R</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">S</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">u</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">args</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">mkdir</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">paths</span><span class="o">&gt;</span>
+<span class="n">hadoop</span> <span class="n">fs</span> <span class="o">-</span><span class="n">tail</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span><span class="p">]</span> <span class="n">URI</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week 8 Spark Outlier detector</a><ul>
+<li><a class="reference internal" href="#installing-centos-and-vmfusion">Installing CentOS and VMFusion</a></li>
+<li><a class="reference internal" href="#installing-java">Installing Java</a></li>
+<li><a class="reference internal" href="#install-scala">Install Scala</a></li>
+<li><a class="reference internal" href="#install-spark">Install Spark</a></li>
+<li><a class="reference internal" href="#anomaly-detection-with-spark">Anomaly Detection with Spark</a><ul>
+<li><a class="reference internal" href="#background">Background</a></li>
+<li><a class="reference internal" href="#steps">Steps</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#useful-spark-commands">Useful Spark Commands</a></li>
+<li><a class="reference internal" href="#useful-hdfs-commands">Useful HDFS commands</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Data Science at Regis University!</a><ul>
+      <li>Previous: <a href="week7mahout.html" title="previous chapter">Week 7 Mahout</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataEngineering/week8.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Josh Peterson.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/dataEngineering/week8.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

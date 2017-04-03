@@ -1,0 +1,397 @@
+
+
+*******************************************
+Homework 2: Installing Hadoop on a Cluster
+*******************************************
+by Joshua Peterson (created in Sphinx)
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
+
+
+
+Installing Hadoop on a Cluster
+===============================
+The goal of this weeks homework is to install hadoop on a cluster of one master and three slaves.  This is accomplished by installing four different CentOS minimal virtual machines on VMware Fusion.  Each virtual machine had a 1 GB memory assigned to it and the other default settings were used.   
+
+.. note::  Make sure you turn on the NAT networking for the four machines.  The first installation I did without NAT on and I had to ready the installation of the virtual machine
+
+Once all four virtual machines were running I type the following command to determine their ip address::
+
+    ip addr
+
+The ip address for the four machines were the following::
+
+    Manager Address:  192.168.112.132 (manager.local)
+    Worker 1 IP Address:  192.168.112.129 (slave1.local)
+    Worker 2 IP Address:  192.168.112.130 (slave2.local)
+    Worker 3 IP Address:  192.168.112.131 (slave3.local)
+
+I then used **item2** to ssh into all four nodes.  The way I set up my iterm2 window was the following where the top left was manager followed by the three slaves.
+
+.. image:: _static/SetupofIterm2.png
+
+
+Then on each node I updated them using the following commands::
+
+    su 
+    yum update
+    yum provides wget
+    yum install wget
+  
+I then changed the name of machines to make it easier to know which machine was associated with each desired process.  This was accomplished by the following command::
+
+    nmtui
+    
+The name of the machines were the following
+    * manger.local
+    * slave1.local
+    * slave2.local
+    * hslave3.local
+
+.. note:: On machine was named hslave and the other to just slave.  In the future I would recommend naming all of them hslave to represent haddop slave.
+
+I then disabled the firewall using the command::
+
+    systemctl stop firewalld
+
+I then disabled the IPV6 by adding these lines to **/etc/sysctl.comf**::
+
+    net.ipv6.conf.all.disable_ipv6 = 1
+    net.ipv6.conf.default.disable_ipv6 = 1
+  
+.. note::  the disabling of the firewall will not survive a reboot and will need to be done every time the machine is rebooted
+
+On **each** of the nodes I did the following::
+----------------------------------------------
+
+    su
+    vi /etc/hosts
+    
+I then added the following lines to /etc/host::
+
+    192.168.112.132  manager
+    192.168.112.129 worker1
+    192.168.112.130 worker2
+    192.168.112.131 worker3
+    
+I then created hadoop user (on each of the node)::
+
+    useradd hadoop
+    passwd haddop
+   
+Then I exited as root and login into hadoop using::
+
+    su **-** hadoop
+    ssh-keygen -t rsa
+    ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@manager
+    ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@worker1
+    ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@worker2
+    ssh-copy-id -i ~/.ssh/id_rsa.pub hadoop@worker3
+    chmod 0600 ~/.ssh/authorized_keys
+
+Installing java
+------------------------------
+The next step is to install java on each of the machines.  On just the manger node I did the following::
+
+    su
+    cd /opt    
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz
+    tar xzf jdk-8u111-linux-x64.tar.gz
+    chown R root:root jdk1.8.0_111
+
+Instead of downloading java on all of the of the other nodes. I then just *scp* the folder to the other nodes stored on the /opt location::
+
+    scp r jdk1.8.0_111 worker1:/opt
+    scp r jdk1.8.0_111 worker2:/opt
+    scp r jdk1.8.0_111 worker3:/opt
+    
+Now on all four nodes use *alternative* to setup Java using the following commands::
+
+    alternatives --install /usr/bin/java java /opt/jdk1.8.0_111/bin/java 2
+    alternatives --config java
+    alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_111/bin/jar 2
+    alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_111/bin/javac 2
+    alternatives --set jar /opt/jdk1.8.0_111/bin/jar
+    alternatives --set javac /opt/jdk1.8.0_111/bin/javac
+
+Now I exited root user and switched to the hadoop user::
+       
+    exit
+    su **-** hadoop
+
+Then I *vi* into the .bashrc on the maser node and added the following to the end of the .bashrc file::
+
+    export JAVA_HOME=/opt/jdk1.8.0_111
+    export JRE_HOME=/opt/jdk1.8.0_111/jre
+    export PATH=$PATH:$JAVA_HOME/bin
+
+Then I coped the .bashrc to all of the other nodes using the command::
+
+    scp .bashrc worker1:/home/hadoop
+    scp .bashrc worker2:/home/hadoop
+    scp .bashrc worker3:/home/hadoop
+
+Installing hadoop
+-----------------
+
+Just like the java code hadoop can be downloaded onto the manager node and then coped to the other nodes /opt location.  This is accomplished with the command::
+
+    su
+    cd /opt
+    wget http://mirrors.advancedhosters.com/apache/hadoop/common/hadoop-2.7.3/hadoop-2.7.3.tar.gz
+    tar zxvf hadoop-2.7.3.tar.gz
+    chown R hadoop:hadoop hadoop-2.7.3
+
+Once hadoop has been dowloaded and unpacked then I *scp* the folder to the other nodes::
+
+    scp r hadoop-2.7.3 worker1:/opt
+    scp r hadoop-2.7.3 worker2:/opt
+    scp r hadoop-2.7.3 worker3:/opt
+
+Now I logged into each node as root and made the directory datanode and change ownership of the director and the just copied over file::
+
+    su #(if needed)
+    mkdir /home/hadoop/datanode
+    chown hadoop:hadoop /home/hadoop/datanode/
+    chown R hadoop:hadoop /opt/hadoop-2.7.3/
+    
+On the *manager* node I also created another directory called namenode and then changed ownership to *hadoop* ::
+
+    mkdir /home/hadoop/namenode
+    chown hadoop:hadoop /home/hadoop/namenode
+
+Configuring Hadoop
+-------------------
+I then became the hadoop user on the *manager* node using the command:: su **-** hadoop and add the following to the .bashrc file::
+
+    export HADOOP_PREFIX=/opt/hadoop-2.7.3
+    export HADOOP_HOME=$HADOOP_PREFIX
+    export HADOOP_COMMON_HOME=$HADOOP_PREFIX
+    export HADOOP_CONF_DIR=$HADOOP_PREFIX/etc/hadoop
+    export HADOOP_HDFS_HOME=$HADOOP_PREFIX
+    export HADOOP_MAPRED_HOME=$HADOOP_PREFIX
+    export PATH=$PATH:$HADOOP_PREFIX/sbin:$HADOOP_PREFIX/bin
+    
+Then I coped the .bashrc to the other nodes using the same command as before::
+
+    scp .bashrc worker1:/home/hadoop
+    scp .bashrc worker2:/home/hadoop
+    scp .bashrc worker3:/home/hadoop
+
+Then on *each* node I changed directors using command::
+    
+    cd /opt/hadoop-2.7.3/etc/hadoop
+ 
+I then *vi* into core-site.xml and set the NameNode URI for each node ::
+
+    <configuration>
+    <property>
+        <name>fs.defaultFS</name>
+        <value>hdfs://manager:9000/</value>
+    </property>
+    </configuration>
+
+Then I edited the *hdfs-site.xml* to set up DataNode on each node::
+
+    <configuration>
+    <property>
+      <name>dfs.replication</name>
+      <value>3</value>
+    </property>
+    <property>
+      <name>dfs.permissions</name>
+      <value>false</value>
+    </property>
+    <property>
+       <name>dfs.datanode.data.dir</name>
+       <value>file:///home/hadoop/datanode</value>
+    </property>
+    </configuration>
+
+Then on the *manager* node I added to more lines to the hdfs-site.xml::
+
+    <property>
+      <name>dfs.namenode.data.dir</name>
+      <value>file:///home/hadoop/namenode</value>
+    </property>
+    	 <property>
+      		<name>dfs.namenode.secondary.http-address</name>
+      		<value>manager:8034</value>
+    </property>
+   
+Also on the *manager* node I coped the *mapred-site.xml.template*::
+
+    cp mapred-site.xml.template mapred-site.xml
+
+I then  edited the mapred_site_xml and added::
+
+    <configuration>
+    
+     <property>
+         <name>mapreduce.framework.name</name>
+         <value>yarn</value>
+     </property>
+    
+    </configuration>
+
+Also on the *manager* node I also edited "yarn-site.xml"::
+
+    <configuration>
+    
+    property>
+       <name>yarn.nodemanager.aux-services</name>
+       <value>mapreduce_shuffle</value>
+    </property>
+    <property>
+       <name>yarn.nodemanager.aux-services.mapreduce.shuffle.class</name>
+       <value>org.apache.hadoop.mapred.ShuffleHandler</value>
+    </property>
+    <property>
+       <name>yarn.resourcemanager.scheduler.address</name>
+       <value>manager:8030</value>
+    </property>
+    <property>
+       <name>yarn.resourcemanager.address</name>
+       <value>manager:8032</value>
+    </property>
+    <property>
+       <name>yarn.resourcemanager.webapp.address</name>
+       <value>manager:8088</value>
+    </property>
+    <property>
+       <name>yarn.resourcemanager.resource-tracker.address</name>
+       <value>manager:8031</value>
+    </property>
+    <property>
+       <name>yarn.resourcemanager.admin.address</name>
+       <value>manager:8033</value>
+    </property> 
+    
+    </configuration>
+
+I then copied the *yarn-site.xml* file to the other nodes::
+
+    scp yarn-site.xml hadoop@worker1:/opt/hadoop-2.7.3/etc/hadoop/
+    scp yarn-site.xml hadoop@worker1:/opt/hadoop-2.7.3/etc/hadoop/
+    scp yarn-site.xml hadoop@worker1:/opt/hadoop-2.7.3/etc/hadoop/
+ 
+
+Also on *manager* I edited *slaves* by removing localhost and adding these four lines::
+
+    manager
+    worker1
+    worker2
+    worker3
+
+On the manager I then change to hadoop user,format namenode, and start hdfs and yarn.  This command will start hdfs and yarn on the workers also::
+
+    su - hadoop
+    hdfs namenode format
+    start-dfs.sh
+    start-yarn.sh
+    mr-jobhistory-daemon.sh start historyserver
+
+Using the code *jps* you can check to see that everything is running on the masters along with the workers::
+
+    jps
+    
+The output of jps can be seen below:
+
+.. image:: _static/afterHadoopStarted.png
+
+For the *manager* node the jpa command outputs::
+
+    22738 NodeManager
+    22483 SecondaryNameNode
+    23973 JobHistoryServer
+    22262 NameNode
+    36056 Jps
+    22364 DataNode
+    22636 ResourceManager
+
+For the *worker* ::
+
+    28628 NodeManager
+    32376 Jps
+    28541 DataNode
+
+
+Web Interface to Hadoop
+-----------------------
+
+In addition to the *jpa* command so see if hadoop is working correct it is possible to also use the web interface.  The address for the web interface of HDFS is ::
+
+     192.168.112.132:50070
+
+A screen shot of this web interface is seen below:
+       
+
+.. image:: _static/hadoopOverview.png   
+  
+The web address for YARN is ::
+
+    192.168.112.132:8088
+
+A screen shot of this web interface is seen below:
+
+
+.. image:: _static/clusterPic.png   
+    
+I used the following commands to run the Shakespeare on the cluster::
+    
+    cd ~
+    hadoop fs -mkdir -p /user/hadoop
+    hadoop fs -ls
+    wget http://norvig.com/ngrams/shakespeare.txt
+    hadoop fs -mkdir shakespeare
+    hadoop fs -mkdir shakespeare/input
+    hadoop fs -copyFromLocal ~/shakespeare.txt shakespeare/input
+    hadoop fs -ls shakespeare/input
+    hadoop jar /opt/hadoop-2.7.3/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar wordcount shakespeare/input shakespeare/output wordcount shakespeare/input shakespeare/output
+    hadoop fs -ls shakespeare/output
+    hadoop fs -cat shakespeare/output/part-r-00000
+    hadoop fs -copyToLocal shakespeare/output/part-r-00000 ~/shakespeareoutput.txt
+    more shakespeareoutput.txt 
+
+.. note:: The java code *hadoop-mapreduce-examples-2.7.3.jar* is located in the */opt* directory
+
+The output using  " more shakespeareoutput.txt" is:: 
+
+    !	10526
+    !'	183
+    !'By	1
+    !'t	1
+    !'twas	1
+    !,	1
+    !About	1
+    !All	1
+    !As	1
+    !Ay	1
+    !Burn	1
+    !Come	1
+    !Cuckold	1
+    !Follow	1
+    !For	1
+    !Give't	1
+    !Handkerchief	1
+    !Hear	1
+    !Help	1
+    !Hoo	1
+    !How	1
+    !I	4
+
+
+
+
+
+
+Thoughts on project
+-------------------
+.. note::  Things I found tricky with this assignment included remembering what each node was and making sure I installed everything on each node.  I also found typing in the password each time I used the command *su* to be time consuming.  I wonder about security of the system and if in the future the firewalls would need to be turned off to accomplish these steps and what type of password should be used on the machine (Hopefully not a different one for each machine).    
+
+

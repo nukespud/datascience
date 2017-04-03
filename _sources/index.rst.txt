@@ -1,29 +1,22 @@
-.. Documentation master file, created by
-   sphinx-quickstart on Wed Feb  1 21:27:50 2017.
+.. Data Science documentation master file, created by
+   sphinx-quickstart on Sun Apr  2 20:20:57 2017.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Data Analytics at Regis University!
-====================================
+Welcome to Data Science's documentation!
+========================================
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
    
-   
-   fromTheExpert
-   discussionQuestions
-   week1
-   week2homework2
-   week2EDA
-   week3homework1
-   week3homework2
-
+   dataEngineering/index.rst
+   dataAnalytics/index.rst
 
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
+* :ref:`modindex`
 * :ref:`search`
-

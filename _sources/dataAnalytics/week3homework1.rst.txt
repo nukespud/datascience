@@ -1,0 +1,240 @@
+.. highlight:: r
+
+*************************************************
+Week 3: Homework 1
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+Background info
+===============
+This week we will continue working with RStudio and will work on the r-bloggers.com site.  We will look at Normality and Testing for Normality in the statistical testing exercise and use the Shapiro-Wilk test.   For the hypothesis test, we will compare the means of two sets of paired samples that are taken from populations with unknown variance using the Students t-Test. 
+
+
+Assignment I (Drop box Statistical Tests) Due April 2nd, midnight your time
+
+After working through the two brief exercises attached (Exercises 1_2.docx) (using R) conduct the experiment described at http://www.r-bloggers.com/normality-and-testing-for-normality/. Please include a write up containing your analysis along with your code and outputs.
+
+The Shapiro-Wilk test is a test of normality, the null hypothesis for the Shapiro-Wilk test is that the data is normally distributed. Ho  and the data is normally distributed, Ha  and the data is not normally distributed. If the p-value is less than 0.05, then the null hypothesis is rejected and we have evidence that the data are not from a normally distributed population  in other words, the lower the p-value, the lower the chance the data came from a normal population.  If the p-value is greater than 0.05, then the null hypothesis is not rejected and we can assume normality.
+
+The following exercise generates data based on the normal distribution and the t distribution and compares the frequency of p-values obtained from the Shapiro-Wilk test for normality.
+
+The two brief exercises (attached) show a simple demonstration using the Shapiro.test() function
+
+
+
+Exercise 1
+===========
+
+First step was to generate 1000 random and independent numbers near the range of 0 and then I can the Shapiro test to determine if the results were normally distributed.  Based on the central limt theory I expected the results to be normal::
+
+  x <- rnorm(1000,mean = 0)
+  Shapiro.test(x) 
+  hist(x)
+  
+The results are below and as expected p-value is .9968 which is >0.05 so I would except the null hypothesis which is that the distribution is normal ::
+
+  Shapiro-Wilk normality test
+  
+  data:  x
+  W = 0.99947, p-value = 0.9968
+  
+The data in a histogram can be seen below:
+
+
+.. figure:: _static/histoOfrNorm.png
+
+  Histograph of a randomly created normal distribution
+
+
+
+Exercise 2
+============
+The goal of this analysis is to determine if the CO2 update is normally distributed.  In the dataset CO2 is the fifth column.  The input is as follows::
+
+  y<-CO2[,5]
+  Shapiro.test(y)
+  hist(y)
+
+In this case the p-value was 0.0007908 which is <0.05 so the null hypothesis that the distribution was normal would be rejected and we have evidence that the uptake of CO2 is not normally distributed::
+
+  # Exercise 2
+  y<-CO2[,5]
+  Shapiro.test(y)
+
+  Shapiro-Wilk normality test
+  
+  data:  y
+  W = 0.94105, p-value = 0.0007908
+
+
+
+.. figure:: _static/histCO2.png
+
+    Histogram showing distribution of CO2 uptake in plants
+  
+
+
+
+Normality and Testing for Normality
+====================================
+
+Note::
+  
+  Example taken from website https://www.r-bloggers.com/normality-and-testing-for-normality/
+  
+
+The goal of this exercise is to exam different ways to determine if the results are normal and then thinking about how this can be applied to real data.  The first step was to create a function that would perform a large range of normality test for three different sample sizes.  This function can be seen below::
+
+  #  https://www.r-bloggers.com/normality-and-testing-for-normality/
+  
+  library(ggplot2)
+  library(reshape2)
+  
+  #' @name assign_vector
+  #' @param data A vector of data to perform the t-test on.
+  #' @param n An integer indicating the number of t-tests to perform. Default is 1000
+  #' @return A data frame in "tall" format
+  assign_vector <- function(data, n = 1000) {
+    # replicate the call to shapiro.test n times to build up a vector of p-values
+    p.5 <- replicate(n=n, expr=shapiro.test(sample(my.data, 5, replace=TRUE))$p.value)
+    p.10 <- replicate(n=n, expr=shapiro.test(sample(my.data, 10, replace=TRUE))$p.value)
+    p.1000 <- replicate(n=n, expr=shapiro.test(sample(my.data, 1000, replace=TRUE))$p.value)
+    #' Combine the data into a data frame, 
+    #' one column for each number of samples tested.
+    p.df <- cbind(p.5, p.10, p.1000)
+    p.df <- as.data.frame(p.df)
+    colnames(p.df) <- c("5 samples","10 samples","1000 samples")
+    #' Put the data in "tall" format, one column for number of samples
+    #' and one column for the p-value.
+    p.df.m <- melt(p.df)
+    #' Make sure the levels are sorted correctly.
+    p.df.m <- transform(p.df.m, variable = factor(variable, levels = c("5 samples","10 samples","1000 samples")))
+    return(p.df.m)  
+  }
+  
+
+The next step is to generate a random normal distribution and then feed this information to the function and then plot the results.  The plot should look very level for the 5 10 and 1000 samples which will visually show that the data is a normal distribution.  The input is as follows::
+
+  n.rand <-1E6
+  n.test <- 1E5
+  #  rnorm is a random generator for the normal distribution where use can specify mean and standard deviation
+  my.data <-rnorm(n.rand)
+  #  assign_vector is a function to perform large number of normality tests for a sample sizes of n=5,10,1000 from the same data
+  p.df.m<-assign_vector(my.data,n = n.test)
+  
+  ggplot(p.df.m, aes(x = value)) + 
+    geom_histogram(binwidth = 1/10) + 
+    facet_grid(facets=variable ~ ., scales="free_y") + 
+    xlim(0,1) +
+    ylab("Count of p-values") +
+    xlab("p-values") +
+    theme(text = element_text(size = 16))
+  
+
+The graph generated from the ggplot command can be seen below
+
+.. image:: _static/countVersusPValue.png
+
+Now comparing the t distribution to the normal distribution the results using the "fat pencil" test both look normal as seen below generated from the code below::
+
+  # Now looking at a t distribution (plotting the normal and t distribution)
+  ggplot(NULL, aes(x=x, colour = distribution)) + 
+    stat_function(fun=dnorm, data = data.frame(x = c(-6,6), distribution = factor(1))) + 
+    stat_function(fun=dt, args = list( df = 20), data = data.frame(x = c(-6,6), distribution = factor(2)), linetype = "dashed") + 
+    scale_colour_manual(values = c("blue","red"), labels = c("Normal","T-Distribution"))
+
+.. image:: _static/tVersusNormal.png
+
+
+
+However when using the shapiro.text the t distribution does not look normal especially for the 1000 sample sizes as seen below::
+  
+
+  # RT is a random t distribution generate  based on the degrees of freedom given
+  my.data <- rt(n.rand, df = 20)
+  p.df.m<-assign_vector(my.data,n = n.test)
+  ggplot(p.df.m, aes(x = value)) + 
+    geom_histogram(binwidth = 1/10) + 
+    facet_grid(facets=variable ~ ., scales="free_y") + 
+    xlim(0,1) +
+    ylab("Count of p-values") +
+    xlab("p-values") +
+    theme(text = element_text(size = 16))
+  
+.. figure:: _static/Tdistrubtionpersample.png
+  
+
+The main difference between the normal distribution and the t distribution is the tails.  So the question is what happens if the tails of the t distribution are removed.  Will the t distribution apple to be more normal.  The input and output for this analysis can be seen below.  ::
+
+  my.data <- rt(n.rand, df = 20)
+  my.data.2 <- rnorm(n.rand)
+  # Trim off the tails
+  my.data <- my.data[which(my.data < 3 & my.data > -3)]
+  # Add in tails from the other distribution
+  my.data <- c(my.data, my.data.2[which(my.data.2 < -3 | my.data.2 > 3)])
+  p.df.m<-assign_vector(my.data,n = n.test)
+  ggplot(p.df.m, aes(x = value)) + 
+    geom_histogram(binwidth = 1/10) + 
+    facet_grid(facets=variable ~ ., scales="free_y") + 
+    xlim(0,1) +
+    ylab("Count of p-values") +
+    xlab("p-values") +
+    theme(text = element_text(size = 16))
+
+As seen below the even removing the tails the results clearly show that the distribution is nor normal for the 1000 samples.  
+
+.. image:: _static/tdistNoTails.png
+
+ 
+This begs the question of how important are the tails.  This can be seen below by replacing 99% of the data with the normal distribution but leaving the 1% tails from the t distribution.  The input for this calculation is below::
+ 
+  my.data <- rnorm(n.rand)
+  my.data.2 <- rt(n.rand, df = 20)
+  # Trim off the tails
+  my.data <- my.data[which(my.data < 3 & my.data > -3)]
+  # Add in tails from the other distribution
+  my.data <- c(my.data, my.data.2[which(my.data.2 < -3 | my.data.2 > 3)])
+  p.df.m<-assign_vector(my.data,n = n.test)
+  ggplot(p.df.m, aes(x = value)) + 
+    geom_histogram(binwidth = 1/10) + 
+    facet_grid(facets=variable ~ ., scales="free_y") + 
+    xlim(0,1) +
+    ylab("Count of p-values") +
+    xlab("p-values") +
+    theme(text = element_text(size = 16))
+
+As seen below even though there is 99 percent of the data that is normally distributed the tails have a significant impact on the results from the Shapiro test.  
+
+.. image:: _static/tdistrubtionNoMiddle.png
+
+ 
+What about highly skewed data.  How does this effect the calculation from the shapiro test.  This question can be answered from the below graph where a rlnorm probabiliy distrubtion was used to generate the data:: 
+
+  my.data <- rlnorm(n.rand, 0, 0.4)
+  p.df.m<-assign_vector(my.data,n = n.test)
+  ggplot(p.df.m, aes(x = value)) + 
+    geom_histogram(binwidth = 1/10) + 
+    facet_grid(facets=variable ~ ., scales="free_y") + 
+    xlim(0,1) +
+    ylab("Count of p-values") +
+    xlab("p-values") +
+    theme(text = element_text(size = 16))
+
+
+The distribution generated with the rlnorm command look like below.
+
+
+.. image:: _static/histSkewedData.png
+
+
+As expected the skewed data and associated tails has a big impact on the results from the Shapiro test.
+
+.. image:: _static/skewedDistribution.png
+
+
+From these calculations, it can be summarized that:
+
+* For small sample sizes everything looks normal
+* Normally test are very sensitive to the extreme tails
+

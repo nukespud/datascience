@@ -1,0 +1,394 @@
+.. highlight:: r
+
+*************************************************
+Homework 1: 
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+Weekly Discussion
+=================
+
+Analytics requires the application of statistics, computer programming, and advanced analytical methods.  The combination of all three allows for the discovery, interpretation, and communication of valuable information and insights extracted from data.  Based on Wikipedia [1] there are multiple types of analytics some of the more common ones today include:
+    * Risk analytics (predictive models that give risk score to individual customers for applications such as loans
+    * Digital Analytics (convert digital information into useful information for reporting, prediction, ect.
+    * Security Analytics (gather and analysis information about different security events and breaches)
+
+Also based on the Wikipedia article [1] others types of analytics include:
+    * Architectural analytics
+    * Behavioral analytics
+    * Big data analytics
+    * Business Analytics
+    * Cloud analytics
+    * Continuous analytics
+    * Cultural Analytics
+    * Customer Analytics
+    * Embedded analytics
+    * Learning Analytics
+    * News Analytics
+    * Online video analytics
+    * Predictive analytics
+    * Predictive engineering analytics
+    * Prescriptive analytics
+    * Semantic analytics
+    * Social analytics
+    * Software analytics
+    * Speech analytics
+    * User behavior analytics
+    * Visual Analytics
+    * Web analytics
+    * Win-loss analytics
+   
+Analytics looks at the entire process starting with determining the question, collecting the data, cleaning up the data, analyzing the information, interpolate the results, and come up with recommendations and conclusions.  However, the analysis is just one step along the way which starts with cleaned data and ends with interpreting the results to come up with conclusions.   
+
+
+
+Reference
+
+[1] "Analytics." Wikipedia. Wikimedia Foundation, 04 Mar. 2017. Web. 14 Mar. 2017.
+
+
+Week 1 Assignment
+=================
+
+For this project I did the following
+
+    * Downloded and install R https://cran.rstudio.com/
+    
+    * Downloaded and install R Studio https://www.rstudio.com/products/rstudio/download/
+
+
+
+Step 1 
+-------
+
+I loaded the data set into R and verify the data looked correct doing::
+
+    data(iris)
+    str(iris)
+    summary(iris)
+    head(iris)
+    # Data table allows for fast data manipulation using OpeMP is avaialble 
+    install.packages('data.table')
+    library('data.table')
+
+The output was as follows::
+
+        > data(iris)
+    > str(iris)
+    'data.frame':	150 obs. of  5 variables:
+     $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+     $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+     $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+     $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+     $ Species     : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ...
+    > summary(iris)
+      Sepal.Length    Sepal.Width     Petal.Length  
+     Min.   :4.300   Min.   :2.000   Min.   :1.000  
+     1st Qu.:5.100   1st Qu.:2.800   1st Qu.:1.600  
+     Median :5.800   Median :3.000   Median :4.350  
+     Mean   :5.843   Mean   :3.057   Mean   :3.758  
+     3rd Qu.:6.400   3rd Qu.:3.300   3rd Qu.:5.100  
+     Max.   :7.900   Max.   :4.400   Max.   :6.900  
+      Petal.Width          Species  
+     Min.   :0.100   setosa    :50  
+     1st Qu.:0.300   versicolor:50  
+     Median :1.300   virginica :50  
+     Mean   :1.199                  
+     3rd Qu.:1.800                  
+     Max.   :2.500                  
+    > head(iris)
+      Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+    1          5.1         3.5          1.4         0.2  setosa
+    2          4.9         3.0          1.4         0.2  setosa
+    3          4.7         3.2          1.3         0.2  setosa
+    4          4.6         3.1          1.5         0.2  setosa
+    5          5.0         3.6          1.4         0.2  setosa
+    6
+
+Step2: 
+-------
+
+Convert Iris to a data table using the commands::
+
+    # saves iris data set as a data.table
+    DT<-as.data.table(iris) 
+    print(DT)
+
+The output was as follows::
+
+    > print(DT)
+         Sepal.Length Sepal.Width Petal.Length Petal.Width
+      1:          5.1         3.5          1.4         0.2
+      2:          4.9         3.0          1.4         0.2
+      3:          4.7         3.2          1.3         0.2
+      4:          4.6         3.1          1.5         0.2
+      5:          5.0         3.6          1.4         0.2
+     ---                                                  
+    146:          6.7         3.0          5.2         2.3
+    147:          6.3         2.5          5.0         1.9
+    148:          6.5         3.0          5.2         2.0
+    149:          6.2         3.4          5.4         2.3
+    150:          5.9         3.0          5.1         1.8
+           Species
+      1:    setosa
+      2:    setosa
+      3:    setosa
+      4:    setosa
+      5:    setosa
+     ---          
+    146: virginica
+    147: virginica
+    148: virginica
+    149: virginica
+    150: virginica
+    
+    
+Step 3: 
+-------
+
+Begin outputting summary functions::
+
+    # Calculated mean of the sepal length
+    DT[,mean(Sepal.Length),by=Species]
+    # Calculate mean of the groups
+    DT[,mean(Sepal.Length,by=substring(Species, 1, 1))]
+    # group by Sepal area and the count number of times this occures in each group to the nearest cm
+    DT[,.N, by =10*round(Sepal.Length*Sepal.Width/10)]
+    # This add lables to the previous calcualtion
+    DT[,.(Count=.N),by=.(Area=10*round(Sepal.Length*Sepal.Width/10))]
+    
+The output was as follows::
+
+    > DT[,mean(Sepal.Length),by=Species]
+          Species    V1
+    1:     setosa 5.006
+    2: versicolor 5.936
+    3:  virginica 6.588
+    > # Calculate mean of the groups
+    > DT[,mean(Sepal.Length,by=substring(Species, 1, 1))]
+    [1] 5.843333
+    > # group by Sepal area and the count number of times this occures in each group to the nearest cm
+    > DT[,.N, by =10*round(Sepal.Length*Sepal.Width/10)]
+       round   N
+    1:    20 117
+    2:    10  29
+    3:    30   4
+    > # This add lables to the previous calcualtion
+    > DT[,.(Count=.N),by=.(Area=10*round(Sepal.Length*Sepal.Width/10))]
+       Area Count
+    1:   20   117
+    2:   10    29
+    3:   30     4
+    
+    
+Step 4: 
+-------
+
+Chaining using the following commands in R::
+
+    # Output median of four categorias grouped by Species and order by species (looks similar to SQL)
+    DT[, .( Sepal_length=median(Sepal.Length), 
+            Sepal_width=median(Sepal.Width),
+            Petal_length=median(Petal.Length),
+            Petal_width=median(Petal.Width)),
+       by=Species][order(-Species)] 
+    
+    # Output mean of four categorias grouped by Species and order by species (looks similar to SQL)
+    DT[, .( Sepal.Length=mean(Sepal.Length), 
+            Sepal.Width=mean(Sepal.Width), 
+            Petal.Length=mean(Petal.Length), 
+            Petal.Width=mean(Petal.Width)), 
+       by=Species][order(Species)] 
+
+The output was as follows::
+
+    > # Output median of four categorias grouped by Species and order by species (looks similar to SQL)
+    > DT[, .( Sepal_length=median(Sepal.Length), 
+    +         Sepal_width=median(Sepal.Width),
+    +         Petal_length=median(Petal.Length),
+    +         Petal_width=median(Petal.Width)),
+    +    by=Species][order(-Species)] 
+          Species Sepal_length Sepal_width Petal_length
+    1:  virginica          6.5         3.0         5.55
+    2: versicolor          5.9         2.8         4.35
+    3:     setosa          5.0         3.4         1.50
+       Petal_width
+    1:         2.0
+    2:         1.3
+    3:         0.2
+    > 
+    > # Output mean of four categorias grouped by Species and order by species (looks similar to SQL)
+    > DT[, .( Sepal.Length=mean(Sepal.Length), 
+    +         Sepal.Width=mean(Sepal.Width), 
+    +         Petal.Length=mean(Petal.Length), 
+    +         Petal.Width=mean(Petal.Width)), 
+    +    by=Species][order(Species)]
+          Species Sepal.Length Sepal.Width Petal.Length
+    1:     setosa        5.006       3.428        1.462
+    2: versicolor        5.936       2.770        4.260
+    3:  virginica        6.588       2.974        5.552
+       Petal.Width
+    1:       0.246
+    2:       1.326
+    3:       2.026
+    
+    
+Step 5: 
+-------
+
+Subset of the data table with the following code in R::
+
+    # This command does the same as the previous one but is much easier to run because it requires less text
+    DT[, lapply(.SD, mean), by=Species]
+    
+    # This gets the max values for each Species
+    DT[, lapply(.SD, max), by=Species]
+    
+The output is as follows::
+
+    > DT[, lapply(.SD, mean), by=Species]
+          Species Sepal.Length Sepal.Width Petal.Length
+    1:     setosa        5.006       3.428        1.462
+    2: versicolor        5.936       2.770        4.260
+    3:  virginica        6.588       2.974        5.552
+       Petal.Width
+    1:       0.246
+    2:       1.326
+    3:       2.026
+    > 
+    > # This gets the max values for each Species
+    > DT[, lapply(.SD, max), by=Species]
+          Species Sepal.Length Sepal.Width Petal.Length
+    1:     setosa          5.8         4.4          1.9
+    2: versicolor          7.0         3.4          5.1
+    3:  virginica          7.9         3.8          6.9
+       Petal.Width
+    1:         0.6
+    2:         1.8
+    3:         2.5
+
+Step 6: 
+-------
+
+Additional commands in R as follows::
+
+    iris = as.data.table(iris)
+    # Get only Species virginica
+    DT1<-iris[Species=="virginica"]
+    # view first few rows 
+    head(DT1)
+    
+    # Creates new subset with either virgina or versicolor as species
+    DT2 <- iris[Species %in% c("virginica","versicolor")] 
+    head(DT2)
+    # Remove the prefix 'Sepal' to all of the column names by using gsub command
+    setnames(iris, gsub("^Sepal[.]", "", names(iris)))
+    #Remove Petal collumn
+    iris <- iris[, grep("^Petal",names(iris)) := NULL]
+    head (iris)
+    
+    # Select data whose area is > 20 square centerments
+    iris[Width*Length>20]
+
+The output is as follows::
+
+    > iris = as.data.table(iris)
+    > # Get only Species virginica
+    > DT1<-iris[Species=="virginica"]
+    > # view first few rows 
+    > head(DT1)
+       Sepal.Length Sepal.Width Petal.Length Petal.Width
+    1:          6.3         3.3          6.0         2.5
+    2:          5.8         2.7          5.1         1.9
+    3:          7.1         3.0          5.9         2.1
+    4:          6.3         2.9          5.6         1.8
+    5:          6.5         3.0          5.8         2.2
+    6:          7.6         3.0          6.6         2.1
+         Species
+    1: virginica
+    2: virginica
+    3: virginica
+    4: virginica
+    5: virginica
+    6: virginica
+    > 
+    > # Creates new subset with either virgina or versicolor as species
+    > DT2 <- iris[Species %in% c("virginica","versicolor")] 
+    > head(DT2)
+       Sepal.Length Sepal.Width Petal.Length Petal.Width
+    1:          7.0         3.2          4.7         1.4
+    2:          6.4         3.2          4.5         1.5
+    3:          6.9         3.1          4.9         1.5
+    4:          5.5         2.3          4.0         1.3
+    5:          6.5         2.8          4.6         1.5
+    6:          5.7         2.8          4.5         1.3
+          Species
+    1: versicolor
+    2: versicolor
+    3: versicolor
+    4: versicolor
+    5: versicolor
+    6: versicolor
+    > # Remove the prefix 'Sepal' to all of the column names by using gsub command
+    > setnames(iris, gsub("^Sepal[.]", "", names(iris)))
+    > #Remove Petal collumn
+    > iris <- iris[, grep("^Petal",names(iris)) := NULL]
+    > head (iris)
+       Length Width Species
+    1:    5.1   3.5  setosa
+    2:    4.9   3.0  setosa
+    3:    4.7   3.2  setosa
+    4:    4.6   3.1  setosa
+    5:    5.0   3.6  setosa
+    6:    5.4   3.9  setosa
+    > 
+    > # Select data whose area is > 20 square centerments
+    > iris[Width*Length>20]
+        Length Width    Species
+     1:    5.4   3.9     setosa
+     2:    5.8   4.0     setosa
+     3:    5.7   4.4     setosa
+     4:    5.4   3.9     setosa
+     5:    5.7   3.8     setosa
+     6:    5.2   4.1     setosa
+     7:    5.5   4.2     setosa
+     8:    7.0   3.2 versicolor
+     9:    6.4   3.2 versicolor
+    10:    6.9   3.1 versicolor
+    11:    6.3   3.3 versicolor
+    12:    6.7   3.1 versicolor
+    13:    6.7   3.0 versicolor
+    14:    6.0   3.4 versicolor
+    15:    6.7   3.1 versicolor
+    16:    6.3   3.3  virginica
+    17:    7.1   3.0  virginica
+    18:    7.6   3.0  virginica
+    19:    7.3   2.9  virginica
+    20:    7.2   3.6  virginica
+    21:    6.5   3.2  virginica
+    22:    6.8   3.0  virginica
+    23:    6.4   3.2  virginica
+    24:    7.7   3.8  virginica
+    25:    7.7   2.6  virginica
+    26:    6.9   3.2  virginica
+    27:    7.7   2.8  virginica
+    28:    6.7   3.3  virginica
+    29:    7.2   3.2  virginica
+    30:    7.2   3.0  virginica
+    31:    7.4   2.8  virginica
+    32:    7.9   3.8  virginica
+    33:    7.7   3.0  virginica
+    34:    6.3   3.4  virginica
+    35:    6.9   3.1  virginica
+    36:    6.7   3.1  virginica
+    37:    6.9   3.1  virginica
+    38:    6.8   3.2  virginica
+    39:    6.7   3.3  virginica
+    40:    6.7   3.0  virginica
+    41:    6.2   3.4  virginica
+        Length Width    Species
+
+    
+
+

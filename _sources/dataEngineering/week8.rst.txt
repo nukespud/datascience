@@ -1,0 +1,684 @@
+
+=============================
+Week 8 Spark Outlier detector
+=============================
+by Josh Peterson
+
+
+
+Installing CentOS and VMFusion
+===============================
+
+* Installed CentOS7 64-bit (minimal install) with networking on, date and time set, and kdump disability
+
+* I then set a root password and also created a user name.  
+
+ 
+
+* Because I am using just the minimal install there was no user interface so I decided to interact with CentOS7 through ssh from my mac.  I like iterm better on mac then its original terminal so I used that for ssh into the machine.  The first step was to find my ip address using command::
+
+    ip addr
+    
+This is used to determine my ip address was *172.16.84.129*::
+
+    ssh 172.16.84.129
+
+* Once I was able to ssh to the CentOS7 virtual machine I installed the OS updates doing::
+
+    su
+    yum update
+    yum install wget 
+
+
+
+Installing Java
+===============
+
+I installed java by doing the following::
+    
+    cd /opt
+    wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz     
+    tar xzf jdk-8u111-linux-x64.tar.gz   
+    chown -R root:root jdk1.8.0_111/   
+    
+I then used alternative to install java doing the following: (Alternative allows for softlinks to the desired location of the executable so as different version of java are released they can be installed and then alternatives used to link to a new one without having to uninstall the old.  This allows for the user to also test the new release and easily go back to the previous one if problems occur):: 
+ 
+    cd /opt/jdk1.8.0.111
+    alternatives --install /usr/bin/java java /opt/jdk1.8.0_111/bin/java 2    
+    alternatives --config java
+    alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_111/bin/jar 2
+    alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_111/bin/javac 2
+    alternatives --set jar /opt/jdk1.8.0_111/bin/jar
+    alternatives --set javac /opt/jdk1.8.0_111/bin/javac
+
+The next step is to create the Hadoop user with commands::
+   
+
+    useradd hadoop
+    passwd hadoop
+
+To allow me the ability for password-less login in using ssh-keygen I do the following::
+
+    su - hadoop
+    ssh-keygen -t rsa
+    cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+    chmod 0600 ~/.ssh/authorized_keys
+
+Once I have established the new user I need to add some environment variables before installing Hadoop.  These are created by modifying the .bashrc file for Hadoop.  This is accomplished by adding the following to the .bashrc::
+
+    export JAVA_HOME=/opt/jdk1.8.0_111
+    export JRE_HOME=/opt/jdk1.8.0_111/jre
+    export PATH=$PATH:$JAVA_HOME/bin
+
+I then source the .bashrc to restart it so I do not need to log out and log back in to get access to it
+To edit the .bashrc I like to use vi instead of nano.  I also use ultraedit for mac to edit longer files through ssh instead 
+
+Install Scala
+=============
+
+Scala is needed for installing spark.  The commands for installing scala is::
+
+    cd ~
+    wget http://downloads.lightbend.com/scala/2.11.8/scala-2.11.8.rpm
+    sudo yum install scala-2.11.8.rpm 
+    sudo yum install openssl   
+ 
+.. note::
+
+    These directions for installing scala come from website https://www.vultr.com/docs/how-to-install-scala-on-centos-7
+ 
+When installing scala the following output is seen::
+
+    [root@localhost hadoop]#     sudo yum install scala-2.11.8.rpm
+    Loaded plugins: fastestmirror
+    Examining scala-2.11.8.rpm: scala-2.11.8-0.noarch
+    Marking scala-2.11.8.rpm to be installed
+    Resolving Dependencies
+    --> Running transaction check
+    ---> Package scala.noarch 0:2.11.8-0 will be installed
+    --> Finished Dependency Resolution
+    
+    Dependencies Resolved
+    
+    =====================================================================================================
+     Package             Arch                 Version                  Repository                   Size
+    =====================================================================================================
+    Installing:
+     scala               noarch               2.11.8-0                 /scala-2.11.8               471 M
+    
+    Transaction Summary
+    =====================================================================================================
+    Install  1 Package
+    
+    Total size: 471 M
+    Installed size: 471 M
+    Is this ok [y/d/N]: y
+    Downloading packages:
+    Running transaction check
+    Running transaction test
+    Transaction test succeeded
+    Running transaction
+      Installing : scala-2.11.8-0.noarch                                                             1/1
+      Verifying  : scala-2.11.8-0.noarch                                                             1/1
+    
+    Installed:
+      scala.noarch 0:2.11.8-0
+    
+    Complete!
+
+Scala is installed in the bin directory
+
+
+
+Install Spark
+==============
+
+.. note:: 
+
+    Steps for installing spark come frome the following website.  https://www.tutorialspoint.com/apache_spark/apache_spark_installation.htm
+
+To install spark I use the following commands::
+
+    wget http://d3kbcqa49mib13.cloudfront.net/spark-2.1.0-bin-hadoop2.7.tgz
+    tar -xvf spark-2.1.0-bin-hadoop2.7.tgz
+    mv spark-2.1.0-bin-hadoop2.7 spark
+    
+I then edit the .bashrc and add the following::
+
+    export PATH=$PATH:/home/hadoop/spark/bin
+
+I then do the following::
+
+    source ~/.bashrc
+    
+To run spark I do the following command::
+
+    spark-shell
+    
+The output is as follows::
+
+    Using Spark's default log4j profile: org/apache/spark/log4j-defaults.properties
+    Setting default log level to "WARN".
+    To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+    17/02/26 10:09:19 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+    17/02/26 10:09:20 WARN Utils: Your hostname, localhost.localdomain resolves to a loopback address: 127.0.0.1; using 172.16.84.129 instead (on interface ens33)
+    17/02/26 10:09:20 WARN Utils: Set SPARK_LOCAL_IP if you need to bind to another address
+    17/02/26 10:09:27 WARN ObjectStore: Failed to get database global_temp, returning NoSuchObjectException
+    Spark context Web UI available at http://172.16.84.129:4040
+    Spark context available as 'sc' (master = local[*], app id = local-1488121761230).
+    Spark session available as 'spark'.
+    Welcome to
+          ____              __
+         / __/__  ___ _____/ /__
+        _\ \/ _ \/ _ `/ __/  '_/
+       /___/ .__/\_,_/_/ /_/\_\   version 2.1.0
+          /_/
+    
+    Using Scala version 2.11.8 (Java HotSpot(TM) 64-Bit Server VM, Java 1.8.0_111)
+    Type in expressions to have them evaluated.
+    Type :help for more information.
+
+
+
+The website for spark can be found at http://172.16.84.129:4040
+
+
+Anomaly Detection with Spark
+============================
+
+Background
+----------
+.. note:  
+
+    This information comes from the book "Advanced Analytics with Spark"
+    
+* Anomaly detection is finding the unknowns unknowns
+* Find fraud, detect network attacks, or discover problems in server or sensor equipped machinery
+* K-means clustering is best-known unsupervised learning
+
+Steps
+-----
+
+In this project I am working through chapter 5 of the book "Advanced Analytics with Spark"I first get and unzip the data needed for chapter 5::  
+
+    wget http://kdd.ics.uci.edu/databases/kddcup99/kddcup.data_10_percent.gz
+    gunzip kddcup.data_10_percent.gz
+    spark-shell
+ 
+I then look at all of the distinct labels to see which is the most common one for which in this data set it is smurf followed by neptune
+
+.. code-block:: scala   
+
+    // import the data
+    val rawData = sc.textFile("kddcup.data_10_percent")
+    // count the values and sort by largest to smallest
+    rawData.map(_.split(',').last).countByValue().toSeq. sortBy(_._2).reverse.foreach(println)
+
+Doing this I get the following output::
+
+    [Stage 0:>                                       [Stage 0:>                                       [Stage 0:>                                       [Stage 0:===================>                    [Stage 0:=======================================>                                 (smurf.,280790)
+    (neptune.,107201)
+    (normal.,97278)
+    (back.,2203)
+    (satan.,1589)
+    (ipsweep.,1247)
+    (portsweep.,1040)
+    (warezclient.,1020)
+    (teardrop.,979)
+    (pod.,264)
+    (nmap.,231)
+    (guess_passwd.,53)
+    (buffer_overflow.,30)
+    (land.,21)
+    (warezmaster.,20)
+    (imap.,12)
+    (rootkit.,10)
+    (loadmodule.,9)
+    (ftp_write.,8)
+    (multihop.,7)
+    (phf.,4)
+    (perl.,3)
+    (spy.,2)
+    
+K-means requires only numerical data so the first, second and last line are removed
+
+.. code-block:: scala 
+    
+    import org.apache.spark.mllib.linalg._
+
+    // Removing 1,3 and last line and splitting by comma (to Buffer creates a mutable list Buffer)
+    val labelsAndData = rawData.map { line=>
+                val buffer = line.split(',').toBuffer
+                buffer.remove(1,3)
+                val label = buffer.remove(buffer.length-1)
+                val vector = Vectors.dense(buffer.map(_.toDouble).toArray)
+                (label, vector)
+                }    
+    // Cashing the data
+    
+    val data = labelsAndData.values.cache()
+    
+    // Importing the KMeans implementation of the clustering algorithm and then running it on the previously defined data
+    import org.apache.spark.mllib.clustering._
+    
+    val kmeans = new KMeans()
+    
+    val model = kmeans.run(data)
+    // Printing out the results
+    model.clusterCenters.foreach(println)
+
+
+I then get the following output::
+
+    [47.979395571029514,1622.078830816566,868.5341828266062,4.453261001578883E-5,0.006432937937735314,1.4169466823205539E-5,0.03451682118132869,1.5181571596291647E-4,0.14824703453301485,0.01021213716043885,1.1133152503947209E-4,3.6435771831099954E-5,0.011351767134933808,0.0010829521072021374,1.0930731549329986E-4,0.0010080563539937655,0.0,0.0,0.0013865835391279706,332.2862475203433,292.9071434354884,0.1766854175944295,0.1766078094004292,0.05743309987449898,0.05771839196793656,0.7915488441762849,0.020981640419416685,0.028996862475203982,232.4707319541719,188.6660459090725,0.7537812031901855,0.030905611108874582,0.6019355289259479,0.0066835148374550625,0.17675395732965873,0.17644162179668482,0.05811762681672762,0.05741111695882669]
+    [2.0,6.9337564E8,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,57.0,3.0,0.79,0.67,0.21,0.33,0.05,0.39,0.0,255.0,3.0,0.01,0.09,0.22,0.0,0.18,0.67,0.05,0.33]
+
+Two vectors are printed which means K-means was fitted for two clusters.  However for this complex data higher k is needed 
+ 
+
+Adding a label to the data makes it easier to understand the results
+
+.. code-block:: scala 
+
+    val clusterLabelCount = labelsAndData.map { case (label,datum) =>
+      val cluster = model.predict(datum)
+      (cluster, label)
+      }.countByValue
+
+   
+
+    clusterLabelCount.toSeq.sorted.foreach {
+          case ((cluster,label),count) =>
+          println(f"$cluster%1s$label%18s$count%8s")
+          }
+ 
+For which I get the following output.  It should be noted that only one value was in cluster 1 (portsweep) which really is not telling us much::
+
+    0             back.    2203
+    0  buffer_overflow.      30
+    0        ftp_write.       8
+    0     guess_passwd.      53
+    0             imap.      12
+    0          ipsweep.    1247
+    0             land.      21
+    0       loadmodule.       9
+    0         multihop.       7
+    0          neptune.  107201
+    0             nmap.     231
+    0           normal.   97278
+    0             perl.       3
+    0              phf.       4
+    0              pod.     264
+    0        portsweep.    1039
+    0          rootkit.      10
+    0            satan.    1589
+    0            smurf.  280790
+    0              spy.       2
+    0         teardrop.     979
+    0      warezclient.    1020
+    0      warezmaster.      20
+    1        portsweep.       1
+ 
+
+To determine the best k value to use we define a Euclidean distance function and return the distance from a data point to the cluster's centroid.  
+
+.. code-block:: scala   
+ 
+    //  Euclidean distance function   
+
+    def distance(a: Vector, b: Vector) =
+      math.sqrt(a.toArray.zip(b.toArray).
+      map(p => p._1 - p._2).map(d => d*d).sum)
+
+
+    def distToCentroid(datum: Vector, model: KMeansModel) = {
+          val cluster = model.predict(datum)
+          val centroid = model.clusterCenters(cluster)
+          distance(centroid, datum)
+          }
+
+    // This is a function that measures average distance to centroid and using this by looking at different k values 
+    
+    import org.apache.spark.rdd._
+    
+   def clusteringScore(data: RDD[Vector], k: Int) = {
+      val kmeans = new KMeans()
+      kmeans.setK(k)
+      val model = kmeans.run(data)
+      data.map(datum => distToCentroid(datum, model)).mean()
+      }
+ 
+    (5 to 40 by 5).map(k => (k, clusteringScore(data, k))).
+      foreach(println)
+
+I then get the following output which shoes the Euclidean distance decreases over time::
+
+    (5,1749.4955121516966)
+    (10,1619.362070190486)
+    (15,1635.5658226105024)
+    (20,1693.9299193264505)
+    (25,1600.714214532261)
+    (30,1592.929577587605)
+    (35,1243.1788321433953)
+    (40,1539.626375713087)
+
+Then I run in parallel with a decreased Epsilon:
+
+.. code-block:: scala
+
+
+    kmeans.setRuns(10)
+
+    kmeans.setEpsilon(1.0e-6)
+    // Run for a different data set
+    (30 to 100 by 10).par.map(k => (k, clusteringScore(data, k))).
+      toList.foreach(println)
+    
+For this run I get the following::
+
+    (30,1575.7856869793948)
+    (40,1242.2277647532821)
+    (50,1002.2273883448219)
+    (60,1540.0415245328945)
+    (70,1530.9731478562514)
+    (80,1260.954770506731)
+    (90,1245.3337344823926)
+    (100,874.4907227080233)
+
+
+I can then export the data using the commands::
+
+
+    val sample = data.map(datum =>
+    model.predict(datum) + "," + datum.toArray.mkString(",")
+    ).sample(false, 0.05)   
+    
+    sample.saveAsTextFile("sample") 
+   
+   
+
+
+
+
+Standard scores can be calculated using the following code:
+
+
+.. code-block:: scala
+
+    val dataAsArray = data.map(_.toArray) 
+    val numCols = dataAsArray.first().length 
+    val n = dataAsArray.count()
+    val sums = dataAsArray.reduce(
+        (a,b) => a.zip(b).map(t => t._1 + t._2)) 
+    
+    val sumSquares = dataAsArray.fold(
+        new Array[Double](numCols)
+    )(
+        (a,b) => a.zip(b).map(t => t._1 + t._2 * t._2)
+    )
+    val stdevs = sumSquares.zip(sums).map {
+        case(sumSq,sum) => math.sqrt(n*sumSq - sum*sum)/n 
+        }
+    val means = sums.map(_ / n)
+    
+    
+    def normalize(datum: Vector) = {
+        val normalizedArray = (datum.toArray, means, stdevs).zipped.map(
+            (value, mean, stdev) =>
+                if (stdev <= 0) (value - mean) else (value - mean) / stdev
+    )
+    Vectors.dense(normalizedArray) 
+    }
+
+The same test can then be ran with the normalized data to look at the effect of higher range of k
+
+.. code-block:: scala
+
+    val normalizedData = data.map(normalize).cache() 
+    (60 to 120 by 10).par.map(k =>
+        (k, clusteringScore(normalizedData, k))).toList.foreach(println)
+
+The results are as follows::
+
+    (60,0.004118646622714536)
+    (70,0.003740116506195756)
+    (80,0.0035581265582007955)
+    (90,0.003482091757247882)
+    (100,0.0032731711581223126)
+    (110,0.003558617998430712)
+    (120,0.003299601197658152)
+
+
+
+   
+  
+For the larger data set I do the following::
+
+    wget http://kdd.ics.uci.edu/databases/kddcup99/kddcup.data.gz
+    gunzip kddcup.data.gz  
+
+
+    
+Then I run::
+   
+    spark-shell
+
+
+ 
+The final list of commands for the large data set are::
+
+    val rawData = sc.textFile("kddcup.data")
+    
+    rawData.map(_.split(',').last).countByValue().toSeq. sortBy(_._2).reverse.foreach(println)
+
+    
+    import org.apache.spark.mllib.linalg._
+    
+    // Removing 1,3 and last line and splitting by comma (to Buffer creates a mutable list Buffer)
+    val labelsAndData = rawData.map { line=>
+                val buffer = line.split(',').toBuffer
+                buffer.remove(1,3)
+                val label = buffer.remove(buffer.length-1)
+                val vector = Vectors.dense(buffer.map(_.toDouble).toArray)
+                (label, vector)
+                }
+    // Cashing the data
+    
+    val data = labelsAndData.values.cache()
+    
+    // Importing the KMeans implementation of the clustering algorithm and then running it on the previously defined data
+    import org.apache.spark.mllib.clustering._
+    
+    val kmeans = new KMeans()
+    
+    val model = kmeans.run(data)
+    // Printing out the results
+    model.clusterCenters.foreach(println)
+
+
+    val clusterLabelCount = labelsAndData.map { case (label,datum) =>
+      val cluster = model.predict(datum)
+      (cluster, label)
+      }.countByValue
+ 
+
+    clusterLabelCount.toSeq.sorted.foreach {
+          case ((cluster,label),count) =>
+          println(f"$cluster%1s$label%18s$count%8s")
+          }
+
+    def distance(a: Vector, b: Vector) =
+      math.sqrt(a.toArray.zip(b.toArray).
+      map(p => p._1 - p._2).map(d => d*d).sum)
+
+    
+    def distToCentroid(datum: Vector, model: KMeansModel) = {
+          val cluster = model.predict(datum)
+          val centroid = model.clusterCenters(cluster)
+          distance(centroid, datum)
+          }
+
+    def distToCentroid(datum: Vector, model: KMeansModel) = {
+          val cluster = model.predict(datum)
+          val centroid = model.clusterCenters(cluster)
+          distance(centroid, datum)
+          }
+
+    import org.apache.spark.rdd._
+    
+   def clusteringScore(data: RDD[Vector], k: Int) = {
+      val kmeans = new KMeans()
+      kmeans.setK(k)
+      val model = kmeans.run(data)
+      data.map(datum => distToCentroid(datum, model)).mean()
+      }
+ 
+    (5 to 40 by 5).map(k => (k, clusteringScore(data, k))).
+      foreach(println)
+
+
+    kmeans.setRuns(10)
+    kmeans.setEpsilon(1.0e-6)
+
+    val sample = data.map(datum =>
+    model.predict(datum) + "," + datum.toArray.mkString(",")
+    ).sample(false, 0.05)   
+    
+    sample.saveAsTextFile("sample_large") 
+
+
+
+Some of the outputs for the large data file include::
+
+    (smurf.,2807886)
+    (neptune.,1072017)
+    (normal.,972781)
+    (satan.,15892)
+    (ipsweep.,12481)
+    (portsweep.,10413)
+    (nmap.,2316)
+    (back.,2203)
+    (warezclient.,1020)
+    (teardrop.,979)
+    (pod.,264)
+    (guess_passwd.,53)
+    (buffer_overflow.,30)
+    (land.,21)
+    (warezmaster.,20)
+    (imap.,12)
+    (rootkit.,10)
+    (loadmodule.,9)
+    (ftp_write.,8)
+    (multihop.,7)
+    (phf.,4)
+    (perl.,3)
+    (spy.,2)
+
+    [48.34019491959669,1834.6215497618625,826.2031900016945,5.7161172049003456E-6,6.487793027561892E-4,7.961734678254053E-6,0.012437658596734055,3.205108575604837E-5,0.14352904910348827,0.00808830584493399,6.818511237273984E-5,3.6746467745787934E-5,0.012934960793560386,0.0011887482315762398,7.430952366370449E-5,0.0010211435092468404,0.0,4.082940860643104E-7,8.351655530445469E-4,334.9735084506668,295.26714620807076,0.17797031701994304,0.17803698940272675,0.05766489875327384,0.05772990937912762,0.7898841322627527,0.021179610609915762,0.02826081009629794,232.98107822302248,189.21428335201279,0.753713389800417,0.030710978823818437,0.6050519309247937,0.006464107887632785,0.1780911843182427,0.17788589813471198,0.05792761150001037,0.05765922142400437]
+    [10999.0,0.0,1.309937401E9,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,0.0,255.0,1.0,0.0,0.65,1.0,0.0,0.0,0.0,1.0,1.0]
+
+    0             back.    2203
+    0  buffer_overflow.      30
+    0        ftp_write.       8
+    0     guess_passwd.      53
+    0             imap.      12
+    0          ipsweep.   12481
+    0             land.      21
+    0       loadmodule.       9
+    0         multihop.       7
+    0          neptune. 1072017
+    0             nmap.    2316
+    0           normal.  972781
+    0             perl.       3
+    0              phf.       4
+    0              pod.     264
+    0        portsweep.   10412
+    0          rootkit.      10
+    0            satan.   15892
+    0            smurf. 2807886
+    0              spy.       2
+    0         teardrop.     979
+    0      warezclient.    1020
+    0      warezmaster.      20
+    1        portsweep.       1
+ 
+    (5,1938.8583418059204)
+    (10,1722.082230207309)
+    (15,1623.2169139841926)
+    (20,1335.5880211159965)
+    (25,1704.9007782782512)
+    (30,1284.8475511193783)
+    (35,1432.7665396867967)
+    (40,1293.158652800046)
+
+
+    sumSquares: Array[Double] = Array(1.8251053254220875E24, 1.5028691047454614E37, 4.147926058342171E36, 312.0, 1.9033906E7, 39947.0, 2.05624051113E11, 16281.0, 8.9950127857E10, 3.762433849743412E15, 21030.0, 14032.0, 3.826441296269735E15, 8.30640425E8, 22302.0, 5498526.0, 0.0, 2.0, 2468835.0, 3.650905996542834E22, 3.5103146254236926E22, 1.276927939442977E11, 1.2775150678269179E11, 2.420819417185655E10, 2.4239238758105E10, 7.408489813830631E11, 1.998153632374866E8, 1.3129891425574625E9, 3.8078328154178543E21, 2.823049527899696E21, 6.878037383317926E11, 6.948391005957295E8, 5.403300570605621E11, 1.4359189363777582E7, 1.2779669123687402E11, 1.2773926062373058E11, 2.4017136249699917E10, 2.3831147450289013E10)
+    
+    scala>     val stdevs = sumSquares.zip(sums).map {
+         |         case(sumSq,sum) => math.sqrt(n*sumSq - sum*sum)/n
+         |         }
+    stdevs: Array[Double] = Array(6.104013264599401E8, 1.751588482391299E15, 9.202101209275971E14, 0.007980841543918522, 1.9712215535247153, 0.0903053719320444, 204.88419481923705, 0.0576516808237867, 135.51025154219585, 27714.42924229041, 0.06552256702321844, 0.053521858831015345, 27949.177385007828, 13.022010234822616, 0.06747503910589286, 1.0594840971176382, 0.0, 6.3897874456691E-4, 0.7099327887848896, 8.633200515545668E7, 8.4653423119692E7, 161.45609095074775, 161.49320521699835, 70.2995513724602, 70.34461297681736, 388.8977681732042, 6.38680347702198, 16.37198819915362, 2.7881134318366878E7, 2.400660525282181E7, 374.71656304244476, 11.910011571767498, 332.1240653785475, 1.7121167208594668, 161.52176194800637, 161.48546488277606, 70.02158946287807, 69.74993882610025)
+    
+    scala>     val means = sums.map(_ / n)
+    means: Array[Double] = Array(48.34243046395876, 1834.6211752293746, 1093.6228137132073, 5.716116037972159E-6, 6.487791703098401E-4, 7.961733052889793E-6, 0.012437656057623349, 3.205107921291532E-5, 0.14352901980246327, 0.008088304193730605, 6.81850984529536E-5, 3.674646024410674E-5, 0.012934958152926926, 0.0011887479888968528, 7.430950849363806E-5, 0.001021143300783455, 0.0, 4.082940027122971E-7, 8.351653825480036E-4, 334.97344027097654, 295.26708613431526, 0.1779702806878365, 0.1780369530570092, 0.05766509112815903, 0.05773010174074107, 0.789884175157277, 0.021179606286161765, 0.0282608043269383, 232.98108271811932, 189.21424492863122, 0.7537132359320887, 0.030711105249815088, 0.6050520115522577, 0.006464106568004543, 0.17809114796146144, 0.17788586181983929, 0.05792780382126354, 0.057...
+
+Useful Spark Commands
+=====================
+
+.. note::  This information was taken from website https://www.tutorialspoint.com/apache_spark/apache_spark_core_programming.htm
+
+Transformation and Meaning::
+
+    map(func)
+    filter(func)
+    flatMap(func)
+    mapPartitions(func)
+    mapPartitionsWithIndex(func)
+    sample(withReplacement,fraction,seed)
+    union(otherDatatset)
+    intersection(otherDataset)
+    distinct([numTasks])
+    groupByKey([numTaks])
+    reducedByKey(func,[numTasks])
+    aggregatedByKey(zeroValue)(seqOp,combOp,[numTasks])
+    sortByKey([ascending],[numTasks])
+    join(otherDataset,[numTasks])
+    cogroup(otherDataset,[numTasks])
+    cartesian(otherDataset)
+    pipe(command,[envVars])
+    coalesce(numPartitions)
+    rapartition(numPartitions)
+    repartitionAndSortWithinPartitions(partitioner)
+    
+Actions::
+    
+    reduce(func)
+    collect()
+    count()
+    first()
+    taken(n)
+    takeSample(withReplacement,num,[seed])
+    takeOrdered(n,[ordering])
+    saveAsTestFile(path)
+    saveAsSequenceFile(path)(Java and Scala)
+    saveAsObjectFile(path)(Java and Scala)
+    countByKey()
+    foreach(func)
+    
+
+ 
+    
+Useful HDFS commands
+=====================
+
+Here is a list of useful commands taken from website:  https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-common/FileSystemShell.html::
+
+    bin/hadoop fs <args>
+    hadoop fs -appendToFile <localsrc> ... <dst>
+    hadoop fs -cat [-ignoreCrc] URI [URI ...]
+    hadoop fs -copyFromLocal <localsrc> URI
+    hadoop fs -copyToLocal [-ignorecrc] [-crc] URI <localdst>
+    hadoop fs -find <path> ... <expression> ...
+    hadoop fs -ls [-C] [-d] [-h] [-q] [-R] [-t] [-S] [-r] [-u] <args>
+    hadoop fs -mkdir [-p] <paths>
+    hadoop fs -tail [-f] URI
