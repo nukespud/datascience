@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 2: &#8212; Data Analytics 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Homework 1:" href="week1.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="week1.html" title="Homework 1:"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Data Analytics 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week 2:</a><ul>
+<li><a class="reference internal" href="#homework-2">Homework 2</a><ul>
+<li><a class="reference internal" href="#question">Question</a></li>
+<li><a class="reference internal" href="#randomized-block-design">Randomized Block Design</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week1.html"
+                        title="previous chapter">Homework 1:</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/week2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-2">
+<h1>Week 2:<a class="headerlink" href="#week-2" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<div class="section" id="homework-2">
+<h2>Homework 2<a class="headerlink" href="#homework-2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="question">
+<h3>Question<a class="headerlink" href="#question" title="Permalink to this headline">¶</a></h3>
+<p>What does an Analysis of Variance tell you?  What types of questions does it answer?
+What then is the significance of experimental design?</p>
+<blockquote>
+<div>ANOVA describes how much variance is between different groups versus how much is within each group. Having a thorough understanding of the experiment is an essential part of the experimental design, especial when it comes to known what should be used as the different groupings.  The results from the ANOVA test will tell the how much variance is between the various groups versus within each group, but if the groups are not chosen correctly for the given experiment, then valuable incite may be missed.</div></blockquote>
+</div>
+<div class="section" id="randomized-block-design">
+<h3>Randomized Block Design<a class="headerlink" href="#randomized-block-design" title="Permalink to this headline">¶</a></h3>
+<p>First I import the table:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>df2 <span class="o">=</span> read.table<span class="p">(</span><span class="s">&quot;fastfood-2.txt&quot;</span><span class="p">,</span> header<span class="o">=</span><span class="kc">TRUE</span><span class="p">);</span>
+df2
+</pre></div>
+</div>
+<p>The table is as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>  Item1 Item2 Item3
+<span class="m">1</span>    <span class="m">31</span>    <span class="m">27</span>    <span class="m">24</span>
+<span class="m">2</span>    <span class="m">31</span>    <span class="m">28</span>    <span class="m">31</span>
+<span class="m">3</span>    <span class="m">45</span>    <span class="m">29</span>    <span class="m">46</span>
+<span class="m">4</span>    <span class="m">21</span>    <span class="m">18</span>    <span class="m">48</span>
+<span class="m">5</span>    <span class="m">42</span>    <span class="m">36</span>    <span class="m">46</span>
+<span class="m">6</span>    <span class="m">32</span>    <span class="m">17</span>    <span class="m">40</span>
+</pre></div>
+</div>
+<p>I then concatenate data rows in df2 into a single vector:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>r <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="kp">t</span><span class="p">(</span><span class="kp">as.matrix</span><span class="p">(</span>df2<span class="p">)))</span>
+r
+</pre></div>
+</div>
+<p>r is viewed as:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">31</span> <span class="m">27</span> <span class="m">24</span> <span class="m">31</span> <span class="m">28</span> <span class="m">31</span> <span class="m">45</span> <span class="m">29</span> <span class="m">46</span> <span class="m">21</span> <span class="m">18</span> <span class="m">48</span> <span class="m">42</span> <span class="m">36</span> <span class="m">46</span> <span class="m">32</span> <span class="m">17</span>
+<span class="p">[</span><span class="m">18</span><span class="p">]</span> <span class="m">40</span>
+</pre></div>
+</div>
+<p>I then create three items:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>f<span class="o">=</span><span class="kt">c</span><span class="p">(</span><span class="s">&quot;Item1&quot;</span><span class="p">,</span><span class="s">&quot;Item2&quot;</span><span class="p">,</span><span class="s">&quot;Item3&quot;</span><span class="p">)</span>
+n <span class="o">=</span> <span class="m">3</span>  <span class="c1"># This is number of levels</span>
+k <span class="o">=</span> <span class="m">6</span>  <span class="c1"># This is number of replications</span>
+
+
+<span class="c1"># gl() function generates factors by specifying the pattern of their levels.</span>
+<span class="c1">#</span>
+<span class="c1"># gl(n, k, length = n*k, labels = 1:n, ordered = FALSE)</span>
+<span class="c1">#</span>
+<span class="c1"># n: number of levels</span>
+<span class="c1"># k: number of replications</span>
+<span class="c1"># length: length of the result</span>
+<span class="c1"># labels: labels for the resulting factor levels</span>
+<span class="c1"># ordered: whether the result would be ordered or not</span>
+
+<span class="c1"># Create a vector treatment factor</span>
+tm <span class="o">=</span> <span class="kp">gl</span><span class="p">(</span>n<span class="p">,</span> <span class="m">1</span><span class="p">,</span> n<span class="o">*</span>k<span class="p">,</span><span class="kp">factor</span><span class="p">(</span>f<span class="p">))</span>
+tm
+</pre></div>
+</div>
+<p>The results are as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span> <span class="p">[</span><span class="m">1</span><span class="p">]</span> Item1 Item2 Item3 Item1 Item2 Item3 Item1 Item2
+ <span class="p">[</span><span class="m">9</span><span class="p">]</span> Item3 Item1 Item2 Item3 Item1 Item2 Item3 Item1
+<span class="p">[</span><span class="m">17</span><span class="p">]</span> Item2 Item3
+Levels<span class="o">:</span> Item1 Item2 Item3
+</pre></div>
+</div>
+<p>Then I do the following:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="c1"># Create vector of blocking factor for each element in the response</span>
+
+blk <span class="o">=</span> <span class="kp">gl</span><span class="p">(</span>n<span class="p">,</span> k<span class="p">,</span> k<span class="o">*</span>n<span class="p">)</span>
+blk
+</pre></div>
+</div>
+<p>The blk variable is:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="m">1</span> <span class="m">1</span> <span class="m">1</span> <span class="m">1</span> <span class="m">1</span> <span class="m">1</span> <span class="m">2</span> <span class="m">2</span> <span class="m">2</span> <span class="m">2</span> <span class="m">2</span> <span class="m">2</span> <span class="m">3</span> <span class="m">3</span> <span class="m">3</span> <span class="m">3</span> <span class="m">3</span> <span class="m">3</span>
+Levels<span class="o">:</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span>
+</pre></div>
+</div>
+<p>I then do the following:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="c1">#Apply function aov to a formula</span>
+av <span class="o">=</span> aov<span class="p">(</span>r <span class="o">~</span> tm <span class="o">+</span> blk<span class="p">)</span>
+<span class="kp">summary</span><span class="p">(</span>av<span class="p">)</span>
+</pre></div>
+</div>
+<p>The summary of av is as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>            Df Sum Sq Mean Sq <span class="bp">F</span> value Pr<span class="p">(</span><span class="o">&gt;</span><span class="bp">F</span><span class="p">)</span>
+tm           <span class="m">2</span>  <span class="m">538.8</span>  <span class="m">269.39</span>   <span class="m">3.727</span> <span class="m">0.0525</span> <span class="m">.</span>
+blk          <span class="m">2</span>  <span class="m">163.4</span>   <span class="m">81.72</span>   <span class="m">1.131</span> <span class="m">0.3526</span>
+Residuals   <span class="m">13</span>  <span class="m">939.6</span>   <span class="m">72.27</span>
+<span class="o">---</span>
+Signif. codes<span class="o">:</span>
+<span class="m">0</span> <span class="o">***</span> <span class="m">0.001</span> <span class="o">**</span> <span class="m">0.01</span> <span class="o">*</span> <span class="m">0.05</span> <span class="m">.</span> <span class="m">0.1</span>   <span class="m">1</span>
+</pre></div>
+</div>
+<p>In the tutorial the significant level was set at 0.05. However in this case the probability was &gt;0.05 at 0.0525 so the null hypothesis that the mean sales volume of the new menu items are all equal would not be rejected in this case</p>
+<p>I also created the response data along vertical columns instead of horizontal rows by adjusting the factor levels accordingly.</p>
+<p>First a linearized along the vertical columns using the command:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>rPart2 <span class="o">=</span> <span class="kt">c</span><span class="p">(</span>df2<span class="p">[,</span><span class="m">1</span><span class="p">],</span>df2<span class="p">[,</span><span class="m">2</span><span class="p">],</span>df2<span class="p">[,</span><span class="m">3</span><span class="p">])</span>
+rPart2
+</pre></div>
+</div>
+<p>The value of rPart2 is:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span> <span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">31</span> <span class="m">31</span> <span class="m">45</span> <span class="m">21</span> <span class="m">42</span> <span class="m">32</span> <span class="m">27</span> <span class="m">28</span> <span class="m">29</span> <span class="m">18</span> <span class="m">36</span> <span class="m">17</span> <span class="m">24</span> <span class="m">31</span> <span class="m">46</span> <span class="m">48</span> <span class="m">46</span>
+<span class="p">[</span><span class="m">18</span><span class="p">]</span> <span class="m">40</span>
+</pre></div>
+</div>
+<p>I then created general factor levels similar to above but with tm and blk reversed:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>tmPart2 <span class="o">=</span> <span class="kp">gl</span><span class="p">(</span>n<span class="p">,</span> k<span class="p">,</span> n<span class="o">*</span>k<span class="p">,</span><span class="kp">factor</span><span class="p">(</span>f<span class="p">))</span>
+tmPart2
+
+blkPart2 <span class="o">=</span> <span class="kp">gl</span><span class="p">(</span>n<span class="p">,</span> <span class="m">1</span><span class="p">,</span> k<span class="o">*</span>n<span class="p">)</span>
+blkPart2
+</pre></div>
+</div>
+<p>The output for tmPart2 and blkPark2 can be seen below:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span> tmPart2
+ <span class="p">[</span><span class="m">1</span><span class="p">]</span> Item1 Item1 Item1 Item1 Item1 Item1 Item2 Item2
+ <span class="p">[</span><span class="m">9</span><span class="p">]</span> Item2 Item2 Item2 Item2 Item3 Item3 Item3 Item3
+<span class="p">[</span><span class="m">17</span><span class="p">]</span> Item3 Item3
+Levels<span class="o">:</span> Item1 Item2 Item3
+
+<span class="o">&gt;</span> blkPart2
+ <span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span>
+Levels<span class="o">:</span> <span class="m">1</span> <span class="m">2</span> <span class="m">3</span>
+</pre></div>
+</div>
+<p>I then ran the command aov</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>av2 <span class="o">=</span>aov<span class="p">(</span>rPart2<span class="o">~</span>tmPart2<span class="o">+</span>blkPart2<span class="p">)</span>
+<span class="kp">summary</span><span class="p">(</span>av2<span class="p">)</span>
+</pre></div>
+</div>
+<p>And got the following summary:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="kp">summary</span><span class="p">(</span>av2<span class="p">)</span>
+            Df Sum Sq Mean Sq <span class="bp">F</span> value Pr<span class="p">(</span><span class="o">&gt;</span><span class="bp">F</span><span class="p">)</span>
+tmPart2      <span class="m">2</span>  <span class="m">538.8</span>  <span class="m">269.39</span>   <span class="m">3.890</span> <span class="m">0.0474</span> <span class="o">*</span>
+blkPart2     <span class="m">2</span>  <span class="m">202.8</span>  <span class="m">101.39</span>   <span class="m">1.464</span> <span class="m">0.2670</span>
+Residuals   <span class="m">13</span>  <span class="m">900.2</span>   <span class="m">69.25</span>
+<span class="o">---</span>
+Signif. codes<span class="o">:</span>
+<span class="m">0</span> <span class="o">***</span> <span class="m">0.001</span> <span class="o">**</span> <span class="m">0.01</span> <span class="o">*</span> <span class="m">0.05</span> <span class="m">.</span> <span class="m">0.1</span>   <span class="m">1</span>
+</pre></div>
+</div>
+<p>In the tutorial the significant level was set at 0.05. In this case the probability was &lt;0.05 at 0.0474 so the null hypothesis that the mean sales volume of the new menu items are all equal could be rejected.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="week1.html" title="Homework 1:"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Data Analytics 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 3: Homework 2 &#8212; Data Analytics 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Week 3: Homework 1" href="week3homework1.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="week3homework1.html" title="Week 3: Homework 1"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Data Analytics 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week 3: Homework 2</a><ul>
+<li><a class="reference internal" href="#example-problem">Example problem</a><ul>
+<li><a class="reference internal" href="#step-1">Step 1</a></li>
+<li><a class="reference internal" href="#step-2">Step 2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#new-data">New data</a><ul>
+<li><a class="reference internal" href="#id1">Step 1</a></li>
+<li><a class="reference internal" href="#id2">Step 2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week3homework1.html"
+                        title="previous chapter">Week 3: Homework 1</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/week3homework2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-3-homework-2">
+<h1>Week 3: Homework 2<a class="headerlink" href="#week-3-homework-2" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<div class="section" id="example-problem">
+<h2>Example problem<a class="headerlink" href="#example-problem" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step-1">
+<h3>Step 1<a class="headerlink" href="#step-1" title="Permalink to this headline">¶</a></h3>
+<p>In this homework assignment, I am looking at if there is a difference in an athletics instructors.  The first step is to input the data, plot it to see if it is a normal distribution and then if so perform a t-test on the data to determine if there is a difference in the results.  The null hypothesis is that there is no difference.  The R input is as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="kn">library</span><span class="p">(</span>ggplot2<span class="p">)</span>
+<span class="kn">library</span><span class="p">(</span>lattice<span class="p">)</span>
+<span class="c1"># First step is to import the data before and after the training</span>
+x_training <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">12.9</span><span class="p">,</span> <span class="m">13.5</span><span class="p">,</span> <span class="m">12.8</span><span class="p">,</span> <span class="m">15.6</span><span class="p">,</span> <span class="m">17.2</span><span class="p">,</span> <span class="m">19.2</span><span class="p">,</span> <span class="m">12.6</span><span class="p">,</span> <span class="m">15.3</span><span class="p">,</span> <span class="m">14.4</span><span class="p">,</span> <span class="m">11.3</span><span class="p">)</span>
+y_training <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">12.7</span><span class="p">,</span> <span class="m">13.6</span><span class="p">,</span> <span class="m">12.0</span><span class="p">,</span> <span class="m">15.2</span><span class="p">,</span> <span class="m">16.8</span><span class="p">,</span> <span class="m">20.0</span><span class="p">,</span> <span class="m">12.0</span><span class="p">,</span> <span class="m">15.9</span><span class="p">,</span> <span class="m">16.0</span><span class="p">,</span> <span class="m">11.1</span><span class="p">)</span>
+<span class="c1"># Plotting</span>
+histogram<span class="p">(</span>x_training<span class="p">,</span> nint<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+histogram<span class="p">(</span>y_training<span class="p">,</span>nint<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+<span class="c1"># T test</span>
+t.test<span class="p">(</span>x_training<span class="p">,</span> y_training<span class="p">,</span> paired<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The figures from the t-test are as follows.</p>
+<div class="figure" id="id3">
+<img alt="_images/week3xTraningPlot.png" src="_images/week3xTraningPlot.png" />
+<p class="caption"><span class="caption-text">X training data set histogram</span></p>
+</div>
+<div class="figure" id="id4">
+<img alt="_images/week3yTraningPlot.png" src="_images/week3yTraningPlot.png" />
+<p class="caption"><span class="caption-text">Y training data set histogram</span></p>
+</div>
+<p>The results appear to be nominal given the low number of samples.  Therefore the t-test should be a valid method for testing the results.</p>
+<p>The output of the t-test is as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>    Paired <span class="kp">t</span><span class="o">-</span>test
+
+data<span class="o">:</span>  x_training and y_training
+t <span class="o">=</span> <span class="m">-0.21331</span><span class="p">,</span> df <span class="o">=</span> <span class="m">9</span><span class="p">,</span> p<span class="o">-</span>value <span class="o">=</span> <span class="m">0.8358</span>
+alternative hypothesis<span class="o">:</span> true difference <span class="kr">in</span> means is not equal to <span class="m">0</span>
+<span class="m">95</span> percent confidence interval<span class="o">:</span>
+ <span class="m">-0.5802549</span>  <span class="m">0.4802549</span>
+sample estimates<span class="o">:</span>
+mean of the differences
+                  <span class="m">-0.05</span>
+</pre></div>
+</div>
+<p>Based on the p-value of 0.8358 we fail to reject the null hypothesis</p>
+<p>The input along with the results to find the t-tabulated value for 97.5% confidence and 9 degrees of freedom can be seen below:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>qt<span class="p">(</span><span class="m">0.975</span><span class="p">,</span> <span class="m">9</span><span class="p">)</span>
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">2.262157</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-2">
+<h3>Step 2<a class="headerlink" href="#step-2" title="Permalink to this headline">¶</a></h3>
+<p>In step two we are looking at results from a new coach to see if before and after has improved the results.  The input to perform this test can be seen below:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>x_training <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">12.9</span><span class="p">,</span> <span class="m">13.5</span><span class="p">,</span> <span class="m">12.8</span><span class="p">,</span> <span class="m">15.6</span><span class="p">,</span> <span class="m">17.2</span><span class="p">,</span> <span class="m">19.2</span><span class="p">,</span> <span class="m">12.6</span><span class="p">,</span> <span class="m">15.3</span><span class="p">,</span> <span class="m">14.4</span><span class="p">,</span> <span class="m">11.3</span><span class="p">)</span>
+y_training <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">12.0</span><span class="p">,</span> <span class="m">12.2</span><span class="p">,</span> <span class="m">11.2</span><span class="p">,</span> <span class="m">13.0</span><span class="p">,</span> <span class="m">15.0</span><span class="p">,</span> <span class="m">15.8</span><span class="p">,</span> <span class="m">12.2</span><span class="p">,</span> <span class="m">13.4</span><span class="p">,</span> <span class="m">12.9</span><span class="p">,</span> <span class="m">11.0</span><span class="p">)</span>
+histogram<span class="p">(</span>x_training<span class="p">,</span> nint<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+histogram<span class="p">(</span>y_training<span class="p">,</span>nint<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+t.test<span class="p">(</span>x_training<span class="p">,</span> y_training<span class="p">,</span> paired<span class="o">=</span><span class="kc">TRUE</span><span class="s">&quot;, alt=&quot;</span>less<span class="s">&quot;&quot;</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>The results seem to be normal so the t-test should work well.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In this example, the t.test used the command alt=&#8221;less&#8221; which means that the alternative hypothesis is that the true difference in means is less than 0 is if the p-value is great then 0.05.</p>
+</div>
+<p>The results are as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>    Paired <span class="kp">t</span><span class="o">-</span>test
+
+data<span class="o">:</span>  x_training and y_training
+t <span class="o">=</span> <span class="m">5.2671</span><span class="p">,</span> df <span class="o">=</span> <span class="m">9</span><span class="p">,</span> p<span class="o">-</span>value <span class="o">=</span> <span class="m">0.9997</span>
+alternative hypothesis<span class="o">:</span> true difference <span class="kr">in</span> means is less than <span class="m">0</span>
+<span class="m">95</span> percent confidence interval<span class="o">:</span>
+     <span class="o">-</span><span class="kc">Inf</span> <span class="m">2.170325</span>
+sample estimates<span class="o">:</span>
+mean of the differences
+                   <span class="m">1.61</span>
+</pre></div>
+</div>
+<p>In this case, we can accept the null hypothesis because the p_value was greater than 0.05.  This means that there is an improvement in the results for before and after the new coaches&#8217; method.</p>
+</div>
+</div>
+<div class="section" id="new-data">
+<h2>New data<a class="headerlink" href="#new-data" title="Permalink to this headline">¶</a></h2>
+<p>In this example, I am looking to see if there is a difference between the effect of a new drug on blood pressure using the same group of 12 people.  To do this, I use the t-test to determine if it has positive, negative, or neutral</p>
+<div class="section" id="id1">
+<h3>Step 1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The null hypothesis is that there is no difference.
+The R input is as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="c1"># First step is to import the data before and after the training</span>
+x_training <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">155</span><span class="p">,</span> <span class="m">142</span><span class="p">,</span> <span class="m">145</span><span class="p">,</span> <span class="m">160</span><span class="p">,</span> <span class="m">149</span><span class="p">,</span> <span class="m">152</span><span class="p">,</span> <span class="m">157</span><span class="p">,</span> <span class="m">159</span><span class="p">,</span> <span class="m">166</span><span class="p">,</span> <span class="m">163</span><span class="p">,</span> <span class="m">158</span><span class="p">,</span> <span class="m">161</span><span class="p">)</span>
+y_training <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">152</span><span class="p">,</span> <span class="m">142</span><span class="p">,</span> <span class="m">144</span><span class="p">,</span> <span class="m">159</span><span class="p">,</span> <span class="m">150</span><span class="p">,</span> <span class="m">153</span><span class="p">,</span> <span class="m">156</span><span class="p">,</span> <span class="m">160</span><span class="p">,</span> <span class="m">165</span><span class="p">,</span> <span class="m">162</span><span class="p">,</span> <span class="m">159</span><span class="p">,</span> <span class="m">160</span><span class="p">)</span>
+<span class="c1"># Plotting</span>
+histogram<span class="p">(</span>x_training<span class="p">,</span> nint<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+histogram<span class="p">(</span>y_training<span class="p">,</span>nint<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+<span class="c1"># T test</span>
+t.test<span class="p">(</span>x_training<span class="p">,</span> y_training<span class="p">,</span> paired<span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The results appear to be nominal even though there is a low number of samples.  Therefore the t-test should be a valid method for testing the results.</p>
+<p>The output of the t-test is as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>Paired <span class="kp">t</span><span class="o">-</span>test
+
+data<span class="o">:</span>  x_training and y_training
+t <span class="o">=</span> <span class="m">1.1639</span><span class="p">,</span> df <span class="o">=</span> <span class="m">11</span><span class="p">,</span> p<span class="o">-</span>value <span class="o">=</span> <span class="m">0.2691</span>
+alternative hypothesis<span class="o">:</span> true difference <span class="kr">in</span> means is not equal to <span class="m">0</span>
+<span class="m">95</span> percent confidence interval<span class="o">:</span>
+ <span class="m">-0.3712632</span>  <span class="m">1.2045965</span>
+sample estimates<span class="o">:</span>
+mean of the differences
+              <span class="m">0.4166667</span>
+</pre></div>
+</div>
+<p>Based on the p-value of 0.2691 we fail to reject the null hypothesis which is there is no difference in the blood pressure before and after taking the drug.  Because the null hypothesis is failed to be rejected there is not point testing if it is great or less then.</p>
+</div>
+<div class="section" id="id2">
+<h3>Step 2<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>In step two we are looking at the difference in blood pressure with a new drug.  The input for R is as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>x_training <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">155</span><span class="p">,</span> <span class="m">142</span><span class="p">,</span> <span class="m">145</span><span class="p">,</span> <span class="m">160</span><span class="p">,</span> <span class="m">149</span><span class="p">,</span> <span class="m">152</span><span class="p">,</span> <span class="m">157</span><span class="p">,</span> <span class="m">159</span><span class="p">,</span> <span class="m">166</span><span class="p">,</span> <span class="m">163</span><span class="p">,</span> <span class="m">158</span><span class="p">,</span> <span class="m">161</span><span class="p">)</span>
+y_training <span class="o">=</span> <span class="kt">c</span><span class="p">(</span><span class="m">150</span><span class="p">,</span> <span class="m">135</span><span class="p">,</span> <span class="m">142</span><span class="p">,</span> <span class="m">153</span><span class="p">,</span> <span class="m">142</span><span class="p">,</span> <span class="m">147</span><span class="p">,</span> <span class="m">152</span><span class="p">,</span> <span class="m">149</span><span class="p">,</span> <span class="m">158</span><span class="p">,</span> <span class="m">155</span><span class="p">,</span> <span class="m">150</span><span class="p">,</span> <span class="m">150</span><span class="p">)</span>
+histogram<span class="p">(</span>x_training<span class="p">,</span> nint<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+histogram<span class="p">(</span>y_training<span class="p">,</span>nint<span class="o">=</span><span class="m">5</span><span class="p">)</span>
+t.test<span class="p">(</span>x_training<span class="p">,</span> y_training<span class="p">,</span> paired<span class="o">=</span><span class="kc">TRUE</span> <span class="p">)</span>
+</pre></div>
+</div>
+<p>Based on the figures the results seem to be normal so the t-test should work well.</p>
+<p>The results are as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>  Paired <span class="kp">t</span><span class="o">-</span>test
+
+data<span class="o">:</span>  x_training and y_training
+t <span class="o">=</span> <span class="m">10.747</span><span class="p">,</span> df <span class="o">=</span> <span class="m">11</span><span class="p">,</span> p<span class="o">-</span>value <span class="o">=</span> <span class="m">3.582e-07</span>
+alternative hypothesis<span class="o">:</span> true difference <span class="kr">in</span> means is not equal to <span class="m">0</span>
+<span class="m">95</span> percent confidence interval<span class="o">:</span>
+ <span class="m">5.566413</span> <span class="m">8.433587</span>
+sample estimates<span class="o">:</span>
+mean of the differences
+                      <span class="m">7</span>
+</pre></div>
+</div>
+<p>In this case, we can reject the null hypothesis because the p_value was less than 0.05.  The results mean that there is a difference in before and after using the drug.  To determine if the drug has a positive, negative, or neutron effect R can be utilized using the alt=&#8221;less&#8221; or all=&#8221;greater&#8221; command as seen below:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span>t.test<span class="p">(</span>x_training<span class="p">,</span> y_training<span class="p">,</span> paired<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>alt<span class="o">=</span><span class="s">&quot;less&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The result are as follows:</p>
+<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span> t.test<span class="p">(</span>x_training<span class="p">,</span> y_training<span class="p">,</span> paired<span class="o">=</span><span class="kc">TRUE</span><span class="p">,</span>alt<span class="o">=</span><span class="s">&quot;less&quot;</span><span class="p">)</span>
+
+    Paired <span class="kp">t</span><span class="o">-</span>test
+
+data<span class="o">:</span>  x_training and y_training
+t <span class="o">=</span> <span class="m">10.747</span><span class="p">,</span> df <span class="o">=</span> <span class="m">11</span><span class="p">,</span> p<span class="o">-</span>value <span class="o">=</span> <span class="m">1</span>
+alternative hypothesis<span class="o">:</span> true difference <span class="kr">in</span> means is less than <span class="m">0</span>
+<span class="m">95</span> percent confidence interval<span class="o">:</span>
+    <span class="o">-</span><span class="kc">Inf</span> <span class="m">8.16973</span>
+sample estimates<span class="o">:</span>
+mean of the differences
+                      <span class="m">7</span>
+</pre></div>
+</div>
+<p>From the results above the p-value is great then 0.05, therefore, we can not reject the null hypothesis which means that the difference in the mean is less than 0.  The result shows that after the use of the new drug the blood pressure of this sample of the population  decreased.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="week3homework1.html" title="Week 3: Homework 1"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Data Analytics 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>

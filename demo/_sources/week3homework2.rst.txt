@@ -1,0 +1,181 @@
+.. highlight:: r
+
+*************************************************
+Week 3: Homework 2
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+Example problem
+******************
+
+
+Step 1
+========
+
+In this homework assignment, I am looking at if there is a difference in an athletics instructors.  The first step is to input the data, plot it to see if it is a normal distribution and then if so perform a t-test on the data to determine if there is a difference in the results.  The null hypothesis is that there is no difference.  The R input is as follows::
+
+  library(ggplot2)
+  library(lattice)
+  # First step is to import the data before and after the training 
+  x_training = c(12.9, 13.5, 12.8, 15.6, 17.2, 19.2, 12.6, 15.3, 14.4, 11.3)
+  y_training = c(12.7, 13.6, 12.0, 15.2, 16.8, 20.0, 12.0, 15.9, 16.0, 11.1)
+  # Plotting
+  histogram(x_training, nint=5)
+  histogram(y_training,nint=5)
+  # T test
+  t.test(x_training, y_training, paired=TRUE) 
+
+The figures from the t-test are as follows.
+
+.. figure:: _static/week3xTraningPlot.png
+
+  X training data set histogram
+
+.. figure:: _static/week3yTraningPlot.png
+
+  Y training data set histogram
+  
+The results appear to be nominal given the low number of samples.  Therefore the t-test should be a valid method for testing the results.  
+
+The output of the t-test is as follows::
+
+      Paired t-test
+  
+  data:  x_training and y_training
+  t = -0.21331, df = 9, p-value = 0.8358
+  alternative hypothesis: true difference in means is not equal to 0
+  95 percent confidence interval:
+   -0.5802549  0.4802549
+  sample estimates:
+  mean of the differences 
+                    -0.05 
+                    
+Based on the p-value of 0.8358 we fail to reject the null hypothesis
+
+The input along with the results to find the t-tabulated value for 97.5% confidence and 9 degrees of freedom can be seen below::
+
+  qt(0.975, 9)
+  [1] 2.262157
+  
+Step 2
+=======
+
+In step two we are looking at results from a new coach to see if before and after has improved the results.  The input to perform this test can be seen below::
+
+  x_training = c(12.9, 13.5, 12.8, 15.6, 17.2, 19.2, 12.6, 15.3, 14.4, 11.3)
+  y_training = c(12.0, 12.2, 11.2, 13.0, 15.0, 15.8, 12.2, 13.4, 12.9, 11.0)
+  histogram(x_training, nint=5)
+  histogram(y_training,nint=5)
+  t.test(x_training, y_training, paired=TRUE", alt="less"" )
+
+The results seem to be normal so the t-test should work well.  
+
+.. note:: 
+
+  In this example, the t.test used the command alt="less" which means that the alternative hypothesis is that the true difference in means is less than 0 is if the p-value is great then 0.05.  
+  
+The results are as follows::
+
+      Paired t-test
+
+  data:  x_training and y_training
+  t = 5.2671, df = 9, p-value = 0.9997
+  alternative hypothesis: true difference in means is less than 0
+  95 percent confidence interval:
+       -Inf 2.170325
+  sample estimates:
+  mean of the differences 
+                     1.61
+
+In this case, we can accept the null hypothesis because the p_value was greater than 0.05.  This means that there is an improvement in the results for before and after the new coaches' method. 
+
+
+New data 
+************
+
+In this example, I am looking to see if there is a difference between the effect of a new drug on blood pressure using the same group of 12 people.  To do this, I use the t-test to determine if it has positive, negative, or neutral
+
+
+
+Step 1
+========
+The null hypothesis is that there is no difference.  
+The R input is as follows::
+
+  # First step is to import the data before and after the training 
+  x_training = c(155, 142, 145, 160, 149, 152, 157, 159, 166, 163, 158, 161)
+  y_training = c(152, 142, 144, 159, 150, 153, 156, 160, 165, 162, 159, 160)
+  # Plotting
+  histogram(x_training, nint=5)
+  histogram(y_training,nint=5)
+  # T test
+  t.test(x_training, y_training, paired=TRUE) 
+
+The results appear to be nominal even though there is a low number of samples.  Therefore the t-test should be a valid method for testing the results.  
+
+The output of the t-test is as follows::
+
+  Paired t-test
+  
+  data:  x_training and y_training
+  t = 1.1639, df = 11, p-value = 0.2691
+  alternative hypothesis: true difference in means is not equal to 0
+  95 percent confidence interval:
+   -0.3712632  1.2045965
+  sample estimates:
+  mean of the differences 
+                0.4166667 
+                      
+Based on the p-value of 0.2691 we fail to reject the null hypothesis which is there is no difference in the blood pressure before and after taking the drug.  Because the null hypothesis is failed to be rejected there is not point testing if it is great or less then.  
+
+
+  
+Step 2
+=======
+
+In step two we are looking at the difference in blood pressure with a new drug.  The input for R is as follows::
+
+  x_training = c(155, 142, 145, 160, 149, 152, 157, 159, 166, 163, 158, 161)
+  y_training = c(150, 135, 142, 153, 142, 147, 152, 149, 158, 155, 150, 150)
+  histogram(x_training, nint=5)
+  histogram(y_training,nint=5)
+  t.test(x_training, y_training, paired=TRUE ) 
+
+Based on the figures the results seem to be normal so the t-test should work well.  
+
+The results are as follows::
+
+    Paired t-test
+  
+  data:  x_training and y_training
+  t = 10.747, df = 11, p-value = 3.582e-07
+  alternative hypothesis: true difference in means is not equal to 0
+  95 percent confidence interval:
+   5.566413 8.433587
+  sample estimates:
+  mean of the differences 
+                        7 
+
+In this case, we can reject the null hypothesis because the p_value was less than 0.05.  The results mean that there is a difference in before and after using the drug.  To determine if the drug has a positive, negative, or neutron effect R can be utilized using the alt="less" or all="greater" command as seen below::
+
+  t.test(x_training, y_training, paired=TRUE,alt="less") 
+  
+  
+The result are as follows::
+
+  > t.test(x_training, y_training, paired=TRUE,alt="less")
+  
+      Paired t-test
+  
+  data:  x_training and y_training
+  t = 10.747, df = 11, p-value = 1
+  alternative hypothesis: true difference in means is less than 0
+  95 percent confidence interval:
+      -Inf 8.16973
+  sample estimates:
+  mean of the differences 
+                        7 
+  
+
+From the results above the p-value is great then 0.05, therefore, we can not reject the null hypothesis which means that the difference in the mean is less than 0.  The result shows that after the use of the new drug the blood pressure of this sample of the population  decreased.               
+                       

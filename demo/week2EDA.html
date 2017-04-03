@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 2: Exploritory Data Analyis (EDA) &#8212; Data Analytics 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Week 2:" href="week2homework2.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="week2homework2.html" title="Week 2:"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Data Analytics 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week 2: Exploritory Data Analyis (EDA)</a><ul>
+<li><a class="reference internal" href="#data-science-working-document">Data science working document</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week2homework2.html"
+                        title="previous chapter">Week 2:</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/week2EDA.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-2-exploritory-data-analyis-eda">
+<h1>Week 2: Exploritory Data Analyis (EDA)<a class="headerlink" href="#week-2-exploritory-data-analyis-eda" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<p>Find functions for the following:</p>
+<ul class="simple">
+<li>Descriptive statistics  (<a class="reference external" href="http://www.statmethods.net/stats/descriptives.html">http://www.statmethods.net/stats/descriptives.html</a>)</li>
+<li>Frequencies www.statmethods.net/stats/frequencies.</li>
+<li>Cross tabs</li>
+<li>Correlations <a class="reference external" href="http://www.statmethods.net/stats/correlations.html">http://www.statmethods.net/stats/correlations.html</a></li>
+<li>How to display these statistics</li>
+</ul>
+<p>I read the following textbook:  R: Data Analysis and Visualization</p>
+<p>Some notes are as follows:</p>
+<blockquote>
+<div><ul class="simple">
+<li>c()  stands for combine</li>
+<li>vectors need to have same data type</li>
+<li>[] - subscript operator</li>
+<li>: used for sequences</li>
+<li>NA is Null</li>
+<li>Vectors can be recycled (expanded until same size)</li>
+<li>For loops not needed in R because of vector and matrix capability</li>
+<li>function.name &lt;-function(argument1, argument 2,...) { #some funciton}</li>
+<li>sapply (Takes every element in vector and applies it to a function)</li>
+<li>Can define function in sapply (use instead of for loop)</li>
+<li>Components of R include:
+* vector data structure
+* matrix
+* data frames
+* list
+* array data structures</li>
+<li>Matrix:
+* a.matrix &lt;-matrix(c(x,x,x,),nol=?)
+* cbin (column columns)
+* rbin (row combine)
+* apply() 1 rows, 2 column (rows 1 columns 2)</li>
+<li>Data.frame.  Rectangular array of data like a spreadsheet application (may have columns of different data type)</li>
+</ul>
+</div></blockquote>
+<dl class="docutils">
+<dt>Chapter 2:</dt>
+<dd><ul class="first last simple">
+<li>Univariate data (samples of one variable)</li>
+</ul>
+</dd>
+</dl>
+<div class="section" id="data-science-working-document">
+<h2>Data science working document<a class="headerlink" href="#data-science-working-document" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Giving me a brief introduction to your data</li>
+<li>Discuss what you hope to discover about your data, or certain questions that you will solve for</li>
+<li>Show a header or summary of your data and explain the columns were applicable (max, means, min)</li>
+<li>Work in R to find your answers to the questions in part 2</li>
+<li>A summary of your findings, did you expect this? did you not?</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="week2homework2.html" title="Week 2:"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Data Analytics 1.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+    </div>
+  </body>
+</html>

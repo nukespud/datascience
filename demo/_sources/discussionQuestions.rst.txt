@@ -1,0 +1,82 @@
+.. highlight:: r
+
+*************************************************
+Disucssion Questions: 
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+
+Week 1
+=================
+
+Analytics requires the application of statistics, computer programming, and advanced analytical methods.  The combination of all three allows for the discovery, interpretation, and communication of valuable information and insights extracted from data.  Based on Wikipedia [1] there are multiple types of analytics some of the more common ones today include:
+    * Risk analytics (predictive models that give risk score to individual customers for applications such as loans
+    * Digital Analytics (convert digital information into useful information for reporting, prediction, ect.
+    * Security Analytics (gather and analysis information about different security events and breaches)
+
+Also based on the Wikipedia article [1] others types of analytics include:
+    * Architectural analytics
+    * Behavioral analytics
+    * Big data analytics
+    * Business Analytics
+    * Cloud analytics
+    * Continuous analytics
+    * Cultural Analytics
+    * Customer Analytics
+    * Embedded analytics
+    * Learning Analytics
+    * News Analytics
+    * Online video analytics
+    * Predictive analytics
+    * Predictive engineering analytics
+    * Prescriptive analytics
+    * Semantic analytics
+    * Social analytics
+    * Software analytics
+    * Speech analytics
+    * User behavior analytics
+    * Visual Analytics
+    * Web analytics
+    * Win-loss analytics
+   
+Analytics looks at the entire process starting with determining the question, collecting the data, cleaning up the data, analyzing the information, interpolate the results, and come up with recommendations and conclusions.  However, the analysis is just one step along the way which starts with cleaned data and ends with interpreting the results to come up with conclusions.   
+
+
+
+Reference
+
+[1] "Analytics." Wikipedia. Wikimedia Foundation, 04 Mar. 2017. Web. 14 Mar. 2017.
+
+
+
+Week 2
+=================
+
+*Please post your answers (reply to this thread) to the questions below and respond to at least one other persons post.
+
+ Initial post due - March 22nd, reply - March 26th, midnight your time.
+
+Discuss research/experimenter bias. How does ANOVA help overcome this?*
+
+
+There are multiple types of bias including selection bias, voluntary response bias, convenience sample bias, recall bias, latent bias, etc.  Many of the bias can be reduced through well-designed experiments and philosophies such as using placebos, doing double blind studies, and performing crossover studies.  Different statistical methods can also be used to flag research/experimenter bias such as the statistical method ANOVA (analysis of variance).  ANOVA describes how much variance is between different groups versus how much is within each group.  If the research/experimenter bias is systemic, then there may be significant variations within the groups making it much harder to reject the null hypothesis. bias.     
+
+For experimental design, there is three main type of design approaches: completely randomized design,  randomized block design, and factorial design.  The completely randomized design is used to study one primary factor and does not take into consideration other factors.  This method requires the least amount of experiments which works well if there truly is no other factor influencing the result.  
+
+The randomized block design is used to remove unimportant influences into the experiment.  This method requires first group subjects into blocks based on characteristics such as age, gender, location, etc. and then the subjects are then randomized within each block.  The randomized block design requires more experiments than completely randomized design, but it does eliminate effects associated with different unimportant influences. 
+ 
+The factorial design is used to look at the effects associated with multiple influences.  In this method, all influences are considered significant and are analyzed.  This method requires the most amount of experiments but does lead to the maximum amount of information.  
+
+
+
+Week 3
+=======
+
+Most inferential statistics is based on the assumption that the variable being measured are normally distributed though it is not required for all inferential statistical analysis.   Perfect normally distributed can be determined if the mean is equal to the median as well as the mode.   The reason it is desirous to have a normal distribution that based on the central limit theorem that states if the variables are independent and random then the distribution of the variables will approximate normal as N increases regardless the shape of the population distribution.  
+
+There should always be some suspicion of the data if it does not approach a normal distribution.  The problems with the data could include outliers, insufficient data, or inappropriately graphed data.  
+
+It is possible to determine if something is normal by conducting the test of the "Assumption of Normality" which can include the Kolmogorov-Smirnov or Shapiro-Wilk test.  These test test the shape against a variety of popular shapes.  Based on these test it can be concluded that if the p-value is under 0.05, then there is statistically significant evidence that the sample is not normal. 
+
+If the data is determined to not have a normal distribution, then methods can be used to transform the data into a normal distribution so the analysis can be performed assuming normalized and then transform the results back after completion.  Also, there is a section of statistics called nonparametric statistics that can be used because it makes no assumptions about the data distribution.    
