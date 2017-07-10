@@ -9,8 +9,8 @@ Data Analytics at Regis University!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
-   
+
+
    fromTheExpert
    discussionQuestions
    week1
@@ -18,12 +18,11 @@ Data Analytics at Regis University!
    week2EDA
    week3homework1
    week3homework2
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
-
+   week5homework1
+   realTimeBigData
+   week6homework1
+   week6homework2
+   week7homework1
+   week7homework2
+   week8LP
+   week8IP

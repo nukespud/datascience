@@ -1,7 +1,7 @@
 .. highlight:: r
 
 *************************************************
-From the experts 
+From the experts
 *************************************************
 by Joshua Peterson (created in Sphinx)
 
@@ -23,7 +23,7 @@ Exploratory Data anlaysis and design of experiment
         * Algorithms
     * Communcate and visualize the results
     * Act, make decisions, data product
-    
+
 
 * (EDA) exploratory data analysis (first but essential part of the data science process)
     * Includes:
@@ -41,7 +41,7 @@ Exploratory Data anlaysis and design of experiment
     * Find idea of theory not test the theory
     * In spreadsheets or databases (but to hard to see anything by just lookng at the raw data)
     * rows reprent experimental subjects
-    * columns subjct indentifiers    
+    * columns subjct indentifiers
     * Two types of variables:
     * Quantitative variables
         * Discrete variables
@@ -61,11 +61,11 @@ Exploratory Data anlaysis and design of experiment
         	* histogram (idea about shape, central tendency, spread, modaility, and outlers
         	* Pie chart (not often used)
         	* Stem and leaf plots
-        	* Boxplots 
+        	* Boxplots
         	* Quantile-normal plots (quantile-quantile  QQ)
         * multivariate non-graphical EDA
         	* Cross tabulation for:
-        		* covarance 
+        		* covarance
         		* corolaton
         *  multivariate graphical EDA
         	* Scatter plot
@@ -73,7 +73,7 @@ Exploratory Data anlaysis and design of experiment
         * (perform univariate EDA before multivariate EDA)
 * Design of experimental or experimental design (DOE)
     * Maximum information from fewest experiments
-    * Quantify effect on a dependent variable           
+    * Quantify effect on a dependent variable
     * Factors include
         * Control factors
         * Uncontrollable factors (measured but not determined by the expeimenter)
@@ -85,7 +85,7 @@ Exploratory Data anlaysis and design of experiment
         * Determine potential sources of variation in the response
         * Decided which variables to measure and control
         * Decide how treatments are to be randomly assigned
-        
+
     * Terminaly review
         * Response variable: the output variable measurse the outcome of the experiment
         * Factor variable (input variable - predictor variable)
@@ -97,7 +97,7 @@ Exploratory Data anlaysis and design of experiment
         * Experimental design: plan for experimentation such as number of experiments
         * Experimental unit: (person, animpal, plant, time peried) emplyed in the expeirment
         * Interaction: change of one level effecting change in the other level
-    
+
     * Three types of experimental design:
         * Completely randomized design (one primary factor is randomly assigned to the expermmental units
             * Is there different between the k treatment
@@ -108,10 +108,10 @@ Exploratory Data anlaysis and design of experiment
             * Population variance are equal
             * If assumptions not vaild use a non-parmatric statistical method such as Kruskall-Wallis
             * in R::
-            
+
               >result= aov(y~A , data=dataframe)
-              >summary(result)    
-                        
+              >summary(result)
+
         * Randomized block design
             * One primary factor is considered in the experiment
             * Units are grouped into blocks
@@ -122,27 +122,27 @@ Exploratory Data anlaysis and design of experiment
                 * variance of block treamnet bk are equal
             * If assumptions not valide use non-parametric statistical method such as Friedman F
             * in R::
-                
+
                     >result=aov (y~A+B, data=dataframe)
-                    >summary(result)                
-        * Factorial designs    
+                    >summary(result)
+        * Factorial designs
             * Study interaction effects between factors (2 factors is two-way factorial design)
             * Concerns about two or more factors and the effect on each other
             * Assumptions include:
                 * Distrubtion of responce on each factor level combination is normal
                 * Variance of the response is constant for all treatments
                 * Experimental units are random and independently assigned for each treatment
-                * Can test for 
+                * Can test for
                     * factor interactions
                     * effect on factor
                     * main affect on a actor
-                    
+
                 * In R::
-                
+
                     > result = aov(y~A*B,data=dataframe) # interaction included
                     > summary(result)
-                
-                    
+
+
 Week 3 Inferntial Statistics
 ============================
 
@@ -163,7 +163,7 @@ Week 3 Inferntial Statistics
         * one sample t-test
         * dependent sample t-test (paired sample t-test) two sample when they are related blood preasure before and after medicine
         * independent sample t-test
-        * ANOVOA (more then two groups)      
+        * ANOVOA (more then two groups)
     * Chi-square test (frequence test for percentages and propotions) - normal
         * test associations (intepdencies) in a two-way table
         * good ness of fit (test of homgenety)
@@ -173,6 +173,22 @@ Week 3 Inferntial Statistics
     * Bayesian
     * Correlation coefficent (r) and Coefficienct of Dermination (R2) (reation but not causation)
 
+
+Week 7 Machine Learning
+========================
+
+Subfield of artifical intelligence
+Solve problems with no specific programming instructions
+Applciations include:
+* Control systems
+* Search engines
+* Bioinformatics
+* Computer VIsion
+
+3 categories:
+* Supervised learning: artifical neural networkds, decision trees
+* Unsupervised learning: trained with unlabeled data.  self-organizaiton maps, k-means
+* Reinforcment learning: learns without an explicit teacher.  robot control system, Q-learning
 
 ======= Discussion
 
@@ -186,9 +202,9 @@ http://www2.psychology.uiowa.edu/faculty/mordkoff/GradStats/part%201/I.07%20norm
 
 
 
-Mist infertial staticstics is based on the assumtion that the variable being measured are normally distrubites.  
+Mist infertial staticstics is based on the assumtion that the variable being measured are normally distrubites.
 
-Perfect normailly distributed can be determined if the mean is equal to the median as well as the mode.   The reason it is desirous to have normal distribution that basedo nthe central limit ttheorm if the variales and independent and random then the distrubtion of the variables will approximate normal as N increases regarless the shape of the population distrbution.  Test that required normaiaty include: t-test, ANOZVA, simple region "Assumtion of Normailty"  
+Perfect normailly distributed can be determined if the mean is equal to the median as well as the mode.   The reason it is desirous to have normal distribution that basedo nthe central limit ttheorm if the variales and independent and random then the distrubtion of the variables will approximate normal as N increases regarless the shape of the population distrbution.  Test that required normaiaty include: t-test, ANOZVA, simple region "Assumtion of Normailty"
 
 Can conduct test of the Assumption of Normailty (Kolmogorov-Sminov or Shaipor-Wilk Test.  Test shape against a varitey of popular shapes.  If p-value is under 0.05 then significant evidence the sample is not normal (some say .10)
 

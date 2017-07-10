@@ -5,13 +5,16 @@
 
 Welcome to Data Science's documentation!
 ========================================
+I started working on my masters in datascience in Fall of 2016.  These are my class notes for a few of my classes I have currently taken
+
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
-   dataEngineering/index.rst
+
    dataAnalytics/index.rst
+   dataEngineering/index.rst
+
 
 
 Indices and tables

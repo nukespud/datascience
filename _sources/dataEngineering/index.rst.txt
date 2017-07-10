@@ -9,8 +9,8 @@ Data Science at Regis University!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-   
-   
+
+
    week1hadoop.rst
    week2hadoop_cluster.rst
    week3hbase.rst
@@ -20,12 +20,3 @@ Data Science at Regis University!
    SparkOnMac.rst
    week7mahout.rst
    week8.rst
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
-

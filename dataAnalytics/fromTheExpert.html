@@ -54,6 +54,7 @@
 <li><a class="reference internal" href="#">From the experts</a><ul>
 <li><a class="reference internal" href="#week-2">Week 2</a></li>
 <li><a class="reference internal" href="#week-3-inferntial-statistics">Week 3 Inferntial Statistics</a></li>
+<li><a class="reference internal" href="#week-7-machine-learning">Week 7 Machine Learning</a></li>
 </ul>
 </li>
 </ul>
@@ -307,7 +308,7 @@
 <li><p class="first">If assumptions not vaild use a non-parmatric statistical method such as Kruskall-Wallis</p>
 </li>
 <li><p class="first">in R:</p>
-<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span>result<span class="o">=</span> aov<span class="p">(</span>y<span class="o">~</span>A <span class="p">,</span> data<span class="o">=</span>dataframe<span class="p">)</span>
+<div class="highlight-r"><div class="highlight"><pre><span class="o">&gt;</span>result<span class="o">=</span> aov<span class="p">(</span>y<span class="o">~</span>A <span class="p">,</span> data<span class="o">=</span>dataframe<span class="p">)</span>
 <span class="o">&gt;</span><span class="kp">summary</span><span class="p">(</span>result<span class="p">)</span>
 </pre></div>
 </div>
@@ -338,7 +339,7 @@
 <li><p class="first">If assumptions not valide use non-parametric statistical method such as Friedman F</p>
 </li>
 <li><p class="first">in R:</p>
-<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span>result<span class="o">=</span>aov <span class="p">(</span>y<span class="o">~</span>A<span class="o">+</span>B<span class="p">,</span> data<span class="o">=</span>dataframe<span class="p">)</span>
+<div class="highlight-r"><div class="highlight"><pre><span class="o">&gt;</span>result<span class="o">=</span>aov <span class="p">(</span>y<span class="o">~</span>A<span class="o">+</span>B<span class="p">,</span> data<span class="o">=</span>dataframe<span class="p">)</span>
 <span class="o">&gt;</span><span class="kp">summary</span><span class="p">(</span>result<span class="p">)</span>
 </pre></div>
 </div>
@@ -374,7 +375,7 @@
 </dl>
 </li>
 <li><p class="first">In R:</p>
-<div class="highlight-r"><div class="highlight"><pre><span></span><span class="o">&gt;</span> result <span class="o">=</span> aov<span class="p">(</span>y<span class="o">~</span>A<span class="o">*</span>B<span class="p">,</span>data<span class="o">=</span>dataframe<span class="p">)</span> <span class="c1"># interaction included</span>
+<div class="highlight-r"><div class="highlight"><pre><span class="o">&gt;</span> result <span class="o">=</span> aov<span class="p">(</span>y<span class="o">~</span>A<span class="o">*</span>B<span class="p">,</span>data<span class="o">=</span>dataframe<span class="p">)</span> <span class="c1"># interaction included</span>
 <span class="o">&gt;</span> <span class="kp">summary</span><span class="p">(</span>result<span class="p">)</span>
 </pre></div>
 </div>
@@ -457,6 +458,20 @@
 </dl>
 </li>
 </ul>
+</div>
+<div class="section" id="week-7-machine-learning">
+<h2>Week 7 Machine Learning<a class="headerlink" href="#week-7-machine-learning" title="Permalink to this headline">¶</a></h2>
+<p>Subfield of artifical intelligence
+Solve problems with no specific programming instructions
+Applciations include:
+* Control systems
+* Search engines
+* Bioinformatics
+* Computer VIsion</p>
+<p>3 categories:
+* Supervised learning: artifical neural networkds, decision trees
+* Unsupervised learning: trained with unlabeled data.  self-organizaiton maps, k-means
+* Reinforcment learning: learns without an explicit teacher.  robot control system, Q-learning</p>
 <p>======= Discussion</p>
 <p><a class="reference external" href="http://www2.psychology.uiowa.edu/faculty/mordkoff/GradStats/part%201/I.07%20normal.pdf">http://www2.psychology.uiowa.edu/faculty/mordkoff/GradStats/part%201/I.07%20normal.pdf</a></p>
 <p>Mist infertial staticstics is based on the assumtion that the variable being measured are normally distrubites.</p>
@@ -496,7 +511,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2017, Josh Peterson.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
   </body>
 </html>
