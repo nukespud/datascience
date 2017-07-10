@@ -1,0 +1,189 @@
+
+
+*************************************************
+Real time big data
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+http://15809-presscdn-0-93.pagely.netdna-cdn.com/wp-content/uploads/Industrial_Internet_of_Things_Timeline.pdf
+
+* OPC Unified Architecture (UA) enabling secure remote communcations between devices, data sources and applications
+Uptake
+* Sensors drop in price (10)
+* Bring your own device (BYOD) becomes mainstream
+* IT standards enter indsutrial automation
+* 16 (IIot vision emerges)
+
+safety and security, services, remote monitoring, advanced control, predictive maintances.   
+========
+
+* equipment monitoring connects and monitors equpment, aggregating telematics signals and contextual data and making them avaialble to other services.  Track asset locations, usage and status at machine level, visualze asset data streams and events , contexutalize data source to proedcue more accurate insights.  -
+* intelligence, speed, and scale
+* diagnostic troubleshooting: enables to identify the root cause of problems, such as equipment failures, using data science mdoes and machine learning to guide users through a step-bystep troubleshooting process,
+* KPI dashboards.  synthesize data and metrics into high-level views that highlight broad trends and patterns enabling managers and executive to monitor performance and make startegic decisions
+* Action recommendation? translates insights into action by suggesting specific task and activites to minimze downtime and enhance ifficency
+* Event and Condition Preduction:  Event and citions prediction identifies and enables operatorto prevent operaiton disruptions before the occur
+* Rules and Alerts:  set-up configutaion user -specific notification and alerts based on customzed thresholds equipment telematics signals, user aciton, or data science predictions
+* Taks management.  Atifical intellegicen to create, assign and resolve tasks.
+
+
+
+Storm is one tool that can be used for real time big data analystics.  The information I am writting about comes from the book "Real-Time Big Data Analytics" found on Safari Online.
+
+Storm abstractions
+=====================
+
+**Streams** :  endless sequence of tuples or data.
+
+    **Tuple** : data comprising of key-value pairs
+
+**Topology** : like MapReduce but runs forever in is a DAG
+
+    **DAG** (Directed Acyclic Graph)
+
+**Spouts** : two type of nodes one a spout - the feeder of data streams into the topology
+
+    **Reliable**  pushes tuples by acknowldeged or acking method
+
+    **Unreliable** doesnt keep track of tuples it pushes into the topology
+
+** Bolts** node components that perform the processing in the topology (emit the processed tuples to streams)
+
+**Taks** processing task broken into smaller work items and perform processing withing bolt or spouts
+
+**Worker** spawned to cater the execution of the topology
+
+Storm architecture and its compoenets
+=======================================
+
+**Zookeper cluster** orchestration enginer and bookkeeper (submission of topology, create of workers, check dead nodes)
+
+**Storm cluster** set on multiple nodes and consists of :
+
+    **Numbus** master process of Storm framework like JobTracker of Hadoop
+
+    **Supervisor** process do the processing
+
+    **UI** browers based interface to monitor cluster  httP://ui-node-ip:8080
+
+
+
+Talk to the following:
+=======================
+
+* Teja Kuruganti
+* Arjun
+* Jamie (UT)
+* Wess (UT)
+* Chad Steed (interactive data science)
+* Budhi Baderi -GIS
+* Laura Purmah
+
+Industrial internet of things.  How to do predictive failure analysis on axceleray intsrumentation and then post process the data to determine the operation history of a nuclear power plant and what needs to be fixed.  Embedded system prodution technologies and smart production processes.  Intersection of people, data and intelligence machines .  Way to improve operational efficience boost revent by increasing production, exploit intelligent technologies to fuel innovation.  Big Data analytis and internet of things for power generation.  Data created by wind turbines and jet engines.  73% of companines are inventiong more than 20% of overall technology budget on Big Data analytics and 31% thing big data analystics is top three properties for power generation.
+
+Add sensors and data collection mechanisims to industrial equipment.  predict breakdowns or other kinds of occurences.
+
+Predictive maintenance of assets saving up to 12 % over scheduled repairs aond reducing overall maintanice cost up to 30 percemt and elminintng breakdowns up to 70 percent.  (50)  **Thames Water Utilities Limited**  using sensors, analytics, and real-time data to help utility respons more quickly to critical situations such as leaks or adverse weather events.  Colmbia Pipeline Group using exisitng asset data integrated with digitial visuzlizaiton, analystics, and shared situational intelligence can respons to potential events even faster.  Apached Corporation predict onshore and offshore oil pump failures
+
+Analytics platform for managing large vlumnes of data and analytics capabilities that drive improvements in clinical performance.  Data management, machine-to-machine communcation and automation technologies
+
+operational efficiency, outcome economy, connected ecosystem, collobartion between humans and machines
+
+From Predix (industrial internet platform)
+
+Big data analystics can prove: scheduling and logistics, predict-and-prevent services, LED solutions and sensors, achieve new levels of performance, reliability, and avaliablty, operations optimization,  (mult-terbyte structured streams of data sampled continously)
+
+Assets > LAN/PAN/PAN > Customed Edge Gateway > WAN connecivity > Cloud (VPN)
+
+Data Origination, Data Ingestion, Store and PRocess, Analysis and Usage.  Operational analystics along with historical anlaytics.  Descriptive analystics, predictive analystics, prscriptive analytics.  Aggregated data and reference data with analytics and models
+
+Industrial data science
+
+Type of sensors:  temperature, strain, pressure, accelerometer, velometer, linear-variable differential transfrmer, proximity probes, thermography, radio frequency/partial discharge, motor current/voltage/phase
+
+Predxi using watchtower remote data contorl and LIghthouse real time software applications.
+
+
+
+
+Installation of STORM
+========================
+https://www.tutorialspoint.com/apache_storm/apache_storm_installation.htm
+
+
+install Java using command::
+
+    sudo apt-get update
+    java -version
+    sudo apt-get install default-jre # Used for just runtime java
+    sudo apt-get install default-jdk # Java development kit
+
+Install zookeeper framework::
+
+    wget http://apache.cs.utah.edu/zookeeper/current/zookeeper-3.4.10.tar.gz
+    sudo mv zookeep-3.4.10.tar.gz opt/
+    sudo tar -xvf zookeeper-3.4.10.tar.gz
+    cd zookeeper-3.4.10
+    sudo mkdir data
+    cd conf/
+    sudo cp zoo_sample.cfg zoo.cfg
+
+Then I add the following to the zoo.cfg::
+
+    sudo vi zoo.cfg
+    tickTime=2000
+    dataDir=/conf/zookeeper-3.4.10/data
+    clientPort=2181
+    initLimit=5
+    syncLimit=2
+
+After the configuration has been saved I then start zookeeper::
+
+    sudo /opt/zookeeper-3.4.10/bin/zkServer.sh start
+
+The output should be::
+
+    ZooKeeper JMX enabled by default
+    Using config: /opt/zookeeper-3.4.10/bin/../conf/zoo.cfg
+    Starting zookeeper ... STARTED
+
+Then start CLI (command line interface for zookeeper) using ::
+
+    /opt/zookeeper-3.4.10/bin/zkCli.sh
+
+The output is as follows::
+
+    Connecting to localhost:2181
+    ................
+    ................
+    ................
+    Welcome to ZooKeeper!
+    ................
+    ................
+    WATCHER::
+    WatchedEvent state:SyncConnected type: None path:null
+    [zk: localhost:2181(CONNECTED) 0]
+
+
+Then download storm using::
+
+    wget http://apache.claz.org/storm/apache-storm-1.1.0/apache-storm-1.1.0.tar.gz
+
+
+
+
+Installing STORM on mac
+==========================
+http://www.javahabit.com/2015/12/26/how-to-set-up-apache-storm-on-mac-using-brew/
+
+
+Do the following::
+
+    brew install zookeeper
+    zkServer start
+    brew install zeromq
+    brew install storm
+
+
+Need to look into kafka

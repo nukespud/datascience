@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 6-2 Text analysis using Python &#8212; Week 3 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 7-1 Supervised Learning Exercise" href="week7homework1.html" />
+    <link rel="prev" title="Week 6-1 Text analysis using Unix/Linux" href="week6homework1.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="week7homework1.html" title="Week 7-1 Supervised Learning Exercise"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="week6homework1.html" title="Week 6-1 Text analysis using Unix/Linux"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week6homework1.html"
+                        title="previous chapter">Week 6-1 Text analysis using Unix/Linux</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="week7homework1.html"
+                        title="next chapter">Week 7-1 Supervised Learning Exercise</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataAnalytics/week6homework2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-6-2-text-analysis-using-python">
+<h1>Week 6-2 Text analysis using Python<a class="headerlink" href="#week-6-2-text-analysis-using-python" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<p>I wanted to compare the difference between the books Mathew and Luke in the Bible (King James Version (KJV). The text for both versions was taken from the website <a class="reference external" href="http://www.earlychristianwritings.com/">http://www.earlychristianwritings.com/</a></p>
+<p>My initial guess was that once I removed the stop words and some of the KJV translation stop words that the most common words would  be the same most common words used in both books</p>
+<p>Running the code I was able to see the most important words were as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="p">,</span><span class="mf">1151.0</span><span class="p">,</span><span class="mf">1071.0</span>
+<span class="n">jesus</span><span class="p">,</span><span class="mf">100.0</span><span class="p">,</span><span class="mf">172.0</span>
+<span class="n">man</span><span class="p">,</span><span class="mf">131.0</span><span class="p">,</span><span class="mf">125.0</span>
+<span class="n">saying</span><span class="p">,</span><span class="mf">106.0</span><span class="p">,</span><span class="mf">120.0</span>
+<span class="n">came</span><span class="p">,</span><span class="mf">113.0</span><span class="p">,</span><span class="mf">107.0</span>
+<span class="n">one</span><span class="p">,</span><span class="mf">85.0</span><span class="p">,</span><span class="mf">80.0</span>
+<span class="n">son</span><span class="p">,</span><span class="mf">145.0</span><span class="p">,</span><span class="mf">78.0</span>
+<span class="n">lord</span><span class="p">,</span><span class="mf">103.0</span><span class="p">,</span><span class="mf">76.0</span>
+<span class="n">heaven</span><span class="p">,</span><span class="mf">31.0</span><span class="p">,</span><span class="mf">76.0</span>
+<span class="n">disciples</span><span class="p">,</span><span class="mf">35.0</span><span class="p">,</span><span class="mf">71.0</span>
+</pre></div>
+</div>
+<p>I thought it was interesting that both books talked about Jesus, son, and Lord.  These words are all names of Jesus.  I also thought it was interesting to see the other most common words used were man, heaven, and disciples.</p>
+<p>What is also intersting is which words were not used in one or the other two books.  The top ten words not used in one or the other book were the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Word</span><span class="p">,</span> <span class="n">luke</span><span class="p">,</span><span class="n">mathew</span>
+<span class="n">begat</span><span class="p">,</span><span class="n">null</span><span class="p">,</span><span class="mf">39.0</span>
+<span class="n">matt</span><span class="p">,</span><span class="n">null</span><span class="p">,</span><span class="mf">27.0</span>
+<span class="n">luke</span><span class="p">,</span><span class="mf">25.0</span><span class="p">,</span><span class="n">null</span>
+<span class="n">talents</span><span class="p">,</span><span class="n">null</span><span class="p">,</span><span class="mf">12.0</span>
+<span class="n">company</span><span class="p">,</span><span class="mf">10.0</span><span class="p">,</span><span class="n">null</span>
+<span class="n">swear</span><span class="p">,</span><span class="n">null</span><span class="p">,</span><span class="mf">9.0</span>
+<span class="n">friends</span><span class="p">,</span><span class="mf">9.0</span><span class="p">,</span><span class="n">null</span>
+<span class="n">elisabeth</span><span class="p">,</span><span class="mf">8.0</span><span class="p">,</span><span class="n">null</span>
+<span class="n">gift</span><span class="p">,</span><span class="n">null</span><span class="p">,</span><span class="mf">8.0</span>
+<span class="n">tares</span><span class="p">,</span><span class="n">null</span><span class="p">,</span><span class="mf">8.0</span>
+</pre></div>
+</div>
+<p>The words matt and luke are not due to the context of the books but because each chapter starts with either Matt or Luke.  What I thought was interesting is from this analysis  talents, gifts, swear and tares are only talked about in the book of Mathew where company, friends, and Elisabeth were only talked about in the book of Luke.</p>
+<p>The python code is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">operator</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">string</span>
+<span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">digits</span>
+<span class="kn">from</span> <span class="nn">nltk.corpus</span> <span class="k">import</span> <span class="n">stopwords</span>
+<span class="c"># from nltk.corpus import gutenberg</span>
+
+
+<span class="k">def</span> <span class="nf">getMostCommonWords</span><span class="p">(</span><span class="n">fileName</span><span class="p">):</span>
+
+    <span class="c">#  Top number of words you wanted printed</span>
+
+
+    <span class="c"># Open both text documents</span>
+    <span class="n">asvText</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span><span class="s">&quot;r&quot;</span><span class="p">)</span>
+
+
+    <span class="n">stop</span> <span class="o">=</span> <span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s">&quot;english&quot;</span><span class="p">)</span>
+    <span class="c">#  Alot of the stopwords are from the Older english words</span>
+    <span class="n">removeList</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;unto&quot;</span><span class="p">,</span><span class="s">&quot;said&quot;</span><span class="p">,</span><span class="s">&quot;shall&quot;</span><span class="p">,</span><span class="s">&quot;ye&quot;</span><span class="p">,</span><span class="s">&quot;thou&quot;</span><span class="p">,</span><span class="s">&quot;thy&quot;</span><span class="p">,</span><span class="s">&quot;thee&quot;</span><span class="p">,</span><span class="s">&quot;come&quot;</span><span class="p">,</span><span class="s">&quot;also&quot;</span><span class="p">,</span><span class="s">&quot;hath&quot;</span><span class="p">,</span><span class="s">&quot;say&quot;</span><span class="p">,</span><span class="s">&quot;behold&quot;</span><span class="p">,</span><span class="s">&quot;upon&quot;</span><span class="p">]</span>
+
+
+    <span class="c"># Creating a dictionary for wordListDictonary and asv</span>
+    <span class="n">wordListDictonary</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">asvText</span><span class="p">:</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="c"># Remove punctioations and digits</span>
+            <span class="n">new_word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">),</span><span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">)</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="k">None</span><span class="p">,</span><span class="n">digits</span><span class="p">)</span>
+            <span class="c"># Counts if word allready exists</span>
+            <span class="k">if</span> <span class="n">new_word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stop</span> <span class="ow">and</span> <span class="n">new_word</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">removeList</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">new_word</span> <span class="ow">in</span> <span class="n">wordListDictonary</span><span class="p">:</span>
+                    <span class="n">wordListDictonary</span><span class="p">[</span><span class="n">new_word</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">wordListDictonary</span><span class="p">[</span><span class="n">new_word</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="n">wordListDictonary</span>
+
+
+
+<span class="n">sorted_luke</span> <span class="o">=</span> <span class="n">getMostCommonWords</span><span class="p">(</span><span class="s">&quot;luke_KJV.txt&quot;</span><span class="p">)</span>
+<span class="n">sorted_mathew</span> <span class="o">=</span> <span class="n">getMostCommonWords</span><span class="p">(</span><span class="s">&quot;mathew_KJV.txt&quot;</span><span class="p">)</span>
+
+<span class="n">compinedData</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sorted_luke</span><span class="p">:</span>
+    <span class="n">compinedData</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">=</span><span class="n">sorted_luke</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sorted_mathew</span><span class="p">:</span>
+    <span class="n">compinedData</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">sorted_mathew</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+
+<span class="n">sortedWordListCombined</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">compinedData</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">operator</span><span class="o">.</span><span class="n">itemgetter</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+
+
+<span class="n">N_POPULAR</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="nb">print</span> <span class="s">&quot;Word, luke,mathew&quot;</span>
+<span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_POPULAR</span><span class="p">):</span>
+    <span class="n">keyValue</span> <span class="o">=</span> <span class="n">sortedWordListCombined</span><span class="p">[</span><span class="n">pair</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">keyValue</span> <span class="ow">in</span> <span class="n">sorted_luke</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">lukeValue</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sorted_luke</span><span class="p">[</span><span class="n">keyValue</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lukeValue</span> <span class="o">=</span> <span class="s">&quot;null&quot;</span>
+    <span class="k">if</span> <span class="n">keyValue</span> <span class="ow">in</span> <span class="n">sorted_mathew</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">matheValue</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sorted_mathew</span><span class="p">[</span><span class="n">keyValue</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">matheValue</span> <span class="o">=</span> <span class="s">&quot;null&quot;</span>
+    <span class="nb">print</span> <span class="s">&quot;%s,%s,%s&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">keyValue</span><span class="p">,</span><span class="n">lukeValue</span><span class="p">,</span><span class="n">matheValue</span><span class="p">)</span>
+
+<span class="c"># Print missing words</span>
+<span class="n">N_POPULAR</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">TOTAL_COUNTS</span><span class="o">=</span><span class="mi">10</span>
+<span class="n">counter</span><span class="o">=</span><span class="mi">0</span>
+<span class="nb">print</span> <span class="s">&quot;</span><span class="se">\n\n\n</span><span class="s">Missing</span><span class="se">\n</span><span class="s">Word, luke,mathew&quot;</span>
+<span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_POPULAR</span><span class="p">):</span>
+    <span class="n">keyValue</span> <span class="o">=</span> <span class="n">sortedWordListCombined</span><span class="p">[</span><span class="n">pair</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">keyValue</span> <span class="ow">in</span> <span class="n">sorted_luke</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">lukeValue</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sorted_luke</span><span class="p">[</span><span class="n">keyValue</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">lukeValue</span> <span class="o">=</span> <span class="s">&quot;null&quot;</span>
+    <span class="k">if</span> <span class="n">keyValue</span> <span class="ow">in</span> <span class="n">sorted_mathew</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">matheValue</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">sorted_mathew</span><span class="p">[</span><span class="n">keyValue</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">matheValue</span> <span class="o">=</span> <span class="s">&quot;null&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">matheValue</span> <span class="o">==</span><span class="s">&quot;null&quot;</span> <span class="ow">or</span> <span class="n">lukeValue</span> <span class="o">==</span> <span class="s">&quot;null&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">counter</span><span class="o">&lt;</span><span class="n">TOTAL_COUNTS</span><span class="p">:</span>
+        <span class="n">counter</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="nb">print</span> <span class="s">&quot;%s,%s,%s&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">keyValue</span><span class="p">,</span><span class="n">lukeValue</span><span class="p">,</span><span class="n">matheValue</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="week7homework1.html" title="Week 7-1 Supervised Learning Exercise"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="week6homework1.html" title="Week 6-1 Text analysis using Unix/Linux"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
+    </div>
+  </body>
+</html>

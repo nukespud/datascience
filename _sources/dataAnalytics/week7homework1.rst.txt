@@ -1,0 +1,41 @@
+
+*************************************************
+Week 7-1 Supervised Learning Exercise
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+*How do supervised learning algorithms solve regression and classification problems?*
+
+In machine learning, regression analysis is used for data that has continuous variables whereas for classification analysis the variables are categorical. The supervised learning problems are utilized by first analyzing the training data with the desired result specified.  This information is then used to optimize the learning algorithm to predict the best response.  Then the optimized learning algorithms can be used to predict the data where the results are not known.
+
+
+*What packages in RapidMiner perform supervised learning?*
+
+Many of the tools for supervised learning come with RapidMiner and do not need to be installed.  Some of these algorithms include: lazy, bayesian, trees, neural nets, functions, logistic regression, support vector machines, discriminant analysis, ensembles.
+
+*What measures of quality of the learning algorithm might you expect to see?*
+
+There are many statistical tests used for measuring the quality of the learning algorithms.  These tests include parametric tests for normal data such as ANOVA and non-parametric data for non-normal data such as Friedman Test and Quade Test.
+
+
+For the supervised learning homework assignment, I decided to use RapidMiner as the tool for performing that analysis.  The data set I used came from the Kraggle website for the Titanic https://www.kaggle.com/c/titanic which included both train data and test data.
+
+The first step was to import the data into RapidMiner using *Retrieve data*.  The *Retrieve Data* is then connected to the *Set role*.  In the set, the attribute *Survived* is set to the label.  Then the *Set role* is connected to *Decision Tree*.  In the *Decision Tree* the maximum depth was set to 4 and *apply pruning* is set to false for both cases.  The *Decision Tree* is then connected to *Apply Model*.  Also, the titanic testing set was connected to the *unlabel* data section. Both the output and model of the *Apply Model* operator is connected to the results node.  The GUI output should look like the figure below.
+
+.. figure:: _static/rapidMinerTitanic.png
+
+    Setup for the RapidMiner Tree learning algorithm
+
+The tree diagram of this supervised learning example can be seen below along with the results
+
+.. figure:: _static/model_titanic_tree.png
+
+    Tree model for the learning algorithms
+
+.. figure:: _static/results_titanic.png
+
+    Results with the testing data for the tree learning algorithm
+
+
+I submitted the result to the Kaggle website to see how I did (https://www.kaggle.com/c/titanic/submissions?sortBy=date&group=all&page=1) and I got a score of 0.77512 for a ranking of 3852 though others with the same score were ranked up to 3365.

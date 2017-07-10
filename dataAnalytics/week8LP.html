@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 8 Linear Programming &#8212; Week 3 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 8 Integer Programming" href="week8IP.html" />
+    <link rel="prev" title="Week 7-2 Unsupervised Learning Exercise" href="week7homework2.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="week8IP.html" title="Week 8 Integer Programming"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="week7homework2.html" title="Week 7-2 Unsupervised Learning Exercise"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week7homework2.html"
+                        title="previous chapter">Week 7-2 Unsupervised Learning Exercise</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="week8IP.html"
+                        title="next chapter">Week 8 Integer Programming</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataAnalytics/week8LP.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-8-linear-programming">
+<h1>Week 8 Linear Programming<a class="headerlink" href="#week-8-linear-programming" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<p>The linear problem was from the website: <a class="reference external" href="http://www.purplemath.com/modules/linprog3.htm">http://www.purplemath.com/modules/linprog3.htm</a></p>
+<p><em>A calculator company produces a scientific calculator and a graphing calculator. Long-term projections indicate an expected demand of at least 100 scientific and 80 graphing calculators each day. Because of limitations on production capacity, no more than 200 scientific and 170 graphing calculators can be made daily. To satisfy a shipping contract, a total of at least 200 calculators much be shipped each day.</em></p>
+<p><em>If each scientific calculator sold results in a $2 loss, but each graphing calculator produces a $5 profit, how many of each type should be made daily to maximize net profits?</em></p>
+<p>The objective function was to optimize profit when $2 loss for scientific calculators and $5 profit for graphing calculators.  The contracts included the production of scientific calculator was between [100,200], and the production of the graphing calculator was between [80,170].  The total number of calculators &gt;=200.</p>
+<p>The R input file is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">library</span><span class="p">(</span><span class="s">&quot;lpSolveAPI&quot;</span><span class="p">)</span>
+
+<span class="n">lprec</span><span class="o">&lt;-</span><span class="n">make</span><span class="o">.</span><span class="n">lp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">lp</span><span class="o">.</span><span class="n">control</span><span class="p">(</span><span class="n">lprec</span><span class="p">,</span><span class="n">sense</span><span class="o">=</span><span class="s">&quot;max&quot;</span><span class="p">)</span>
+
+<span class="nb">set</span><span class="o">.</span><span class="n">objfn</span><span class="p">(</span><span class="n">lprec</span><span class="p">,</span><span class="n">c</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span> <span class="c">#-2  for x and +5 for y</span>
+
+<span class="n">add</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span><span class="n">lprec</span><span class="p">,</span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="s">&quot;&gt;=&quot;</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span> <span class="c">#At least x per day</span>
+<span class="n">add</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span><span class="n">lprec</span><span class="p">,</span><span class="n">c</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="s">&quot;&gt;=&quot;</span><span class="p">,</span><span class="mi">80</span><span class="p">)</span> <span class="c">#At least y per day</span>
+<span class="n">add</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span><span class="n">lprec</span><span class="p">,</span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span><span class="s">&quot;&lt;=&quot;</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span> <span class="c"># no more then 200</span>
+<span class="n">add</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span><span class="n">lprec</span><span class="p">,</span><span class="n">c</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="s">&quot;&lt;=&quot;</span><span class="p">,</span><span class="mi">170</span><span class="p">)</span> <span class="c"># no more y per day</span>
+<span class="n">add</span><span class="o">.</span><span class="n">constraint</span><span class="p">(</span><span class="n">lprec</span><span class="p">,</span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="s">&quot;&gt;=&quot;</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span> <span class="c"># total of at leas 200 shiped per day</span>
+<span class="n">lprec</span>
+
+<span class="n">solve</span><span class="p">(</span><span class="n">lprec</span><span class="p">)</span>
+<span class="n">get</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span><span class="n">lprec</span><span class="p">)</span>
+<span class="n">get</span><span class="o">.</span><span class="n">variables</span><span class="p">(</span><span class="n">lprec</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output from the line &gt; lp.control(lprec,sense=&#8221;max&#8221;) is</p>
+<div class="highlight-default"><div class="highlight"><pre>$anti.degen
+[1] &quot;none&quot;
+
+$basis.crash
+[1] &quot;none&quot;
+
+$bb.depthlimit
+[1] -50
+
+$bb.floorfirst
+[1] &quot;automatic&quot;
+
+$bb.rule
+[1] &quot;pseudononint&quot; &quot;greedy&quot;       &quot;dynamic&quot;
+[4] &quot;rcostfixing&quot;
+
+$break.at.first
+[1] FALSE
+
+$break.at.value
+[1] 1e+30
+
+$epsilon
+      epsb       epsd      epsel     epsint
+     1e-10      1e-09      1e-12      1e-07
+epsperturb   epspivot
+     1e-05      2e-07
+
+$improve
+[1] &quot;dualfeas&quot; &quot;thetagap&quot;
+
+$infinite
+[1] 1e+30
+
+$maxpivot
+[1] 250
+
+$mip.gap
+absolute relative
+   1e-11    1e-11
+
+$negrange
+[1] -1e+06
+
+$obj.in.basis
+[1] TRUE
+
+$pivoting
+[1] &quot;devex&quot;    &quot;adaptive&quot;
+
+$presolve
+[1] &quot;none&quot;
+
+$scalelimit
+[1] 5
+
+$scaling
+[1] &quot;geometric&quot;   &quot;equilibrate&quot; &quot;integers&quot;
+
+$sense
+[1] &quot;maximize&quot;
+
+$simplextype
+[1] &quot;dual&quot;   &quot;primal&quot;
+
+$timeout
+[1] 0
+
+$verbose
+[1] &quot;neutral&quot;
+</pre></div>
+</div>
+<p>The output of the line lprec is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Model</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">C1</span>    <span class="n">C2</span>
+<span class="n">Maximize</span>    <span class="o">-</span><span class="mi">2</span>     <span class="mi">5</span>
+<span class="n">R1</span>           <span class="mi">1</span>     <span class="mi">1</span>  <span class="o">&gt;=</span>  <span class="mi">200</span>
+<span class="n">R2</span>           <span class="mi">0</span>     <span class="mi">1</span>  <span class="o">&gt;=</span>   <span class="mi">80</span>
+<span class="n">R3</span>           <span class="mi">1</span>     <span class="mi">0</span>  <span class="o">&lt;=</span>  <span class="mi">200</span>
+<span class="n">R4</span>           <span class="mi">0</span>     <span class="mi">1</span>  <span class="o">&lt;=</span>  <span class="mi">170</span>
+<span class="n">R5</span>           <span class="mi">1</span>     <span class="mi">1</span>  <span class="o">&gt;=</span>  <span class="mi">200</span>
+<span class="n">Kind</span>       <span class="n">Std</span>   <span class="n">Std</span>
+<span class="n">Type</span>      <span class="n">Real</span>  <span class="n">Real</span>
+<span class="n">Upper</span>      <span class="n">Inf</span>   <span class="n">Inf</span>
+<span class="n">Lower</span>        <span class="mi">0</span>     <span class="mi">0</span>
+</pre></div>
+</div>
+<p>The max profit possible is 650 per day, and this would require making 100 scientific calculations and 170 graphing calculators.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="week8IP.html" title="Week 8 Integer Programming"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="week7homework2.html" title="Week 7-2 Unsupervised Learning Exercise"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
+    </div>
+  </body>
+</html>

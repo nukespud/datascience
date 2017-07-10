@@ -1,0 +1,402 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 7-2 Unsupervised Learning Exercise &#8212; Week 3 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 8 Linear Programming" href="week8LP.html" />
+    <link rel="prev" title="Week 7-1 Supervised Learning Exercise" href="week7homework1.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="week8LP.html" title="Week 8 Linear Programming"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="week7homework1.html" title="Week 7-1 Supervised Learning Exercise"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week 7-2 Unsupervised Learning Exercise</a><ul>
+<li><a class="reference internal" href="#appendix-a">Appendix A</a></li>
+<li><a class="reference internal" href="#appendix-b">Appendix B</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week7homework1.html"
+                        title="previous chapter">Week 7-1 Supervised Learning Exercise</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="week8LP.html"
+                        title="next chapter">Week 8 Linear Programming</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataAnalytics/week7homework2.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-7-2-unsupervised-learning-exercise">
+<h1>Week 7-2 Unsupervised Learning Exercise<a class="headerlink" href="#week-7-2-unsupervised-learning-exercise" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<p><em>How is unsupervised learning related to the statistical clustering problem?</em></p>
+<p>Unsupervised learning uses the associated parameters to find patterns, associations, and groups without having any associated response.  The most common unsupervised learning methods uses cluster analysis to find hidden relationships and patterns</p>
+<p><em>What packages (in R, Python…) perform unsupervised learning?</em></p>
+<p>The two main packages in R for performing unsupervised learning are <em>factoextra</em> and <em>cluster</em></p>
+<p><em>What measures of quality for the learning algorithm might you expect to see?</em></p>
+<p>Based on the website: <a class="reference external" href="http://www.sthda.com/english/wiki/cluster-analysis-in-r-unsupervised-machine-learning">http://www.sthda.com/english/wiki/cluster-analysis-in-r-unsupervised-machine-learning</a>: clustering validation requires three main tasks:  cluster tendency, clustering evaluation, and clustering stability.  Cluster tendency is used to determine if using clustering is a good idea of the associated data, clustering evaluation determines the quality of the clustering, and clustering stability looks at the sensitive of the results to different parameters used.</p>
+<p>For this example I will be using K-means clustering in R.  The first step is to load the data using the commands:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">data</span><span class="p">(</span><span class="n">iris</span><span class="p">)</span>
+<span class="n">head</span><span class="p">(</span><span class="n">iris</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The head command shows the top values in the dataset.  The columns of the data set include Sepal.Length, Sepal.Width, Petal.Length, Petal.Width, and Species</p>
+<p>The next step is to set the random number generator to make sure the results are reproducible.  Once the random number has been set then the kmeans command can be used as seen below:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="nb">set</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">km</span> <span class="o">&lt;-</span> <span class="n">kmeans</span><span class="p">(</span><span class="n">iris</span><span class="p">[,</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span><span class="mi">3</span><span class="p">,</span><span class="n">nstart</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">km</span>
+</pre></div>
+</div>
+<p>The kmeans cluster uses all of the data except for the Species.  The goal of this cluster analysis is to see if the kmeans method can predict what species the flower are based on the parameters.  This method request for three centers and 25 random sets should be chosen to predict the clusters</p>
+<p>The results are as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">K</span><span class="o">-</span><span class="n">means</span> <span class="n">clustering</span> <span class="k">with</span> <span class="mi">3</span> <span class="n">clusters</span> <span class="n">of</span> <span class="n">sizes</span> <span class="mi">62</span><span class="p">,</span> <span class="mi">38</span><span class="p">,</span> <span class="mi">50</span>
+
+<span class="n">Cluster</span> <span class="n">means</span><span class="p">:</span>
+  <span class="n">Sepal</span><span class="o">.</span><span class="n">Length</span> <span class="n">Sepal</span><span class="o">.</span><span class="n">Width</span> <span class="n">Petal</span><span class="o">.</span><span class="n">Length</span> <span class="n">Petal</span><span class="o">.</span><span class="n">Width</span>
+<span class="mi">1</span>     <span class="mf">5.901613</span>    <span class="mf">2.748387</span>     <span class="mf">4.393548</span>    <span class="mf">1.433871</span>
+<span class="mi">2</span>     <span class="mf">6.850000</span>    <span class="mf">3.073684</span>     <span class="mf">5.742105</span>    <span class="mf">2.071053</span>
+<span class="mi">3</span>     <span class="mf">5.006000</span>    <span class="mf">3.428000</span>     <span class="mf">1.462000</span>    <span class="mf">0.246000</span>
+
+<span class="n">Clustering</span> <span class="n">vector</span><span class="p">:</span>
+  <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span>
+ <span class="p">[</span><span class="mi">28</span><span class="p">]</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span>
+ <span class="p">[</span><span class="mi">55</span><span class="p">]</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span>
+ <span class="p">[</span><span class="mi">82</span><span class="p">]</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span>
+<span class="p">[</span><span class="mi">109</span><span class="p">]</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span>
+<span class="p">[</span><span class="mi">136</span><span class="p">]</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">1</span>
+
+<span class="n">Within</span> <span class="n">cluster</span> <span class="nb">sum</span> <span class="n">of</span> <span class="n">squares</span> <span class="n">by</span> <span class="n">cluster</span><span class="p">:</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="mf">39.82097</span> <span class="mf">23.87947</span> <span class="mf">15.15100</span>
+ <span class="p">(</span><span class="n">between_SS</span> <span class="o">/</span> <span class="n">total_SS</span> <span class="o">=</span>  <span class="mf">88.4</span> <span class="o">%</span><span class="p">)</span>
+
+<span class="n">Available</span> <span class="n">components</span><span class="p">:</span>
+
+<span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="s">&quot;cluster&quot;</span>      <span class="s">&quot;centers&quot;</span>      <span class="s">&quot;totss&quot;</span>
+<span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="s">&quot;withinss&quot;</span>     <span class="s">&quot;tot.withinss&quot;</span> <span class="s">&quot;betweenss&quot;</span>
+<span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="s">&quot;size&quot;</span>         <span class="s">&quot;iter&quot;</span>         <span class="s">&quot;ifault&quot;</span>
+</pre></div>
+</div>
+<p>The results from the cluster can be compared from the actual species classification using the command:</p>
+<div class="highlight-default"><div class="highlight"><pre>table(km$cluster,iris$Species)
+</pre></div>
+</div>
+<p>The output is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre>    <span class="n">setosa</span> <span class="n">versicolor</span> <span class="n">virginica</span>
+<span class="mi">1</span>      <span class="mi">0</span>         <span class="mi">48</span>        <span class="mi">14</span>
+<span class="mi">2</span>      <span class="mi">0</span>          <span class="mi">2</span>        <span class="mi">36</span>
+<span class="mi">3</span>     <span class="mi">50</span>          <span class="mi">0</span>         <span class="mi">0</span>
+</pre></div>
+</div>
+<p>This shows that the 3rd cluster predicts 100% that they are sets.  Cluster 1 and Cluster 2 also predict rather well but not 100%.</p>
+<p>The clustering can be plotted to show a better relationship by plotting the Sepal.Width versus Sepal.Length and then coloring the results based on which cluster they were in and the shape based on the species using the command below:</p>
+<div class="highlight-default"><div class="highlight"><pre>library(ggplot2)
+dat &lt;- data.frame(Sepal.Length =iris[,1],
+                  Sepal.Width =iris[,2],
+                  Cluster = km$cluster,
+                  Species =iris[,5])
+ggplot(dat,aes(x=Sepal.Length,y=Sepal.Width,color=Cluster,shape=Species)) +
+  geom_point(size=3)
+</pre></div>
+</div>
+<p>The figures can be seen below.</p>
+<div class="figure">
+<img alt="../_images/Sepal_width_length.png" src="../_images/Sepal_width_length.png" />
+</div>
+<p>The clustering can also be plotted to show a better relationship by plotting the Petal.Width versus Petal.Length and then coloring the results based on which cluster they were in and the shape based on the species using the command below:</p>
+<div class="highlight-default"><div class="highlight"><pre>dat &lt;- data.frame(Petal.Length =iris[,3],
+                  Petal.Width =iris[,4],
+                  Cluster = km$cluster,
+                  Species =iris[,5])
+ggplot(dat,aes(x=Petal.Length,y=Petal.Width,color=Cluster,shape=Species)) +
+  geom_point(size=3)
+</pre></div>
+</div>
+<div class="figure">
+<img alt="../_images/petalWidthLength.png" src="../_images/petalWidthLength.png" />
+</div>
+<p>This figure shows the grouping for the setosa - it having a much smaller petal length and width.  The overlap of the other two species can also be seen in this figure.</p>
+<p>I also applied the same method to the Titanic data.  However, because of the method, I could only use numerical data for the analysis, so I had to modify the data a little.  How I did this was by changing 1 to male and 0 to female and then removing the other text values in the dataset.  This method did not work that well in this case, and the final result was:</p>
+<div class="highlight-default"><div class="highlight"><pre>    <span class="mi">0</span>   <span class="mi">1</span>
+<span class="mi">1</span> <span class="mi">416</span> <span class="mi">264</span>
+<span class="mi">2</span>   <span class="mi">8</span>  <span class="mi">26</span>
+</pre></div>
+</div>
+<p>It predicted that much more people survived.  If only this were true</p>
+<p>One of the plots for this can be seen below</p>
+<div class="figure">
+<img alt="../_images/titanicUnlearned.png" src="../_images/titanicUnlearned.png" />
+</div>
+<div class="section" id="appendix-a">
+<h2>Appendix A<a class="headerlink" href="#appendix-a" title="Permalink to this headline">¶</a></h2>
+<p>Code for iris is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre>data(iris)
+head(iris)
+
+set.seed(25)
+km &lt;- kmeans(iris[,1:4],3,nstart=25)
+km
+
+
+table(km$cluster,iris$Species)
+
+plot(iris[,1],iris[,2],col=km$cluster,sh)
+
+points(km$center[,c(1,2)],col=1:3,pch=8,cex=2)
+
+plot(iris[,3],iris[,4],col=km$cluster)
+points(km$center[,c(3,4)],col=1:3,pch=8,cex=2)
+
+library(ggplot2)
+dat &lt;- data.frame(Sepal.Length =iris[,1],
+                  Sepal.Width =iris[,2],
+                  Cluster = km$cluster,
+                  Species =iris[,5])
+ggplot(dat,aes(x=Sepal.Length,y=Sepal.Width,color=Cluster,shape=Species)) +
+  geom_point(size=3)
+
+dat &lt;- data.frame(Petal.Length =iris[,3],
+                  Petal.Width =iris[,4],
+                  Cluster = km$cluster,
+                  Species =iris[,5])
+ggplot(dat,aes(x=Petal.Length,y=Petal.Width,color=Cluster,shape=Species)) +
+  geom_point(size=3)
+</pre></div>
+</div>
+<p>Code for titanic is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre># Removed all text and set 0 to female and 1 to male
+data = read.csv(&quot;/Users/f4p/Dropbox (ORNL)/1 Coursera/Regis/Data Analytics/Week7/train.csv&quot;)
+
+cleanData &lt;- na.omit(data)
+head(cleanData)
+
+
+set.seed(25)
+km &lt;- kmeans(cleanData[,2:8],2,nstart=50)
+
+
+
+table(km$cluster,cleanData$Survived)
+
+
+library(ggplot2)
+ggplot(cleanData,aes(x=Age,y=Fare,color=km$cluster*3)) +
+  geom_point(size=1+cleanData$Survived)
+
+
+ggplot(cleanData,aes(x=Age,y=Fare,color=Survived)) +
+  geom_point(size=km$cluster*3)
+</pre></div>
+</div>
+</div>
+<div class="section" id="appendix-b">
+<h2>Appendix B<a class="headerlink" href="#appendix-b" title="Permalink to this headline">¶</a></h2>
+<p>Description of kmeans functions from the R help screen is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre>K-Means Clustering
+
+Description
+
+Perform k-means clustering on a data matrix.
+
+Usage
+
+kmeans(x, centers, iter.max = 10, nstart = 1,
+       algorithm = c(&quot;Hartigan-Wong&quot;, &quot;Lloyd&quot;, &quot;Forgy&quot;,
+                     &quot;MacQueen&quot;), trace=FALSE)
+## S3 method for class &#39;kmeans&#39;
+fitted(object, method = c(&quot;centers&quot;, &quot;classes&quot;), ...)
+Arguments
+
+x
+numeric matrix of data, or an object that can be coerced to such a matrix (such as a numeric vector or a data frame with all numeric columns).
+centers
+either the number of clusters, say k, or a set of initial (distinct) cluster centres. If a number, a random set of (distinct) rows in x is chosen as the initial centres.
+iter.max
+the maximum number of iterations allowed.
+nstart
+if centers is a number, how many random sets should be chosen?
+algorithm
+character: may be abbreviated. Note that &quot;Lloyd&quot; and &quot;Forgy&quot; are alternative names for one algorithm.
+object
+an R object of class &quot;kmeans&quot;, typically the result ob of ob &lt;- kmeans(..).
+method
+character: may be abbreviated. &quot;centers&quot; causes fitted to return cluster centers (one for each input point) and &quot;classes&quot; causes fitted to return a vector of class assignments.
+trace
+logical or integer number, currently only used in the default method (&quot;Hartigan-Wong&quot;): if positive (or true), tracing information on the progress of the algorithm is produced. Higher values may produce more tracing information.
+...
+not used.
+Details
+
+The data given by x are clustered by the k-means method, which aims to partition the points into k groups such that the sum of squares from points to the assigned cluster centres is minimized. At the minimum, all cluster centres are at the mean of their Voronoi sets (the set of data points which are nearest to the cluster centre).
+
+The algorithm of Hartigan and Wong (1979) is used by default. Note that some authors use k-means to refer to a specific algorithm rather than the general method: most commonly the algorithm given by MacQueen (1967) but sometimes that given by Lloyd (1957) and Forgy (1965). The Hartigan–Wong algorithm generally does a better job than either of those, but trying several random starts (nstart&gt; 1) is often recommended. In rare cases, when some of the points (rows of x) are extremely close, the algorithm may not converge in the “Quick-Transfer” stage, signalling a warning (and returning ifault = 4). Slight rounding of the data may be advisable in that case.
+
+For ease of programmatic exploration, k=1 is allowed, notably returning the center and withinss.
+
+Except for the Lloyd–Forgy method, k clusters will always be returned if a number is specified. If an initial matrix of centres is supplied, it is possible that no point will be closest to one or more centres, which is currently an error for the Hartigan–Wong method.
+
+Value
+
+kmeans returns an object of class &quot;kmeans&quot; which has a print and a fitted method. It is a list with at least the following components:
+
+cluster
+A vector of integers (from 1:k) indicating the cluster to which each point is allocated.
+centers
+A matrix of cluster centres.
+totss
+The total sum of squares.
+withinss
+Vector of within-cluster sum of squares, one component per cluster.
+tot.withinss
+Total within-cluster sum of squares, i.e. sum(withinss).
+betweenss
+The between-cluster sum of squares, i.e. totss-tot.withinss.
+size
+The number of points in each cluster.
+iter
+The number of (outer) iterations.
+ifault
+integer: indicator of a possible algorithm problem – for experts.
+References
+
+Forgy, E. W. (1965) Cluster analysis of multivariate data: efficiency vs interpretability of classifications. Biometrics 21, 768–769.
+
+Hartigan, J. A. and Wong, M. A. (1979). A K-means clustering algorithm. Applied Statistics 28, 100–108.
+
+Lloyd, S. P. (1957, 1982) Least squares quantization in PCM. Technical Note, Bell Laboratories. Published in 1982 in IEEE Transactions on Information Theory 28, 128–137.
+
+MacQueen, J. (1967) Some methods for classification and analysis of multivariate observations. In Proceedings of the Fifth Berkeley Symposium on Mathematical Statistics and Probability, eds L. M. Le Cam &amp; J. Neyman, 1, pp. 281–297. Berkeley, CA: University of California Press.
+
+Examples
+
+require(graphics)
+
+# a 2-dimensional example
+x &lt;- rbind(matrix(rnorm(100, sd = 0.3), ncol = 2),
+           matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2))
+colnames(x) &lt;- c(&quot;x&quot;, &quot;y&quot;)
+(cl &lt;- kmeans(x, 2))
+plot(x, col = cl$cluster)
+points(cl$centers, col = 1:2, pch = 8, cex = 2)
+
+# sum of squares
+ss &lt;- function(x) sum(scale(x, scale = FALSE)^2)
+
+## cluster centers &quot;fitted&quot; to each obs.:
+fitted.x &lt;- fitted(cl);  head(fitted.x)
+resid.x &lt;- x - fitted(cl)
+
+## Equalities : ----------------------------------
+cbind(cl[c(&quot;betweenss&quot;, &quot;tot.withinss&quot;, &quot;totss&quot;)], # the same two columns
+         c(ss(fitted.x), ss(resid.x),    ss(x)))
+stopifnot(all.equal(cl$ totss,        ss(x)),
+      all.equal(cl$ tot.withinss, ss(resid.x)),
+      ## these three are the same:
+      all.equal(cl$ betweenss,    ss(fitted.x)),
+      all.equal(cl$ betweenss, cl$totss - cl$tot.withinss),
+      ## and hence also
+      all.equal(ss(x), ss(fitted.x) + ss(resid.x))
+      )
+
+kmeans(x,1)$withinss # trivial one-cluster, (its W.SS == ss(x))
+
+## random starts do help here with too many clusters
+## (and are often recommended anyway!):
+(cl &lt;- kmeans(x, 5, nstart = 25))
+plot(x, col = cl$cluster)
+points(cl$centers, col = 1:5, pch = 8)
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="week8LP.html" title="Week 8 Linear Programming"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="week7homework1.html" title="Week 7-1 Supervised Learning Exercise"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
+    </div>
+  </body>
+</html>

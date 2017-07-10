@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 7-1 Supervised Learning Exercise &#8212; Week 3 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 7-2 Unsupervised Learning Exercise" href="week7homework2.html" />
+    <link rel="prev" title="Week 6-2 Text analysis using Python" href="week6homework2.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="week7homework2.html" title="Week 7-2 Unsupervised Learning Exercise"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="week6homework2.html" title="Week 6-2 Text analysis using Python"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week6homework2.html"
+                        title="previous chapter">Week 6-2 Text analysis using Python</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="week7homework2.html"
+                        title="next chapter">Week 7-2 Unsupervised Learning Exercise</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataAnalytics/week7homework1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-7-1-supervised-learning-exercise">
+<h1>Week 7-1 Supervised Learning Exercise<a class="headerlink" href="#week-7-1-supervised-learning-exercise" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<p><em>How do supervised learning algorithms solve regression and classification problems?</em></p>
+<p>In machine learning, regression analysis is used for data that has continuous variables whereas for classification analysis the variables are categorical. The supervised learning problems are utilized by first analyzing the training data with the desired result specified.  This information is then used to optimize the learning algorithm to predict the best response.  Then the optimized learning algorithms can be used to predict the data where the results are not known.</p>
+<p><em>What packages in RapidMiner perform supervised learning?</em></p>
+<p>Many of the tools for supervised learning come with RapidMiner and do not need to be installed.  Some of these algorithms include: lazy, bayesian, trees, neural nets, functions, logistic regression, support vector machines, discriminant analysis, ensembles.</p>
+<p><em>What measures of quality of the learning algorithm might you expect to see?</em></p>
+<p>There are many statistical tests used for measuring the quality of the learning algorithms.  These tests include parametric tests for normal data such as ANOVA and non-parametric data for non-normal data such as Friedman Test and Quade Test.</p>
+<p>For the supervised learning homework assignment, I decided to use RapidMiner as the tool for performing that analysis.  The data set I used came from the Kraggle website for the Titanic <a class="reference external" href="https://www.kaggle.com/c/titanic">https://www.kaggle.com/c/titanic</a> which included both train data and test data.</p>
+<p>The first step was to import the data into RapidMiner using <em>Retrieve data</em>.  The <em>Retrieve Data</em> is then connected to the <em>Set role</em>.  In the set, the attribute <em>Survived</em> is set to the label.  Then the <em>Set role</em> is connected to <em>Decision Tree</em>.  In the <em>Decision Tree</em> the maximum depth was set to 4 and <em>apply pruning</em> is set to false for both cases.  The <em>Decision Tree</em> is then connected to <em>Apply Model</em>.  Also, the titanic testing set was connected to the <em>unlabel</em> data section. Both the output and model of the <em>Apply Model</em> operator is connected to the results node.  The GUI output should look like the figure below.</p>
+<div class="figure" id="id1">
+<img alt="../_images/rapidMinerTitanic.png" src="../_images/rapidMinerTitanic.png" />
+<p class="caption"><span class="caption-text">Setup for the RapidMiner Tree learning algorithm</span></p>
+</div>
+<p>The tree diagram of this supervised learning example can be seen below along with the results</p>
+<div class="figure" id="id2">
+<img alt="../_images/model_titanic_tree.png" src="../_images/model_titanic_tree.png" />
+<p class="caption"><span class="caption-text">Tree model for the learning algorithms</span></p>
+</div>
+<div class="figure" id="id3">
+<img alt="../_images/results_titanic.png" src="../_images/results_titanic.png" />
+<p class="caption"><span class="caption-text">Results with the testing data for the tree learning algorithm</span></p>
+</div>
+<p>I submitted the result to the Kaggle website to see how I did (<a class="reference external" href="https://www.kaggle.com/c/titanic/submissions?sortBy=date&amp;group=all&amp;page=1">https://www.kaggle.com/c/titanic/submissions?sortBy=date&amp;group=all&amp;page=1</a>) and I got a score of 0.77512 for a ranking of 3852 though others with the same score were ranked up to 3365.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="week7homework2.html" title="Week 7-2 Unsupervised Learning Exercise"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="week6homework2.html" title="Week 6-2 Text analysis using Python"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
+    </div>
+  </body>
+</html>

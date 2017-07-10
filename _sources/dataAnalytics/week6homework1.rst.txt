@@ -1,0 +1,123 @@
+
+
+*************************************************
+Week 6-1 Text analysis using Unix/Linux
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+
+I downloaded VMWare Fusion and Ubuntu and started to work on the exercise.
+
+The first step is to download the file::
+
+    wget http://www.gutenberg.org/cache/epub/10/pg10.txt
+
+Then to ensure the file is downloaded I use the head and tail commands::
+
+    head pg10.txt
+
+
+The output is::
+
+    The Project Gutenberg EBook of The King James Bible
+
+    This eBook is for the use of anyone anywhere at no cost and with almost no restrictions whatsoever.  You may copy it, give it away or
+    re-use it under the terms of the Project Gutenberg License included
+    with this eBook or online at www.gutenberg.org
+
+
+    Title: The King James Bible
+
+Some other useful Linux commands are::
+
+    less -N pg10.txt # View entire text including line numbers
+
+Using the less command I determine that the first 18 lines and lines 99862-100222 are unneeded text and to remove these lines I used to command as follows::
+
+    cp pg10.txt pg10_backup.txt
+
+    sed '99862,100222d' pg10.txt >pg10_nofooter.txt
+
+    sed '1,18d'pg10_nofooter.txt >pg10_noheader.txt
+
+To better characterize what is in the text file I use the following command::
+
+    wc -l pg10_noheader.txt # number of lines the document has
+
+    wc -m pg10_noheader.txt # number of character in a document
+
+The results are::
+
+    99843 pg10_noheader.txt
+    4432428 pg10_noheader.txt
+
+To see which words are in the document I can use the commands::
+
+    grep -n "Jesus" pg10_noheader.txt # search line that matches a pattern
+
+    grep -E -n "J|j"esus pg10_noheader.txt # search all cases of Jesus in the file
+
+The output of the second command is::
+
+    99667:21:2 And I John saw the holy city, new Jerusalem, coming down from God
+    99701:mountain, and shewed me that great city, the holy Jerusalem,
+    99783:22:8 And I John saw these things, and heard them. And when I had heard
+    99811:22:16 I Jesus have sent mine angel to testify unto you these things in
+    99829:Even so, come, Lord Jesus.
+    99831:22:21 The grace of our Lord Jesus Christ be with you all. Amen.
+
+To delete all punctiations and convert everything to lower case and remove numbers I use the commands::
+
+    tr -d [:punct:]<pg10_noheader.txt >pg10_nopunc.txt # removes all punctuations
+
+    tr [:upper:] [:lower:] <pg10_nopunc.txt >pg10_allLower.txt # Convert all to lower case
+
+    tr -d '[:digit:]' <pg10_allLower.txt >pg10_noNumber.txt # Remove all numbers
+
+
+
+
+The output of less is::
+
+    the first book of moses  called genesis
+
+
+     in the beginning god created the heavens and the earth
+
+
+To start word count I first remove carriage return characterst that will interefere with the frequency counts along with delte blank spaces and replace them with a new line.  I then sort the words and finally use the uniq command combined with the -c command to count the number of repetitions in each line using the following commands::
+
+    tr -d "\r" <pg10_noNumber.txt >pg10_noCarriage.txt ''#remove false carraige returns
+
+    tr ' ' '\n' <pg10_noCarriage.txt >pg10_noSpace.txt # remove space and create a return between words
+
+    sort pg10_noSpace.txt >pg10_sorted.txt # sort value
+
+    uniq -c pg10_sorted.txt > pg10_wordCount.txt # Count number of repitions in each line
+
+    sort -nr pg10_wordCount.txt >pg10_sortedWordCount.txt
+
+    less pg10_sortedWordCount.txt
+
+The output of the sortedWordCount is as follows::
+
+    64023 the
+     58010
+     51696 and
+     34670 of
+     13580 to
+     12912 that
+     12667 in
+     10419 he
+      9838 shall
+      8997 unto
+      8970 for
+      8854 i
+      8473 his
+      8177 a
+      7830 lord
+
+.. note::
+
+        The most common words are filler words *the* *and* *of* and the word *lord* is in the top 15 words.  Another note of interest is that the word *i* is used over 8000 times and appears to be a filler word, but in the Bible the word I can also be a significant word and used to describe Jesus such as "I am."  In this case, it is hard to separate the important and not important *I*, but this could be an example of how the analyst may miss relevant information if they do not have an understanding of the data they are looking at.

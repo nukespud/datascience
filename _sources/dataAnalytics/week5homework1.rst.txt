@@ -1,0 +1,731 @@
+
+
+*************************************************
+Week 5: Text analytics in Rapid Miner
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+
+
+
+Text processing (word cound) using RapidMiner
+**********************************************
+
+The following steps are needed for text processing with the rapid miner.
+
+*  Open up a new processing in Rapid Miner
+* Drag the *Read Document* operator to the Main Process window.  This can be found using the search bar or **Extension>Text Processing>Read Document**
+* Select the *Read Document* operation and in the sidebar select the folder and find the desired text document.  Then select *extract text only* and *use file extension as type*.  See figure below to see what the GUI looks like for the different options selected
+
+.. figure:: _static/readDocument.png
+    :width: 500px
+    :align: center
+
+    Screen shot of the parameter box in Rapid Miner.  In this case, it is the parameter box for *Read Document*
+
+* Bring the *Process Document* operator into the Main Process window between the Read Document and the res (result) node.  **>Extension>Text Processing >Process Document**
+* Double click on the *Process Documents* operation and open the processing folder in the operation panel.
+
+.. note::  To go back to the original process click on the hyperlink at the top of the process tab
+
+* Drag the *Tokenize* operator and connect the doc note on the left to the doc node on the left side of the *Tokenize* operator.  The tokenizer operator will break up the documents so that no punctuations remain
+
+* Drag the *Filter Stopwords (English)* to the right of the tokenize.  This operator requires that each token represents an English word.  The filter stopwords removes less important words to improve the quality of the text processing results
+
+* Drag the *Filter Token by Length* to the right of the *Filter Stopwords (English)*  and set the desired min and a maximum number of characters per word.  This tool can remove word tokens based on size.
+
+* Drag the *Transform cases* operator to the right of *Filter Tokens (by Length)* operator.  This converts all of the tokens/words into the lower case because rapid miner will treat upper and lower case words as different words.
+
+* There is an optional operator called *N-Gram* that can be used to assigning a probability of what words will occur next in a sentence of a sequence of words.
+
+
+.. figure:: _static/process.png
+    :width: 500px
+    :align: center
+
+    Screen shot of what the final setup should look like
+
+In this example, I did text analysis on the King James version of the Bible.  What I looked at is to see what were the most common words used in the Bible (see figure below).  From the analysis some of the most common used words included: Lord, said, Israel, king, people, came, house, come, and children.  What I found interesting is that some of the stopwords words such as came and come was not removed with the *Filter Stopwords* operator because it is used for current English and the King James version of the Bible used older less common words
+
+
+
+.. figure:: _static/textResults.png
+    :width: 500px
+    :align: center
+
+    Screen show of the results from running the text processor in Rapid Miner
+
+To create a visualization of the most common words in the Bible, I used wordcloud.com and weighted each of the words according to the number counted.  To get better results, I divided all of the counts by 1000 and rounded to the nearest to the nearest integer.  The result from the word cloud can be seen below.  I love how the things that show up are king, Israel, and children
+
+.. figure:: _static/kingJames.png
+    :width: 500px
+    :align: center
+
+    Screen shot of the word cloud using the top words from King James version of the Bible.
+
+
+
+Sentiment Analysis
+====================
+
+
+
+
+
+The first step I did for sentimental analysis in Rapid Miner was to install the free extensions *Text Processing* and *Web Minning*.  After the installation process, Rapid Miner automatically restarted allowing me to use the new extensions.  All of the extensions operators are available under the *extensions* folder on the left-hand side of rapid miner.
+
+The following steps describe the different extensions I used to perform the sentimental analysis.
+
+* I brought the *Read CSV* operator into the process pane.  I then clicked on it and selected the desired CSV file I wanted to use and then selected the following *column separator* =  **,**
+
+.. note::
+
+    All of the operators can be found by using the search function under the operator tab
+
+* I then brought the *Select Attributes* to the left of *Read CSV* and connnected them together.  In the parameter pane a set the *filter attribute type* = **single** and *attribute* = **text**
+
+* I then brought the *Encode URLs* operator and connected to the *Read CSV*.  I selected the *Encode URLs* operator, and in the parameters pane I set **URL attribute = text** and **encoding = SYSTEM** which is under advanced parameters
+
+* I then subscribed to a text analysis API from aylien on the website https://developer.aylien.com/admin   The API Key and ID was used in the following step
+
+* I then brought *Enrich Data by Webservice* to the operator panel and connected it to the *Encode URLs* operator.  This tool is needed to analysze the sentiment of the test in order to find out if it is positive, neutral, or negative.  The configure for the parameters are as follows:
+
+    * *query type* = **XPath**
+    * *attribute type* = **Nominal**
+    * *xpath queries* (click on edit list)
+        * *attribute name* : **polarity**
+        * *query expression* : **//polarity/text()**
+    * *assume html* : unchecked
+    * *request method* = **POST**
+    * *body*  (click on edit text)
+        * **text=<%title%>**
+    * *url*  = **https://api.aylien.com/api/v1/sentiment?mode=tweet&text=<%text%>**
+    * *separator* = **,**
+    * *request properties* (click on edit list)
+        .. csv-table::
+         :header: property,value
+
+            Accept,  text/xml
+            X-AYLIEN-TextAPI-Application-Key, <API application Key>
+            X-AYLIEN-TextAPI-Application-ID,  <API application ID>
+
+    * *encoding* = **SYSTEM**
+
+The final results in the process panel should look like the figure below.
+
+.. figure:: _static/sentamentalProcess.png
+    :width: 500px
+    :align: center
+
+    What the process pannel should look like when finished with setting up the sentamental analysis process.
+
+*  I then clicked on *Run* to check the polarity of the results to see positive, neutral, or negative
+
+
+This is one method for sentimental analysis but has limitations based on the subscription service with Aylien.  Because I signed up for the free service, I was not able to analysis on all of the texts from the Excell spreadsheet DS-skills-DFE-2.csv.  So a small version of the spreadsheet was used to get the results (60 rows)
+
+
+The results of this analysis can be seen below.
+
+
+.. figure:: _static/sentamentalChart.png
+    :width: 500px
+    :align: center
+
+    Graph showing the results of positive, neutral, and negative values
+
+
+The results seem to be well distributed with both positive and negative sentementals.  There appeared to be no strong emotions over the results.
+
+
+I used another method with rapid miner where I connected *Read CSV > Select Attribute >Data to Document >Analyze sentiment >Document to Data*.  The Analyze sentiment is an add-on from aylien that also has a limit on how many querries can be done.
+
+For the *Data to Document* I set the following attribute *specific wieghts* = **Text** (source) , **1.0** (weight)
+
+For the *Analyze sentiment* I created an Alyien Text connection using the application id and application key obtained above.
+
+I then used the *Document to Data* to convert the information back into data format so it is easier to view and understand and set the parameter *text attribute* = **Text**
+
+The setup can be seen in the figure below.
+
+.. figure:: _static/AnalyzeSentiment.png
+    :width: 500px
+    :align: center
+
+    Another way for sentimental analysis this time using the operator *Analyze sentiment*
+
+Appendix A:
+*************
+
+
+The description for Read document as follows::
+
+    Input
+
+    file (File)
+    The file port.
+
+    Output
+
+    output
+    The output port.
+
+    Parameters
+    file
+    Name of the file to read the data from.
+    Type: string
+    extract text only (optional)
+    If checked, structural information like xml or html tags will be ignored and discarded.
+    Type: boolean Default: true
+    use file extension as type
+    If checked, the type of the files will be determined by their extensions. Unknown extensions will be treated as text files.
+    Type: boolean Default: true
+    content type (optional)
+    The content type of the input texts
+    Type: selection Range: txt, pdf, xml, html Default: txt
+    encoding (optional)
+
+Tokenize
+==========
+
+The description for tokenize is as follows::
+
+    Synopsis
+    Tokenizes a document.
+
+    Description
+    This operator splits the text of a document into a sequence of tokens. There are several options how to specify the splitting points. Either you may use all non-letter character, what is the default settings. This will result in tokens consisting of one single word, what's the most appropriate option before finally building the word vector
+
+    Or if you are going to build windows of tokens or something like that, you will probably split complete sentences, this is possible by setting the split mode to specify character and enter all splitting characters.
+
+    The third option let's you define regular expressions and is the most flexible for very special cases. Each non-letter character is used as separator. As a result, each word in the text is represented by a single token.
+
+    Input
+
+    document
+    The document port.
+
+    Output
+
+    document
+    The document port.
+
+    Parameters
+    mode (optional)
+    This selects the tokenization mode. Depending on the mode, split points are chosen differently.
+    Type: selection Range: non letters, specify characters, regular expression, linguistic sentences, linguistic tokens Default: non letters
+    characters (optional)
+    The incoming document will be split into tokens on each of this characters. For example enter a '.' for splitting into sentences.
+    Type: string Default: .:
+    expression (optional)
+    This regular expression defines the splitting point.
+    Type: string
+    language (optional)
+    The language for the used part of speech (POS) tagger.
+    Type: selection Range: English, German, Generic Asian Default: English
+    max token length (optional)
+    The maximal token length of the tokens
+    Type: integer
+
+Filter Stopwords (English)
+=================================
+
+The description for filter stopwords is as follows::
+
+    Synopsis
+    Removes English stopwords from a document.
+
+    Description
+    This operator filters English stopwords from a document by removing every token which equals a stopword from the built-in stopword list. Please note that, for this operator to work properly, every token should represent a single English word only. To obtain a document with each token representing a single word, you may tokenize a document by applying the Tokenize operator beforehand.
+
+    Input
+
+    document
+    The document port.
+
+    Output
+
+    document
+    The document port.
+
+
+
+Filter Tokens (by length)
+=================================
+
+The description of *filter tokens (by length)* is as follows::
+
+    Synopsis
+    Filters tokens based on their length.
+
+    Description
+    This operator filters tokens based on their length (i.e. the number of characters they contain).
+
+    Input
+
+    document
+    The document port.
+
+    Output
+
+    document
+    The document port.
+
+    Parameters
+    min chars (optional)
+    The minimal number of characters that a token must contain to be considered.
+    Type: integer Range: 0 - +∞ Default: 4
+    max chars (optional)
+    The maximal number of characters that a token must contain to be considered.
+
+
+n-Gram
+=================================
+
+The description of *n-Gram* is as follows::
+
+    Synopsis
+    Creates term n-Grams of tokens in a document.
+
+    Description
+    This operator creates term n-Grams of tokens in a document. A term n-Gram is defined as a series of consecutive tokens of length n. The term n-Grams generated by this operator consist of all series of consecutive tokens of length n.
+
+    Input
+
+    document
+    The document port.
+
+    Output
+
+    document
+    The document port.
+
+Create Document
+=================================
+
+The description of *Create Document* is as follows::
+
+    Synopsis
+    Creates a document.
+
+    Description
+    This operator creates a document containing the text given as parameter.
+
+    Output
+
+    output
+    The output port.
+
+    Parameters
+    text
+    The text.
+    Type: string
+    add label (optional)
+    Add a label value to the text as meta data.
+    Type: boolean Default: false
+    label type (optional)
+    The value type of the label.
+    Type: selection Range: nominal, numeric, integer, real, text, binominal, polynominal, file_path Default: nominal
+
+
+Document to Data
+=================================
+
+The description of *Document to Data* is as follows::
+
+    Synopsis
+    Generates a data set from documents.
+
+    Description
+    This operator generates a data set from a collection of documents. For each document in the collection, an example is added to the data set. The text contained in the document is stored in a nominal attribute. If a label or meta data are present associated with the documents, a label attribute or attribute for the meta data are created, respectively.
+
+    Input
+
+    documents (Collection)
+    The documents port.
+
+    Output
+
+    example set (Data Table)
+    The example set port.
+
+    Parameters
+    text attribute
+    The name of the text attribute.
+    Type: string
+    label attribute (optional)
+    The name of the label attribute.
+    Type: string
+    add meta information (optional)
+    If checked, available meta information of the text like filename, date is added as attribute.
+    Type: boolean Default: true
+    datamanagement (optional)
+    Determines, how the data is represented internally.
+
+
+Encode URLs
+=================================
+
+The description of *Encode URLs* is as follows::
+
+    Synopsis
+    Encodes URLs.
+
+    Description
+    This operator encodes URLs contained in a data set attribute.
+
+    Input
+
+    example set input (Data Table)
+    The example set input port.
+
+    Output
+
+    example set output (Data Table)
+    The example set output port.
+
+    original (Data Table)
+    The original port.
+
+    Parameters
+    url attribute
+    The attribute that contains the URLs that should be decoded.
+    Type: string
+    encoding (optional)
+    The encoding used for reading or writing files.
+    Type: selection
+
+Data to Document
+=================================
+
+
+The description of *Data to Document* is as follows::
+
+    Tags: Text Processing
+    Synopsis
+    Generates documents from values contained within a data set.
+
+    Description
+    This operator transforms a data set to a collection of documents by generating a document for each example of the data set.
+
+    Input
+
+    example set (Data Table)
+    The example set port.
+
+    Output
+
+    documents (Collection)
+    The documents port.
+
+    Parameters
+    select attributes and weights (optional)
+    If checked, you might select the used text attributes and their weights. Otherwise all text attributes are used.
+    Type: boolean Default: false
+    specify weights (optional)
+    This parameters allows to set weights per attribute. Text from attributes with higher weight will be more imporant during analysis.
+    Type: list
+
+Analyze Sentiment
+=================================
+
+
+The description of *Analyze Sentiment* is as follows::
+
+    Analyze Sentiment (Document) AYLIEN Text Analysis
+    Tags: Document
+    Synopsis
+    Analyzes Sentiment of text.
+
+    Description
+    Extracting sentiment from a piece of text such as a tweet, a review or an article can provide us with valuable insight about the author's emotions and perspective: whether the tone is positive, neutral or negative, and whether the text is subjective (meaning it's reflecting the author's opinion) or objective (meaning it's expressing a fact).
+
+    Input
+
+    documents 1
+
+    Output
+
+    documents
+
+    Parameters
+    connection
+    The connection details for the AYLIEN Text Analysis API have to be specified. If you have already configured a connection, you can select it from the drop-down list. If you have not configured one yet, select the icon to the right of the drop-down list and create a new connection in the Manage Connections box. Please note, the application id and application key are required. Retrieve your Text Analysis Application ID here.
+    Type:
+    sentiment mode (optional)
+    Specifies the analyze mode
+
+
+Document to Data
+==================
+
+The description of *Analyze Sentiment* is as follows::
+
+    Tags: Text Processing
+    Synopsis
+    Generates a data set from documents.
+
+    Description
+    This operator generates a data set from a collection of documents. For each document in the collection, an example is added to the data set. The text contained in the document is stored in a nominal attribute. If a label or meta data are present associated with the documents, a label attribute or attribute for the meta data are created, respectively.
+
+    Input
+
+    documents (Collection)
+    The documents port.
+
+    Output
+
+    example set (Data Table)
+    The example set port.
+
+    Parameters
+    text attribute
+    The name of the text attribute.
+    Type: string
+    label attribute (optional)
+    The name of the label attribute.
+    Type: string
+    add meta information (optional)
+    If checked, available meta information of the text like filename, date is added as attribute.
+    Type: boolean Default: true
+    datamanagement (optional)
+    Determines, how the data is represented internally.
+
+
+Important Terms for Rapid Miner
+================================
+
+This was obtained directly from the website http://docs.rapidminer.com/studio/getting-started/important-terms.html
+
+
+Important Terms
+
+The following lists the first terms you need to know when using RapidMiner Studio. Following the terms are a description of the RapidMiner data types and operator port descriptions.
+
+
+Attribute:
+
+    The information elements describing a scenario. Attributes are the table columns of a data set.
+
+
+Classification:
+
+    The process of predicting which category (or class) an example belongs to, based on existing data for which category membership is known. A category is defined as the possible values for a label. (Similarly, regression is the process for predicting numerical results.) That is, with classification you construct a model that, when trained, uses the learned rules to predict the category of new data.
+
+
+Data set:
+
+    The training set is the data used to discover predictive relationships and train models. The test set is the data used to test the accuracy and meaningfulness of a model's representation of the predictive relationship (typically discovered using the training set). The new data set is the data with missing labels; the rules derived from the training set are applied to predict outcome for the new data set.
+
+
+
+Example:
+
+    Characterized by its attributes, an example has concrete values that can be compared with other examples. Examples are the table rows of a data set.
+
+
+
+Example Set:
+
+    The table created from the attributes (columns) and examples (rows). Also known as data or data set.
+
+
+Label:
+
+    The identifying attribute in relation to the current question. The goal is to know or learn this attribute's (the label's) value, or learn rules for deriving it from the regular attributes, for each row in the example set. Sometimes referred to as the target attribute or variable, it is the thing to predict for new examples that are not yet characterized. There can be only one label per data set.
+
+
+
+Model:
+
+    The data mining method or prediction instruction. A model explains the discovered rules and/or predicts unknown situations for current and future examples.
+
+
+
+Operator:
+
+    The building blocks, grouped by function, used to create RapidMiner processes. An operator has input and output ports; the action performed on the input ultimately leads to what is supplied to the output. Operator parameters control those actions. There are more than 1500 operators available in RapidMiner. Operators, in the Operators panel of the Design view, are both browsable and searchable.
+
+
+
+Panel:
+
+    Each view has its own set of panels, or tools, related to the view. They can be moved, sized, and hidden to suit. You can access additional panels from the View > Show Panel pull-down menu:
+
+
+
+Parameter:
+
+    The setting(s) whose value(s) determine the characteristics or behavior of an operator. RapidMiner presents parameters in the Parameters panel of the Design view. There are regular parameters and expert parameters. The expert parameters are indicated by italic names and are displayed or hidden by clicking the Show/Hide advanced parameters link at the bottom of the panel.
+
+    As part of the Wisdom of Crowds capabilities, RapidMiner Studio provides parameter recommendations based on the knowledge and best practices of other RapidMiner users. The recommender helps configure operators by providing recommendations on which parameters to change and by suggesting appropriate parameter values.
+
+
+
+Ports:
+
+    The point through which data moves, represented by a semicircle labeled icon on the sides or operators and the Design view. See the list of port abbreviations below.
+
+
+
+Prediction:
+
+    The most probable value for a target attribute; predictions are derived by data mining. If you have rules and data, you can predict an outcome.
+
+
+
+Process:
+
+    A set of interconnected operators represented by a flow design, where each operator manipulates your data. A process might, for example, load a data set, transform the data, compute a model, and apply the model to another data set.
+
+
+
+Process view:
+
+    The working area for building processes. This is the canvas in the Design view where you drag operators or where, when you double-click a process, the operators of that process appear.
+
+
+
+Repository:
+
+    The storage mechanism for data and RapidMiner processes. Best practice recommends you use the repository for data storage instead of reading directly from a file or database. If you use a Read operator, meta data will not be available to RapidMiner, limiting the available functions.
+
+
+Role:
+
+    The identifying tag for or function of an attribute. Roles tell RapidMiner of special meaning or treatment for an attribute. RapidMiner has several pre-defined roles and supports the ability to create your own roles. The label role is of utmost importance in defining the target for a prediction. Any attribute without a role assigned is known as a regular attribute.
+
+
+
+Training:
+
+    The process of finding predictive relationships. The outcome of this learning process is the model.
+
+
+
+View:
+
+    A "work area" in which you access a specific functionality. There are two pre-defined views. Some extensions can add their own views (for example, the Radoop Extension). You can also create your own view by clicking New view... in the View menu.
+
+
+
+RapidMiner data types:
+
+    The following terms describe the data types RapidMiner assigns to attributes. Defining a data type specifies the kind of values allowed for an attribute. RapidMiner supports the natural division of numbers, texts, and dates. Numeric is the label for numbers, nominal for texts or strings, and date_time for dates.
+
+    attribute
+    Parent of all possible types ("any type").
+
+    binominal
+    Exactly two values (for example true/false or yes/no).
+
+    date
+    Date without time (for example 23.12.2014).
+
+    date_time
+    Both date and time (for example 23.12.2014 17:59).
+
+    file_path
+    Nominal data type (rarely used) that allows for more granular distinction. Can be used to mark a column as "only containing file paths."
+
+    integer
+    A whole number (for example, 23, -5, or 11,024,768).
+
+    nominal
+    All kinds of text values; includes polynomial and binomial.
+
+    numeric
+    All kinds of number values; includes date, time, integer, and real numbers.
+
+    polynominal
+    Many different string values (for example red, green, blue, yellow).
+
+    real
+    A fractional number (for example 11.23 or -0.0001).
+
+    text
+    Nominal data type that allows for more granular distinction (to differentiate from polynomial).
+
+    time
+    Time without date (for example 17:59).
+
+
+Operator port information::
+
+    The following table lists each port abbreviation and provides a brief description.
+
+    Port Abbreviation	Meaning	Description
+
+    ano	Anova	ANOVA matrix for ANOVA significance test
+    ann	Annotation	Annotations extracted from the input object
+    arc	Archive	Archive file generated during execution of the operator
+    ass	Association	Association rules that have been discovered in a frequent item set
+    att	Attribute	Attribute weights (in and out)
+    ave	Average	Performance measures; estimate of performance using the model built on the complete delivered data
+    clu	Cluster model	Cluster model created when clustering an example set
+    clu	Clustered set	Example set given to the clustering operator; may contain an attribute with a cluster role (describes the cluster of each example)
+    col	Collection	Collection of objects
+    con	Condition	Any object can be supplied; the condition specified in parameters is tested on this object
+    cov	Covariance	Covariance matrix
+    dic	Dictionary	Example set used for replacing 'from' values with 'to' values in a given example set
+    dis	Distance measure	SimilarityMeasure object
+    doc	Document	Document or document set
+    err	Error	Standard error output
+    est	Estimated performance	Performance vector of the SVM model which gives an estimation of statistical performance of this model
+    exa	Example set	Example set
+    fil	File	File object
+    fla	Flat	Flat collection or flat clustering model
+    for	Formula	Formula result
+    fre	Frequent	Frequent item or item sets for association rule learning
+    gro	Grouped	Grouped models, attributes, items
+    hie	Hierarchical	Hierarchical clustering model
+    inp	Input	Input source, can take various objects
+    ite	Item sets	Frequent item sets (groups of items that often appear together in the data)
+    joi	Join	Join of the left and right example sets
+    lab	Labeled data	Model that was given in input is applied on the example set and the updated example set is delivered from this port
+    lef	Left	Left input port expecting an example set, which is used as the left example set for a join
+    lif	Lift chart	Lift Pareto chart for the given model and example set
+    mat	Matrix	Correlations matrix of all attributes of the input example set
+    mer	Merged	Merged example set
+    mod	Model	Default model from this output port
+    obj	Object	IO object
+    ori	Original	Input example set is passed without changing to this port
+    out	Output	Output port
+    par	Parameter set	Set of parameters that can be applied on an operator
+    pat	Patterns	GSP algorithm is applied on the given example set; resultant sequential patterns set is delivered through this port
+    per	Performance	Performance Vector for selected attributes
+    pre	Preprocessing	Preprocessing model with information regarding the operator's parameters in the current process
+    ran	Random forest	Model of a random forest
+    ref	Reference	Provided reference data or reference set
+    req	Request set	Provided example set
+    res	Result set	Distance or similarity between examples of the request set and reference set
+    rig	Right	Right input port expecting an example set, which is used as the right example set for a join
+    roc	ROC curve	Calculated ROC curves for included models
+    rul	Rules	Association rules that have been discovered in a frequent item set
+    sec	Second	Input take an example set derived from the output of the Generate ID operator in an attached example process
+    seg	Segment	Segment of an image
+    sel	Selected	Object specified by the index parameter is returned through this port
+    ses	Session	Session example set
+    sig	Significance	Significance test results of performance vector comparison is delivered through this port
+    sim	Similarity	Calculated similarity between each example of the given example set with every other example of the same set
+    sin	Single	Single object of the given collection, which is processed in the inner part of the operator
+    sta	Stacking	Stacking examples or model
+    sto	Stored	Through this port, the input object is passed without changing to the output
+    sub	Subtrahend	Expects an example set; example set must have ID attribute
+    sup	Superset	Superset of input example sets
+    thr	Through	Objects are passed through without changing
+    thr	Threshold	Threshold output of the Select Recall operator
+    tra	Training	Training data to train a model (example set)
+    uni	Union	Union of the input example sets
+    unl	Unlabeled	Examples that are not labelled and therefore not used when training a model
+    unm	Unmatched	Examples that did not match a specified pattern in the original example set
+    unr	Unrelated	Examples that were unrelated to a specified pattern in the original example set
+    vis	Visualization	Self-organizing map (SOM) visualization
+    wei	Weights	Attribute weights
+    wor	Word	Expects or outputs a word list
+    xsl	XSLT	EXtensible Stylesheet Language (XSLT) document
+    Brand
+    © RapidMiner GmbH 2017. All rights reserved.
+
+      Provide Feedback

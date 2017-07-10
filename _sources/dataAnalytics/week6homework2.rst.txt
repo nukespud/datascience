@@ -1,0 +1,131 @@
+
+
+*************************************************
+Week 6-2 Text analysis using Python
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+I wanted to compare the difference between the books Mathew and Luke in the Bible (King James Version (KJV). The text for both versions was taken from the website http://www.earlychristianwritings.com/
+
+My initial guess was that once I removed the stop words and some of the KJV translation stop words that the most common words would  be the same most common words used in both books
+
+Running the code I was able to see the most important words were as follows::
+
+    ,1151.0,1071.0
+    jesus,100.0,172.0
+    man,131.0,125.0
+    saying,106.0,120.0
+    came,113.0,107.0
+    one,85.0,80.0
+    son,145.0,78.0
+    lord,103.0,76.0
+    heaven,31.0,76.0
+    disciples,35.0,71.0
+
+
+I thought it was interesting that both books talked about Jesus, son, and Lord.  These words are all names of Jesus.  I also thought it was interesting to see the other most common words used were man, heaven, and disciples.
+
+
+What is also intersting is which words were not used in one or the other two books.  The top ten words not used in one or the other book were the following::
+
+    Word, luke,mathew
+    begat,null,39.0
+    matt,null,27.0
+    luke,25.0,null
+    talents,null,12.0
+    company,10.0,null
+    swear,null,9.0
+    friends,9.0,null
+    elisabeth,8.0,null
+    gift,null,8.0
+    tares,null,8.0
+
+The words matt and luke are not due to the context of the books but because each chapter starts with either Matt or Luke.  What I thought was interesting is from this analysis  talents, gifts, swear and tares are only talked about in the book of Mathew where company, friends, and Elisabeth were only talked about in the book of Luke.
+
+
+The python code is as follows::
+
+    import operator, time, string
+    from string import digits
+    from nltk.corpus import stopwords
+    # from nltk.corpus import gutenberg
+
+
+    def getMostCommonWords(fileName):
+
+        #  Top number of words you wanted printed
+
+
+        # Open both text documents
+        asvText = open(fileName,"r")
+
+
+        stop = stopwords.words("english")
+        #  Alot of the stopwords are from the Older english words
+        removeList = ["unto","said","shall","ye","thou","thy","thee","come","also","hath","say","behold","upon"]
+
+
+        # Creating a dictionary for wordListDictonary and asv
+        wordListDictonary = {}
+        for line in asvText:
+            line = line.split()
+            for word in line:
+                word = word.lower()
+                # Remove punctioations and digits
+                new_word = word.translate(string.maketrans("",""),string.punctuation).translate(None,digits)
+                # Counts if word allready exists
+                if new_word not in stop and new_word not in removeList:
+                    if new_word in wordListDictonary:
+                        wordListDictonary[new_word]+=1
+                    else:
+                        wordListDictonary[new_word]=1
+        return wordListDictonary
+
+
+
+    sorted_luke = getMostCommonWords("luke_KJV.txt")
+    sorted_mathew = getMostCommonWords("mathew_KJV.txt")
+
+    compinedData = {}
+    for key in sorted_luke:
+        compinedData[key]=sorted_luke[key]
+    for key in sorted_mathew:
+        compinedData[key] = sorted_mathew[key]
+
+
+    sortedWordListCombined = sorted(compinedData.iteritems(), key=operator.itemgetter(1), reverse=True)
+
+
+    N_POPULAR = 10
+    print "Word, luke,mathew"
+    for pair in range(N_POPULAR):
+        keyValue = sortedWordListCombined[pair][0]
+        if keyValue in sorted_luke.keys():
+            lukeValue=float(sorted_luke[keyValue])
+        else:
+            lukeValue = "null"
+        if keyValue in sorted_mathew.keys():
+            matheValue=float(sorted_mathew[keyValue])
+        else:
+            matheValue = "null"
+        print "%s,%s,%s"%(keyValue,lukeValue,matheValue)
+
+    # Print missing words
+    N_POPULAR = 500
+    TOTAL_COUNTS=10
+    counter=0
+    print "\n\n\nMissing\nWord, luke,mathew"
+    for pair in range(N_POPULAR):
+        keyValue = sortedWordListCombined[pair][0]
+        if keyValue in sorted_luke.keys():
+            lukeValue=float(sorted_luke[keyValue])
+        else:
+            lukeValue = "null"
+        if keyValue in sorted_mathew.keys():
+            matheValue=float(sorted_mathew[keyValue])
+        else:
+            matheValue = "null"
+        if (matheValue =="null" or lukeValue == "null") and counter<TOTAL_COUNTS:
+            counter+=1
+            print "%s,%s,%s"%(keyValue,lukeValue,matheValue)

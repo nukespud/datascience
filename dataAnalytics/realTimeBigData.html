@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Real time big data &#8212; Week 3 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 6-1 Text analysis using Unix/Linux" href="week6homework1.html" />
+    <link rel="prev" title="Week 5: Text analytics in Rapid Miner" href="week5homework1.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="week6homework1.html" title="Week 6-1 Text analysis using Unix/Linux"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="week5homework1.html" title="Week 5: Text analytics in Rapid Miner"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Real time big data</a><ul>
+<li><a class="reference internal" href="#safety-and-security-services-remote-monitoring-advanced-control-predictive-maintances">safety and security, services, remote monitoring, advanced control, predictive maintances.</a></li>
+<li><a class="reference internal" href="#storm-abstractions">Storm abstractions</a></li>
+<li><a class="reference internal" href="#storm-architecture-and-its-compoenets">Storm architecture and its compoenets</a></li>
+<li><a class="reference internal" href="#talk-to-the-following">Talk to the following:</a></li>
+<li><a class="reference internal" href="#installation-of-storm">Installation of STORM</a></li>
+<li><a class="reference internal" href="#installing-storm-on-mac">Installing STORM on mac</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week5homework1.html"
+                        title="previous chapter">Week 5: Text analytics in Rapid Miner</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="week6homework1.html"
+                        title="next chapter">Week 6-1 Text analysis using Unix/Linux</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataAnalytics/realTimeBigData.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="real-time-big-data">
+<h1>Real time big data<a class="headerlink" href="#real-time-big-data" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<p><a class="reference external" href="http://15809-presscdn-0-93.pagely.netdna-cdn.com/wp-content/uploads/Industrial_Internet_of_Things_Timeline.pdf">http://15809-presscdn-0-93.pagely.netdna-cdn.com/wp-content/uploads/Industrial_Internet_of_Things_Timeline.pdf</a></p>
+<ul class="simple">
+<li>OPC Unified Architecture (UA) enabling secure remote communcations between devices, data sources and applications</li>
+</ul>
+<p>Uptake
+* Sensors drop in price (10)
+* Bring your own device (BYOD) becomes mainstream
+* IT standards enter indsutrial automation
+* 16 (IIot vision emerges)</p>
+<div class="section" id="safety-and-security-services-remote-monitoring-advanced-control-predictive-maintances">
+<h2>safety and security, services, remote monitoring, advanced control, predictive maintances.<a class="headerlink" href="#safety-and-security-services-remote-monitoring-advanced-control-predictive-maintances" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>equipment monitoring connects and monitors equpment, aggregating telematics signals and contextual data and making them avaialble to other services.  Track asset locations, usage and status at machine level, visualze asset data streams and events , contexutalize data source to proedcue more accurate insights.  -</li>
+<li>intelligence, speed, and scale</li>
+<li>diagnostic troubleshooting: enables to identify the root cause of problems, such as equipment failures, using data science mdoes and machine learning to guide users through a step-bystep troubleshooting process,</li>
+<li>KPI dashboards.  synthesize data and metrics into high-level views that highlight broad trends and patterns enabling managers and executive to monitor performance and make startegic decisions</li>
+<li>Action recommendation? translates insights into action by suggesting specific task and activites to minimze downtime and enhance ifficency</li>
+<li>Event and Condition Preduction:  Event and citions prediction identifies and enables operatorto prevent operaiton disruptions before the occur</li>
+<li>Rules and Alerts:  set-up configutaion user -specific notification and alerts based on customzed thresholds equipment telematics signals, user aciton, or data science predictions</li>
+<li>Taks management.  Atifical intellegicen to create, assign and resolve tasks.</li>
+</ul>
+<p>Storm is one tool that can be used for real time big data analystics.  The information I am writting about comes from the book &#8220;Real-Time Big Data Analytics&#8221; found on Safari Online.</p>
+</div>
+<div class="section" id="storm-abstractions">
+<h2>Storm abstractions<a class="headerlink" href="#storm-abstractions" title="Permalink to this headline">¶</a></h2>
+<p><strong>Streams</strong> :  endless sequence of tuples or data.</p>
+<blockquote>
+<div><strong>Tuple</strong> : data comprising of key-value pairs</div></blockquote>
+<p><strong>Topology</strong> : like MapReduce but runs forever in is a DAG</p>
+<blockquote>
+<div><strong>DAG</strong> (Directed Acyclic Graph)</div></blockquote>
+<p><strong>Spouts</strong> : two type of nodes one a spout - the feeder of data streams into the topology</p>
+<blockquote>
+<div><p><strong>Reliable</strong>  pushes tuples by acknowldeged or acking method</p>
+<p><strong>Unreliable</strong> doesnt keep track of tuples it pushes into the topology</p>
+</div></blockquote>
+<p>** Bolts** node components that perform the processing in the topology (emit the processed tuples to streams)</p>
+<p><strong>Taks</strong> processing task broken into smaller work items and perform processing withing bolt or spouts</p>
+<p><strong>Worker</strong> spawned to cater the execution of the topology</p>
+</div>
+<div class="section" id="storm-architecture-and-its-compoenets">
+<h2>Storm architecture and its compoenets<a class="headerlink" href="#storm-architecture-and-its-compoenets" title="Permalink to this headline">¶</a></h2>
+<p><strong>Zookeper cluster</strong> orchestration enginer and bookkeeper (submission of topology, create of workers, check dead nodes)</p>
+<p><strong>Storm cluster</strong> set on multiple nodes and consists of :</p>
+<blockquote>
+<div><p><strong>Numbus</strong> master process of Storm framework like JobTracker of Hadoop</p>
+<p><strong>Supervisor</strong> process do the processing</p>
+<p><strong>UI</strong> browers based interface to monitor cluster  <a class="reference external" href="httP://ui-node-ip:8080">httP://ui-node-ip:8080</a></p>
+</div></blockquote>
+</div>
+<div class="section" id="talk-to-the-following">
+<h2>Talk to the following:<a class="headerlink" href="#talk-to-the-following" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Teja Kuruganti</li>
+<li>Arjun</li>
+<li>Jamie (UT)</li>
+<li>Wess (UT)</li>
+<li>Chad Steed (interactive data science)</li>
+<li>Budhi Baderi -GIS</li>
+<li>Laura Purmah</li>
+</ul>
+<p>Industrial internet of things.  How to do predictive failure analysis on axceleray intsrumentation and then post process the data to determine the operation history of a nuclear power plant and what needs to be fixed.  Embedded system prodution technologies and smart production processes.  Intersection of people, data and intelligence machines .  Way to improve operational efficience boost revent by increasing production, exploit intelligent technologies to fuel innovation.  Big Data analytis and internet of things for power generation.  Data created by wind turbines and jet engines.  73% of companines are inventiong more than 20% of overall technology budget on Big Data analytics and 31% thing big data analystics is top three properties for power generation.</p>
+<p>Add sensors and data collection mechanisims to industrial equipment.  predict breakdowns or other kinds of occurences.</p>
+<p>Predictive maintenance of assets saving up to 12 % over scheduled repairs aond reducing overall maintanice cost up to 30 percemt and elminintng breakdowns up to 70 percent.  (50)  <strong>Thames Water Utilities Limited</strong>  using sensors, analytics, and real-time data to help utility respons more quickly to critical situations such as leaks or adverse weather events.  Colmbia Pipeline Group using exisitng asset data integrated with digitial visuzlizaiton, analystics, and shared situational intelligence can respons to potential events even faster.  Apached Corporation predict onshore and offshore oil pump failures</p>
+<p>Analytics platform for managing large vlumnes of data and analytics capabilities that drive improvements in clinical performance.  Data management, machine-to-machine communcation and automation technologies</p>
+<p>operational efficiency, outcome economy, connected ecosystem, collobartion between humans and machines</p>
+<p>From Predix (industrial internet platform)</p>
+<p>Big data analystics can prove: scheduling and logistics, predict-and-prevent services, LED solutions and sensors, achieve new levels of performance, reliability, and avaliablty, operations optimization,  (mult-terbyte structured streams of data sampled continously)</p>
+<p>Assets &gt; LAN/PAN/PAN &gt; Customed Edge Gateway &gt; WAN connecivity &gt; Cloud (VPN)</p>
+<p>Data Origination, Data Ingestion, Store and PRocess, Analysis and Usage.  Operational analystics along with historical anlaytics.  Descriptive analystics, predictive analystics, prscriptive analytics.  Aggregated data and reference data with analytics and models</p>
+<p>Industrial data science</p>
+<p>Type of sensors:  temperature, strain, pressure, accelerometer, velometer, linear-variable differential transfrmer, proximity probes, thermography, radio frequency/partial discharge, motor current/voltage/phase</p>
+<p>Predxi using watchtower remote data contorl and LIghthouse real time software applications.</p>
+</div>
+<div class="section" id="installation-of-storm">
+<h2>Installation of STORM<a class="headerlink" href="#installation-of-storm" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://www.tutorialspoint.com/apache_storm/apache_storm_installation.htm">https://www.tutorialspoint.com/apache_storm/apache_storm_installation.htm</a></p>
+<p>install Java using command:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">java</span> <span class="o">-</span><span class="n">version</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">default</span><span class="o">-</span><span class="n">jre</span> <span class="c"># Used for just runtime java</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">default</span><span class="o">-</span><span class="n">jdk</span> <span class="c"># Java development kit</span>
+</pre></div>
+</div>
+<p>Install zookeeper framework:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="o">.</span><span class="n">cs</span><span class="o">.</span><span class="n">utah</span><span class="o">.</span><span class="n">edu</span><span class="o">/</span><span class="n">zookeeper</span><span class="o">/</span><span class="n">current</span><span class="o">/</span><span class="n">zookeeper</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mf">10.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">sudo</span> <span class="n">mv</span> <span class="n">zookeep</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mf">10.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> <span class="n">opt</span><span class="o">/</span>
+<span class="n">sudo</span> <span class="n">tar</span> <span class="o">-</span><span class="n">xvf</span> <span class="n">zookeeper</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mf">10.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+<span class="n">cd</span> <span class="n">zookeeper</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">10</span>
+<span class="n">sudo</span> <span class="n">mkdir</span> <span class="n">data</span>
+<span class="n">cd</span> <span class="n">conf</span><span class="o">/</span>
+<span class="n">sudo</span> <span class="n">cp</span> <span class="n">zoo_sample</span><span class="o">.</span><span class="n">cfg</span> <span class="n">zoo</span><span class="o">.</span><span class="n">cfg</span>
+</pre></div>
+</div>
+<p>Then I add the following to the zoo.cfg:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">vi</span> <span class="n">zoo</span><span class="o">.</span><span class="n">cfg</span>
+<span class="n">tickTime</span><span class="o">=</span><span class="mi">2000</span>
+<span class="n">dataDir</span><span class="o">=/</span><span class="n">conf</span><span class="o">/</span><span class="n">zookeeper</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">10</span><span class="o">/</span><span class="n">data</span>
+<span class="n">clientPort</span><span class="o">=</span><span class="mi">2181</span>
+<span class="n">initLimit</span><span class="o">=</span><span class="mi">5</span>
+<span class="n">syncLimit</span><span class="o">=</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>After the configuration has been saved I then start zookeeper:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">sudo</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">zookeeper</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">10</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">zkServer</span><span class="o">.</span><span class="n">sh</span> <span class="n">start</span>
+</pre></div>
+</div>
+<p>The output should be:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">ZooKeeper</span> <span class="n">JMX</span> <span class="n">enabled</span> <span class="n">by</span> <span class="n">default</span>
+<span class="n">Using</span> <span class="n">config</span><span class="p">:</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">zookeeper</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">10</span><span class="o">/</span><span class="nb">bin</span><span class="o">/../</span><span class="n">conf</span><span class="o">/</span><span class="n">zoo</span><span class="o">.</span><span class="n">cfg</span>
+<span class="n">Starting</span> <span class="n">zookeeper</span> <span class="o">...</span> <span class="n">STARTED</span>
+</pre></div>
+</div>
+<p>Then start CLI (command line interface for zookeeper) using</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">zookeeper</span><span class="o">-</span><span class="mf">3.4</span><span class="o">.</span><span class="mi">10</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">zkCli</span><span class="o">.</span><span class="n">sh</span>
+</pre></div>
+</div>
+<p>The output is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre>Connecting to localhost:2181
+................
+................
+................
+Welcome to ZooKeeper!
+................
+................
+WATCHER::
+WatchedEvent state:SyncConnected type: None path:null
+[zk: localhost:2181(CONNECTED) 0]
+</pre></div>
+</div>
+<p>Then download storm using:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">wget</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">apache</span><span class="o">.</span><span class="n">claz</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">storm</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">storm</span><span class="o">-</span><span class="mf">1.1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">apache</span><span class="o">-</span><span class="n">storm</span><span class="o">-</span><span class="mf">1.1</span><span class="o">.</span><span class="mf">0.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="installing-storm-on-mac">
+<h2>Installing STORM on mac<a class="headerlink" href="#installing-storm-on-mac" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://www.javahabit.com/2015/12/26/how-to-set-up-apache-storm-on-mac-using-brew/">http://www.javahabit.com/2015/12/26/how-to-set-up-apache-storm-on-mac-using-brew/</a></p>
+<p>Do the following:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">brew</span> <span class="n">install</span> <span class="n">zookeeper</span>
+<span class="n">zkServer</span> <span class="n">start</span>
+<span class="n">brew</span> <span class="n">install</span> <span class="n">zeromq</span>
+<span class="n">brew</span> <span class="n">install</span> <span class="n">storm</span>
+</pre></div>
+</div>
+<p>Need to look into kafka</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="week6homework1.html" title="Week 6-1 Text analysis using Unix/Linux"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="week5homework1.html" title="Week 5: Text analytics in Rapid Miner"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
+    </div>
+  </body>
+</html>

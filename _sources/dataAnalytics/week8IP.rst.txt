@@ -1,0 +1,123 @@
+
+*************************************************
+Week 8 Integer Programming
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+The linear example problems comes from the website:  http://www.cs.princeton.edu/courses/archive/spring07/cos226/lectures/22LinearProgramming.pdf
+
+There is a small brewer that wants to optimize the profit for producing his ale and beer given the constraints on how much corn (480 lbs), hops (160 oz), and malt (1190 lbs) he has.  The table below shows how much material is required and the associated profit
+
+.. csv-table::
+ :header: beers, corn(lbs),hops(oz), malt(lbs),profit($)
+
+    ale (1 barrel), 5, 4, 35, 13
+    beer (1 barrel), 15, 4, 20, 23
+
+The python code requires to import pulp and set up the blending problem using the code bellow::
+
+    # Import the pulp module
+    from pulp import *
+
+    # Step 2: Create a variable to contain the problem data
+    # Use LpMaximize or LpMinimize depending on the type of problem
+    blendingFeed = LpProblem("Capital Budget", LpMaximize)
+
+The next step is to set up the two variables with a lower limit of zero and no max limit::
+
+    # Step 3: Create the two variables needed with a lower limit of zero
+    A = LpVariable("Ale", 0, None, LpInteger)
+    B = LpVariable("Beer", 0, None, LpInteger)
+
+Then the goal is to maximize the associated profit::
+
+    blendingFeed+=  13 * A + 23 * B, "profit"
+
+With the given limitaitons::
+
+    blendingFeed+= 5 * A + 15 * B <= 480, "corn"
+    blendingFeed+= 4 * A + 4 * B <= 160 , "hops"
+    blendingFeed+= 35 * A + 20 * B <=1190, "malt"
+
+The data is written to an .lp file using command::
+
+    blendingFeed.writeLP("blending.lp")
+
+
+
+The lp file is ::
+
+    \* Brewer's Problem *\
+    Maximize
+    profit: 13 Ale + 23 Beer
+    Subject To
+    corn: 5 Ale + 15 Beer <= 480
+    hops: 4 Ale + 4 Beer <= 160
+    malt: 35 Ale + 20 Beer <= 1190
+    Bounds
+    0 <= Ale
+    0 <= Beer
+    Generals
+    Ale
+    Beer
+    End
+
+The results are then solved using the command::
+
+    blendingFeed.solve()
+
+The results are plotted out using the command::
+
+    print(LpStatus[blendingFeed.status])
+
+    # Step 7: View each variables optimum value
+    for x in blendingFeed.variables():
+        print(x.name, "=", x.varValue)
+
+    print("Total profit
+
+The output of the results are::
+
+    Optimal
+    ('Ale', '=', 12.0)
+    ('Beer', '=', 28.0)
+    ('Total proffit', 800.0)
+
+From this analysis of the brewer makes 12 barrels of Ale and 28 Barrels of Beer he will have an optimized profit of $800.
+
+
+The final Python scripts are as follows::
+
+    # Import the pulp module
+    from pulp import *
+
+    # Step 2: Create a variable to contain the problem data
+    # Use LpMaximize or LpMinimize depending on the type of problem
+    blendingFeed = LpProblem("Brewer's Problem", LpMaximize)
+
+    # Step 3: Create the two variables needed with a lower limit of zero
+    A = LpVariable("Ale", 0, None, LpInteger)
+    B = LpVariable("Beer", 0, None, LpInteger)
+
+
+
+    # Add the objective functions
+    blendingFeed+=  13 * A + 23 * B, "profit"
+    blendingFeed+= 5 * A + 15 * B <= 480, "corn"
+    blendingFeed+= 4 * A + 4 * B <= 160 , "hops"
+    blendingFeed+= 35 * A + 20 * B <=1190, "malt"
+
+
+    # Step 5: The data is written to an .lp file
+    blendingFeed.writeLP("blending.lp")
+
+    # Step 6: Solve the problem using PuLPs choice of solver
+    blendingFeed.solve()
+
+    print(LpStatus[blendingFeed.status])
+
+    # Step 7: View each variables optimum value
+    for x in blendingFeed.variables():
+        print(x.name, "=", x.varValue)
+
+    print("Total profit", value(blendingFeed.objective))

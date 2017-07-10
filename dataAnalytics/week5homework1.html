@@ -1,0 +1,787 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Week 5: Text analytics in Rapid Miner &#8212; Week 3 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Real time big data" href="realTimeBigData.html" />
+    <link rel="prev" title="Week 3: Homework 2" href="week3homework2.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="realTimeBigData.html" title="Real time big data"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="week3homework2.html" title="Week 3: Homework 2"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Week 5: Text analytics in Rapid Miner</a><ul>
+<li><a class="reference internal" href="#text-processing-word-cound-using-rapidminer">Text processing (word cound) using RapidMiner</a><ul>
+<li><a class="reference internal" href="#sentiment-analysis">Sentiment Analysis</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#appendix-a">Appendix A:</a><ul>
+<li><a class="reference internal" href="#tokenize">Tokenize</a></li>
+<li><a class="reference internal" href="#filter-stopwords-english">Filter Stopwords (English)</a></li>
+<li><a class="reference internal" href="#filter-tokens-by-length">Filter Tokens (by length)</a></li>
+<li><a class="reference internal" href="#n-gram">n-Gram</a></li>
+<li><a class="reference internal" href="#create-document">Create Document</a></li>
+<li><a class="reference internal" href="#document-to-data">Document to Data</a></li>
+<li><a class="reference internal" href="#encode-urls">Encode URLs</a></li>
+<li><a class="reference internal" href="#data-to-document">Data to Document</a></li>
+<li><a class="reference internal" href="#analyze-sentiment">Analyze Sentiment</a></li>
+<li><a class="reference internal" href="#id1">Document to Data</a></li>
+<li><a class="reference internal" href="#important-terms-for-rapid-miner">Important Terms for Rapid Miner</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="week3homework2.html"
+                        title="previous chapter">Week 3: Homework 2</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="realTimeBigData.html"
+                        title="next chapter">Real time big data</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dataAnalytics/week5homework1.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="week-5-text-analytics-in-rapid-miner">
+<h1>Week 5: Text analytics in Rapid Miner<a class="headerlink" href="#week-5-text-analytics-in-rapid-miner" title="Permalink to this headline">¶</a></h1>
+<p>by Joshua Peterson (created in Sphinx)</p>
+<div class="section" id="text-processing-word-cound-using-rapidminer">
+<h2>Text processing (word cound) using RapidMiner<a class="headerlink" href="#text-processing-word-cound-using-rapidminer" title="Permalink to this headline">¶</a></h2>
+<p>The following steps are needed for text processing with the rapid miner.</p>
+<ul class="simple">
+<li>Open up a new processing in Rapid Miner</li>
+<li>Drag the <em>Read Document</em> operator to the Main Process window.  This can be found using the search bar or <strong>Extension&gt;Text Processing&gt;Read Document</strong></li>
+<li>Select the <em>Read Document</em> operation and in the sidebar select the folder and find the desired text document.  Then select <em>extract text only</em> and <em>use file extension as type</em>.  See figure below to see what the GUI looks like for the different options selected</li>
+</ul>
+<div class="figure align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/readDocument.png"><img alt="../_images/readDocument.png" src="../_images/readDocument.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Screen shot of the parameter box in Rapid Miner.  In this case, it is the parameter box for <em>Read Document</em></span></p>
+</div>
+<ul class="simple">
+<li>Bring the <em>Process Document</em> operator into the Main Process window between the Read Document and the res (result) node.  <strong>&gt;Extension&gt;Text Processing &gt;Process Document</strong></li>
+<li>Double click on the <em>Process Documents</em> operation and open the processing folder in the operation panel.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">To go back to the original process click on the hyperlink at the top of the process tab</p>
+</div>
+<ul class="simple">
+<li>Drag the <em>Tokenize</em> operator and connect the doc note on the left to the doc node on the left side of the <em>Tokenize</em> operator.  The tokenizer operator will break up the documents so that no punctuations remain</li>
+<li>Drag the <em>Filter Stopwords (English)</em> to the right of the tokenize.  This operator requires that each token represents an English word.  The filter stopwords removes less important words to improve the quality of the text processing results</li>
+<li>Drag the <em>Filter Token by Length</em> to the right of the <em>Filter Stopwords (English)</em>  and set the desired min and a maximum number of characters per word.  This tool can remove word tokens based on size.</li>
+<li>Drag the <em>Transform cases</em> operator to the right of <em>Filter Tokens (by Length)</em> operator.  This converts all of the tokens/words into the lower case because rapid miner will treat upper and lower case words as different words.</li>
+<li>There is an optional operator called <em>N-Gram</em> that can be used to assigning a probability of what words will occur next in a sentence of a sequence of words.</li>
+</ul>
+<div class="figure align-center" id="id3">
+<a class="reference internal image-reference" href="../_images/process.png"><img alt="../_images/process.png" src="../_images/process.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Screen shot of what the final setup should look like</span></p>
+</div>
+<p>In this example, I did text analysis on the King James version of the Bible.  What I looked at is to see what were the most common words used in the Bible (see figure below).  From the analysis some of the most common used words included: Lord, said, Israel, king, people, came, house, come, and children.  What I found interesting is that some of the stopwords words such as came and come was not removed with the <em>Filter Stopwords</em> operator because it is used for current English and the King James version of the Bible used older less common words</p>
+<div class="figure align-center" id="id4">
+<a class="reference internal image-reference" href="../_images/textResults.png"><img alt="../_images/textResults.png" src="../_images/textResults.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Screen show of the results from running the text processor in Rapid Miner</span></p>
+</div>
+<p>To create a visualization of the most common words in the Bible, I used wordcloud.com and weighted each of the words according to the number counted.  To get better results, I divided all of the counts by 1000 and rounded to the nearest to the nearest integer.  The result from the word cloud can be seen below.  I love how the things that show up are king, Israel, and children</p>
+<div class="figure align-center" id="id5">
+<a class="reference internal image-reference" href="../_images/kingJames.png"><img alt="../_images/kingJames.png" src="../_images/kingJames.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Screen shot of the word cloud using the top words from King James version of the Bible.</span></p>
+</div>
+<div class="section" id="sentiment-analysis">
+<h3>Sentiment Analysis<a class="headerlink" href="#sentiment-analysis" title="Permalink to this headline">¶</a></h3>
+<p>The first step I did for sentimental analysis in Rapid Miner was to install the free extensions <em>Text Processing</em> and <em>Web Minning</em>.  After the installation process, Rapid Miner automatically restarted allowing me to use the new extensions.  All of the extensions operators are available under the <em>extensions</em> folder on the left-hand side of rapid miner.</p>
+<p>The following steps describe the different extensions I used to perform the sentimental analysis.</p>
+<ul class="simple">
+<li>I brought the <em>Read CSV</em> operator into the process pane.  I then clicked on it and selected the desired CSV file I wanted to use and then selected the following <em>column separator</em> =  <strong>,</strong></li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All of the operators can be found by using the search function under the operator tab</p>
+</div>
+<ul>
+<li><p class="first">I then brought the <em>Select Attributes</em> to the left of <em>Read CSV</em> and connnected them together.  In the parameter pane a set the <em>filter attribute type</em> = <strong>single</strong> and <em>attribute</em> = <strong>text</strong></p>
+</li>
+<li><p class="first">I then brought the <em>Encode URLs</em> operator and connected to the <em>Read CSV</em>.  I selected the <em>Encode URLs</em> operator, and in the parameters pane I set <strong>URL attribute = text</strong> and <strong>encoding = SYSTEM</strong> which is under advanced parameters</p>
+</li>
+<li><p class="first">I then subscribed to a text analysis API from aylien on the website <a class="reference external" href="https://developer.aylien.com/admin">https://developer.aylien.com/admin</a>   The API Key and ID was used in the following step</p>
+</li>
+<li><p class="first">I then brought <em>Enrich Data by Webservice</em> to the operator panel and connected it to the <em>Encode URLs</em> operator.  This tool is needed to analysze the sentiment of the test in order to find out if it is positive, neutral, or negative.  The configure for the parameters are as follows:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><em>query type</em> = <strong>XPath</strong></p>
+</li>
+<li><p class="first"><em>attribute type</em> = <strong>Nominal</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt><em>xpath queries</em> (click on edit list)</dt>
+<dd><ul class="first last simple">
+<li><em>attribute name</em> : <strong>polarity</strong></li>
+<li><em>query expression</em> : <strong>//polarity/text()</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><em>assume html</em> : unchecked</p>
+</li>
+<li><p class="first"><em>request method</em> = <strong>POST</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt><em>body</em>  (click on edit text)</dt>
+<dd><ul class="first last simple">
+<li><strong>text=&lt;%title%&gt;</strong></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first"><em>url</em>  = <strong>https://api.aylien.com/api/v1/sentiment?mode=tweet&amp;text=&lt;%text%&gt;</strong></p>
+</li>
+<li><p class="first"><em>separator</em> = <strong>,</strong></p>
+</li>
+<li><dl class="first docutils">
+<dt><em>request properties</em> (click on edit list)</dt>
+<dd><table border="1" class="first last docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">property</th>
+<th class="head">value</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Accept</td>
+<td>text/xml</td>
+</tr>
+<tr class="row-odd"><td>X-AYLIEN-TextAPI-Application-Key</td>
+<td>&lt;API application Key&gt;</td>
+</tr>
+<tr class="row-even"><td>X-AYLIEN-TextAPI-Application-ID</td>
+<td>&lt;API application ID&gt;</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+<li><p class="first"><em>encoding</em> = <strong>SYSTEM</strong></p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>The final results in the process panel should look like the figure below.</p>
+<div class="figure align-center" id="id6">
+<a class="reference internal image-reference" href="../_images/sentamentalProcess.png"><img alt="../_images/sentamentalProcess.png" src="../_images/sentamentalProcess.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">What the process pannel should look like when finished with setting up the sentamental analysis process.</span></p>
+</div>
+<ul class="simple">
+<li>I then clicked on <em>Run</em> to check the polarity of the results to see positive, neutral, or negative</li>
+</ul>
+<p>This is one method for sentimental analysis but has limitations based on the subscription service with Aylien.  Because I signed up for the free service, I was not able to analysis on all of the texts from the Excell spreadsheet DS-skills-DFE-2.csv.  So a small version of the spreadsheet was used to get the results (60 rows)</p>
+<p>The results of this analysis can be seen below.</p>
+<div class="figure align-center" id="id7">
+<a class="reference internal image-reference" href="../_images/sentamentalChart.png"><img alt="../_images/sentamentalChart.png" src="../_images/sentamentalChart.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Graph showing the results of positive, neutral, and negative values</span></p>
+</div>
+<p>The results seem to be well distributed with both positive and negative sentementals.  There appeared to be no strong emotions over the results.</p>
+<p>I used another method with rapid miner where I connected <em>Read CSV &gt; Select Attribute &gt;Data to Document &gt;Analyze sentiment &gt;Document to Data</em>.  The Analyze sentiment is an add-on from aylien that also has a limit on how many querries can be done.</p>
+<p>For the <em>Data to Document</em> I set the following attribute <em>specific wieghts</em> = <strong>Text</strong> (source) , <strong>1.0</strong> (weight)</p>
+<p>For the <em>Analyze sentiment</em> I created an Alyien Text connection using the application id and application key obtained above.</p>
+<p>I then used the <em>Document to Data</em> to convert the information back into data format so it is easier to view and understand and set the parameter <em>text attribute</em> = <strong>Text</strong></p>
+<p>The setup can be seen in the figure below.</p>
+<div class="figure align-center" id="id8">
+<a class="reference internal image-reference" href="../_images/AnalyzeSentiment.png"><img alt="../_images/AnalyzeSentiment.png" src="../_images/AnalyzeSentiment.png" style="width: 500px;" /></a>
+<p class="caption"><span class="caption-text">Another way for sentimental analysis this time using the operator <em>Analyze sentiment</em></span></p>
+</div>
+</div>
+</div>
+<div class="section" id="appendix-a">
+<h2>Appendix A:<a class="headerlink" href="#appendix-a" title="Permalink to this headline">¶</a></h2>
+<p>The description for Read document as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Input</span>
+
+<span class="n">file</span> <span class="p">(</span><span class="n">File</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">file</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">output</span>
+<span class="n">The</span> <span class="n">output</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Parameters</span>
+<span class="n">file</span>
+<span class="n">Name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">file</span> <span class="n">to</span> <span class="n">read</span> <span class="n">the</span> <span class="n">data</span> <span class="n">from</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span>
+<span class="n">extract</span> <span class="n">text</span> <span class="n">only</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">If</span> <span class="n">checked</span><span class="p">,</span> <span class="n">structural</span> <span class="n">information</span> <span class="n">like</span> <span class="n">xml</span> <span class="ow">or</span> <span class="n">html</span> <span class="n">tags</span> <span class="n">will</span> <span class="n">be</span> <span class="n">ignored</span> <span class="ow">and</span> <span class="n">discarded</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">boolean</span> <span class="n">Default</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">use</span> <span class="n">file</span> <span class="n">extension</span> <span class="k">as</span> <span class="nb">type</span>
+<span class="n">If</span> <span class="n">checked</span><span class="p">,</span> <span class="n">the</span> <span class="nb">type</span> <span class="n">of</span> <span class="n">the</span> <span class="n">files</span> <span class="n">will</span> <span class="n">be</span> <span class="n">determined</span> <span class="n">by</span> <span class="n">their</span> <span class="n">extensions</span><span class="o">.</span> <span class="n">Unknown</span> <span class="n">extensions</span> <span class="n">will</span> <span class="n">be</span> <span class="n">treated</span> <span class="k">as</span> <span class="n">text</span> <span class="n">files</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">boolean</span> <span class="n">Default</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">content</span> <span class="nb">type</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">content</span> <span class="nb">type</span> <span class="n">of</span> <span class="n">the</span> <span class="nb">input</span> <span class="n">texts</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">selection</span> <span class="n">Range</span><span class="p">:</span> <span class="n">txt</span><span class="p">,</span> <span class="n">pdf</span><span class="p">,</span> <span class="n">xml</span><span class="p">,</span> <span class="n">html</span> <span class="n">Default</span><span class="p">:</span> <span class="n">txt</span>
+<span class="n">encoding</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="tokenize">
+<h3>Tokenize<a class="headerlink" href="#tokenize" title="Permalink to this headline">¶</a></h3>
+<p>The description for tokenize is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Synopsis</span>
+<span class="n">Tokenizes</span> <span class="n">a</span> <span class="n">document</span><span class="o">.</span>
+
+<span class="n">Description</span>
+<span class="n">This</span> <span class="n">operator</span> <span class="n">splits</span> <span class="n">the</span> <span class="n">text</span> <span class="n">of</span> <span class="n">a</span> <span class="n">document</span> <span class="n">into</span> <span class="n">a</span> <span class="n">sequence</span> <span class="n">of</span> <span class="n">tokens</span><span class="o">.</span> <span class="n">There</span> <span class="n">are</span> <span class="n">several</span> <span class="n">options</span> <span class="n">how</span> <span class="n">to</span> <span class="n">specify</span> <span class="n">the</span> <span class="n">splitting</span> <span class="n">points</span><span class="o">.</span> <span class="n">Either</span> <span class="n">you</span> <span class="n">may</span> <span class="n">use</span> <span class="nb">all</span> <span class="n">non</span><span class="o">-</span><span class="n">letter</span> <span class="n">character</span><span class="p">,</span> <span class="n">what</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">default</span> <span class="n">settings</span><span class="o">.</span> <span class="n">This</span> <span class="n">will</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="n">consisting</span> <span class="n">of</span> <span class="n">one</span> <span class="n">single</span> <span class="n">word</span><span class="p">,</span> <span class="n">what</span><span class="s">&#39;s the most appropriate option before finally building the word vector</span>
+
+<span class="n">Or</span> <span class="k">if</span> <span class="n">you</span> <span class="n">are</span> <span class="n">going</span> <span class="n">to</span> <span class="n">build</span> <span class="n">windows</span> <span class="n">of</span> <span class="n">tokens</span> <span class="ow">or</span> <span class="n">something</span> <span class="n">like</span> <span class="n">that</span><span class="p">,</span> <span class="n">you</span> <span class="n">will</span> <span class="n">probably</span> <span class="n">split</span> <span class="n">complete</span> <span class="n">sentences</span><span class="p">,</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">possible</span> <span class="n">by</span> <span class="n">setting</span> <span class="n">the</span> <span class="n">split</span> <span class="n">mode</span> <span class="n">to</span> <span class="n">specify</span> <span class="n">character</span> <span class="ow">and</span> <span class="n">enter</span> <span class="nb">all</span> <span class="n">splitting</span> <span class="n">characters</span><span class="o">.</span>
+
+<span class="n">The</span> <span class="n">third</span> <span class="n">option</span> <span class="n">let</span><span class="s">&#39;s you define regular expressions and is the most flexible for very special cases. Each non-letter character is used as separator. As a result, each word in the text is represented by a single token.</span>
+
+<span class="n">Input</span>
+
+<span class="n">document</span>
+<span class="n">The</span> <span class="n">document</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">document</span>
+<span class="n">The</span> <span class="n">document</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Parameters</span>
+<span class="n">mode</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">This</span> <span class="n">selects</span> <span class="n">the</span> <span class="n">tokenization</span> <span class="n">mode</span><span class="o">.</span> <span class="n">Depending</span> <span class="n">on</span> <span class="n">the</span> <span class="n">mode</span><span class="p">,</span> <span class="n">split</span> <span class="n">points</span> <span class="n">are</span> <span class="n">chosen</span> <span class="n">differently</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">selection</span> <span class="n">Range</span><span class="p">:</span> <span class="n">non</span> <span class="n">letters</span><span class="p">,</span> <span class="n">specify</span> <span class="n">characters</span><span class="p">,</span> <span class="n">regular</span> <span class="n">expression</span><span class="p">,</span> <span class="n">linguistic</span> <span class="n">sentences</span><span class="p">,</span> <span class="n">linguistic</span> <span class="n">tokens</span> <span class="n">Default</span><span class="p">:</span> <span class="n">non</span> <span class="n">letters</span>
+<span class="n">characters</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">incoming</span> <span class="n">document</span> <span class="n">will</span> <span class="n">be</span> <span class="n">split</span> <span class="n">into</span> <span class="n">tokens</span> <span class="n">on</span> <span class="n">each</span> <span class="n">of</span> <span class="n">this</span> <span class="n">characters</span><span class="o">.</span> <span class="n">For</span> <span class="n">example</span> <span class="n">enter</span> <span class="n">a</span> <span class="s">&#39;.&#39;</span> <span class="k">for</span> <span class="n">splitting</span> <span class="n">into</span> <span class="n">sentences</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span> <span class="n">Default</span><span class="p">:</span> <span class="o">.</span><span class="p">:</span>
+<span class="n">expression</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">This</span> <span class="n">regular</span> <span class="n">expression</span> <span class="n">defines</span> <span class="n">the</span> <span class="n">splitting</span> <span class="n">point</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span>
+<span class="n">language</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">language</span> <span class="k">for</span> <span class="n">the</span> <span class="n">used</span> <span class="n">part</span> <span class="n">of</span> <span class="n">speech</span> <span class="p">(</span><span class="n">POS</span><span class="p">)</span> <span class="n">tagger</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">selection</span> <span class="n">Range</span><span class="p">:</span> <span class="n">English</span><span class="p">,</span> <span class="n">German</span><span class="p">,</span> <span class="n">Generic</span> <span class="n">Asian</span> <span class="n">Default</span><span class="p">:</span> <span class="n">English</span>
+<span class="nb">max</span> <span class="n">token</span> <span class="n">length</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">maximal</span> <span class="n">token</span> <span class="n">length</span> <span class="n">of</span> <span class="n">the</span> <span class="n">tokens</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">integer</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="filter-stopwords-english">
+<h3>Filter Stopwords (English)<a class="headerlink" href="#filter-stopwords-english" title="Permalink to this headline">¶</a></h3>
+<p>The description for filter stopwords is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Synopsis</span>
+<span class="n">Removes</span> <span class="n">English</span> <span class="n">stopwords</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">document</span><span class="o">.</span>
+
+<span class="n">Description</span>
+<span class="n">This</span> <span class="n">operator</span> <span class="n">filters</span> <span class="n">English</span> <span class="n">stopwords</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">document</span> <span class="n">by</span> <span class="n">removing</span> <span class="n">every</span> <span class="n">token</span> <span class="n">which</span> <span class="n">equals</span> <span class="n">a</span> <span class="n">stopword</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">built</span><span class="o">-</span><span class="ow">in</span> <span class="n">stopword</span> <span class="nb">list</span><span class="o">.</span> <span class="n">Please</span> <span class="n">note</span> <span class="n">that</span><span class="p">,</span> <span class="k">for</span> <span class="n">this</span> <span class="n">operator</span> <span class="n">to</span> <span class="n">work</span> <span class="n">properly</span><span class="p">,</span> <span class="n">every</span> <span class="n">token</span> <span class="n">should</span> <span class="n">represent</span> <span class="n">a</span> <span class="n">single</span> <span class="n">English</span> <span class="n">word</span> <span class="n">only</span><span class="o">.</span> <span class="n">To</span> <span class="n">obtain</span> <span class="n">a</span> <span class="n">document</span> <span class="k">with</span> <span class="n">each</span> <span class="n">token</span> <span class="n">representing</span> <span class="n">a</span> <span class="n">single</span> <span class="n">word</span><span class="p">,</span> <span class="n">you</span> <span class="n">may</span> <span class="n">tokenize</span> <span class="n">a</span> <span class="n">document</span> <span class="n">by</span> <span class="n">applying</span> <span class="n">the</span> <span class="n">Tokenize</span> <span class="n">operator</span> <span class="n">beforehand</span><span class="o">.</span>
+
+<span class="n">Input</span>
+
+<span class="n">document</span>
+<span class="n">The</span> <span class="n">document</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">document</span>
+<span class="n">The</span> <span class="n">document</span> <span class="n">port</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="filter-tokens-by-length">
+<h3>Filter Tokens (by length)<a class="headerlink" href="#filter-tokens-by-length" title="Permalink to this headline">¶</a></h3>
+<p>The description of <em>filter tokens (by length)</em> is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre>Synopsis
+Filters tokens based on their length.
+
+Description
+This operator filters tokens based on their length (i.e. the number of characters they contain).
+
+Input
+
+document
+The document port.
+
+Output
+
+document
+The document port.
+
+Parameters
+min chars (optional)
+The minimal number of characters that a token must contain to be considered.
+Type: integer Range: 0 - +∞ Default: 4
+max chars (optional)
+The maximal number of characters that a token must contain to be considered.
+</pre></div>
+</div>
+</div>
+<div class="section" id="n-gram">
+<h3>n-Gram<a class="headerlink" href="#n-gram" title="Permalink to this headline">¶</a></h3>
+<p>The description of <em>n-Gram</em> is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Synopsis</span>
+<span class="n">Creates</span> <span class="n">term</span> <span class="n">n</span><span class="o">-</span><span class="n">Grams</span> <span class="n">of</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">document</span><span class="o">.</span>
+
+<span class="n">Description</span>
+<span class="n">This</span> <span class="n">operator</span> <span class="n">creates</span> <span class="n">term</span> <span class="n">n</span><span class="o">-</span><span class="n">Grams</span> <span class="n">of</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">document</span><span class="o">.</span> <span class="n">A</span> <span class="n">term</span> <span class="n">n</span><span class="o">-</span><span class="n">Gram</span> <span class="ow">is</span> <span class="n">defined</span> <span class="k">as</span> <span class="n">a</span> <span class="n">series</span> <span class="n">of</span> <span class="n">consecutive</span> <span class="n">tokens</span> <span class="n">of</span> <span class="n">length</span> <span class="n">n</span><span class="o">.</span> <span class="n">The</span> <span class="n">term</span> <span class="n">n</span><span class="o">-</span><span class="n">Grams</span> <span class="n">generated</span> <span class="n">by</span> <span class="n">this</span> <span class="n">operator</span> <span class="n">consist</span> <span class="n">of</span> <span class="nb">all</span> <span class="n">series</span> <span class="n">of</span> <span class="n">consecutive</span> <span class="n">tokens</span> <span class="n">of</span> <span class="n">length</span> <span class="n">n</span><span class="o">.</span>
+
+<span class="n">Input</span>
+
+<span class="n">document</span>
+<span class="n">The</span> <span class="n">document</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">document</span>
+<span class="n">The</span> <span class="n">document</span> <span class="n">port</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-document">
+<h3>Create Document<a class="headerlink" href="#create-document" title="Permalink to this headline">¶</a></h3>
+<p>The description of <em>Create Document</em> is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Synopsis</span>
+<span class="n">Creates</span> <span class="n">a</span> <span class="n">document</span><span class="o">.</span>
+
+<span class="n">Description</span>
+<span class="n">This</span> <span class="n">operator</span> <span class="n">creates</span> <span class="n">a</span> <span class="n">document</span> <span class="n">containing</span> <span class="n">the</span> <span class="n">text</span> <span class="n">given</span> <span class="k">as</span> <span class="n">parameter</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">output</span>
+<span class="n">The</span> <span class="n">output</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Parameters</span>
+<span class="n">text</span>
+<span class="n">The</span> <span class="n">text</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span>
+<span class="n">add</span> <span class="n">label</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">Add</span> <span class="n">a</span> <span class="n">label</span> <span class="n">value</span> <span class="n">to</span> <span class="n">the</span> <span class="n">text</span> <span class="k">as</span> <span class="n">meta</span> <span class="n">data</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">boolean</span> <span class="n">Default</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">label</span> <span class="nb">type</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">value</span> <span class="nb">type</span> <span class="n">of</span> <span class="n">the</span> <span class="n">label</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">selection</span> <span class="n">Range</span><span class="p">:</span> <span class="n">nominal</span><span class="p">,</span> <span class="n">numeric</span><span class="p">,</span> <span class="n">integer</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">binominal</span><span class="p">,</span> <span class="n">polynominal</span><span class="p">,</span> <span class="n">file_path</span> <span class="n">Default</span><span class="p">:</span> <span class="n">nominal</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="document-to-data">
+<h3>Document to Data<a class="headerlink" href="#document-to-data" title="Permalink to this headline">¶</a></h3>
+<p>The description of <em>Document to Data</em> is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Synopsis</span>
+<span class="n">Generates</span> <span class="n">a</span> <span class="n">data</span> <span class="nb">set</span> <span class="kn">from</span> <span class="nn">documents.</span>
+
+<span class="n">Description</span>
+<span class="n">This</span> <span class="n">operator</span> <span class="n">generates</span> <span class="n">a</span> <span class="n">data</span> <span class="nb">set</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">collection</span> <span class="n">of</span> <span class="n">documents</span><span class="o">.</span> <span class="n">For</span> <span class="n">each</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">collection</span><span class="p">,</span> <span class="n">an</span> <span class="n">example</span> <span class="ow">is</span> <span class="n">added</span> <span class="n">to</span> <span class="n">the</span> <span class="n">data</span> <span class="nb">set</span><span class="o">.</span> <span class="n">The</span> <span class="n">text</span> <span class="n">contained</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">document</span> <span class="ow">is</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">nominal</span> <span class="n">attribute</span><span class="o">.</span> <span class="n">If</span> <span class="n">a</span> <span class="n">label</span> <span class="ow">or</span> <span class="n">meta</span> <span class="n">data</span> <span class="n">are</span> <span class="n">present</span> <span class="n">associated</span> <span class="k">with</span> <span class="n">the</span> <span class="n">documents</span><span class="p">,</span> <span class="n">a</span> <span class="n">label</span> <span class="n">attribute</span> <span class="ow">or</span> <span class="n">attribute</span> <span class="k">for</span> <span class="n">the</span> <span class="n">meta</span> <span class="n">data</span> <span class="n">are</span> <span class="n">created</span><span class="p">,</span> <span class="n">respectively</span><span class="o">.</span>
+
+<span class="n">Input</span>
+
+<span class="n">documents</span> <span class="p">(</span><span class="n">Collection</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">documents</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">example</span> <span class="nb">set</span> <span class="p">(</span><span class="n">Data</span> <span class="n">Table</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">example</span> <span class="nb">set</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Parameters</span>
+<span class="n">text</span> <span class="n">attribute</span>
+<span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">text</span> <span class="n">attribute</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span>
+<span class="n">label</span> <span class="n">attribute</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">label</span> <span class="n">attribute</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span>
+<span class="n">add</span> <span class="n">meta</span> <span class="n">information</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">If</span> <span class="n">checked</span><span class="p">,</span> <span class="n">available</span> <span class="n">meta</span> <span class="n">information</span> <span class="n">of</span> <span class="n">the</span> <span class="n">text</span> <span class="n">like</span> <span class="n">filename</span><span class="p">,</span> <span class="n">date</span> <span class="ow">is</span> <span class="n">added</span> <span class="k">as</span> <span class="n">attribute</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">boolean</span> <span class="n">Default</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">datamanagement</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">Determines</span><span class="p">,</span> <span class="n">how</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">represented</span> <span class="n">internally</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="encode-urls">
+<h3>Encode URLs<a class="headerlink" href="#encode-urls" title="Permalink to this headline">¶</a></h3>
+<p>The description of <em>Encode URLs</em> is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Synopsis</span>
+<span class="n">Encodes</span> <span class="n">URLs</span><span class="o">.</span>
+
+<span class="n">Description</span>
+<span class="n">This</span> <span class="n">operator</span> <span class="n">encodes</span> <span class="n">URLs</span> <span class="n">contained</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">data</span> <span class="nb">set</span> <span class="n">attribute</span><span class="o">.</span>
+
+<span class="n">Input</span>
+
+<span class="n">example</span> <span class="nb">set</span> <span class="nb">input</span> <span class="p">(</span><span class="n">Data</span> <span class="n">Table</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">example</span> <span class="nb">set</span> <span class="nb">input</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">example</span> <span class="nb">set</span> <span class="n">output</span> <span class="p">(</span><span class="n">Data</span> <span class="n">Table</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">example</span> <span class="nb">set</span> <span class="n">output</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">original</span> <span class="p">(</span><span class="n">Data</span> <span class="n">Table</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">original</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Parameters</span>
+<span class="n">url</span> <span class="n">attribute</span>
+<span class="n">The</span> <span class="n">attribute</span> <span class="n">that</span> <span class="n">contains</span> <span class="n">the</span> <span class="n">URLs</span> <span class="n">that</span> <span class="n">should</span> <span class="n">be</span> <span class="n">decoded</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span>
+<span class="n">encoding</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">encoding</span> <span class="n">used</span> <span class="k">for</span> <span class="n">reading</span> <span class="ow">or</span> <span class="n">writing</span> <span class="n">files</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">selection</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="data-to-document">
+<h3>Data to Document<a class="headerlink" href="#data-to-document" title="Permalink to this headline">¶</a></h3>
+<p>The description of <em>Data to Document</em> is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Tags</span><span class="p">:</span> <span class="n">Text</span> <span class="n">Processing</span>
+<span class="n">Synopsis</span>
+<span class="n">Generates</span> <span class="n">documents</span> <span class="kn">from</span> <span class="nn">values</span> <span class="n">contained</span> <span class="n">within</span> <span class="n">a</span> <span class="n">data</span> <span class="nb">set</span><span class="o">.</span>
+
+<span class="n">Description</span>
+<span class="n">This</span> <span class="n">operator</span> <span class="n">transforms</span> <span class="n">a</span> <span class="n">data</span> <span class="nb">set</span> <span class="n">to</span> <span class="n">a</span> <span class="n">collection</span> <span class="n">of</span> <span class="n">documents</span> <span class="n">by</span> <span class="n">generating</span> <span class="n">a</span> <span class="n">document</span> <span class="k">for</span> <span class="n">each</span> <span class="n">example</span> <span class="n">of</span> <span class="n">the</span> <span class="n">data</span> <span class="nb">set</span><span class="o">.</span>
+
+<span class="n">Input</span>
+
+<span class="n">example</span> <span class="nb">set</span> <span class="p">(</span><span class="n">Data</span> <span class="n">Table</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">example</span> <span class="nb">set</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">documents</span> <span class="p">(</span><span class="n">Collection</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">documents</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Parameters</span>
+<span class="n">select</span> <span class="n">attributes</span> <span class="ow">and</span> <span class="n">weights</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">If</span> <span class="n">checked</span><span class="p">,</span> <span class="n">you</span> <span class="n">might</span> <span class="n">select</span> <span class="n">the</span> <span class="n">used</span> <span class="n">text</span> <span class="n">attributes</span> <span class="ow">and</span> <span class="n">their</span> <span class="n">weights</span><span class="o">.</span> <span class="n">Otherwise</span> <span class="nb">all</span> <span class="n">text</span> <span class="n">attributes</span> <span class="n">are</span> <span class="n">used</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">boolean</span> <span class="n">Default</span><span class="p">:</span> <span class="n">false</span>
+<span class="n">specify</span> <span class="n">weights</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">This</span> <span class="n">parameters</span> <span class="n">allows</span> <span class="n">to</span> <span class="nb">set</span> <span class="n">weights</span> <span class="n">per</span> <span class="n">attribute</span><span class="o">.</span> <span class="n">Text</span> <span class="kn">from</span> <span class="nn">attributes</span> <span class="k">with</span> <span class="n">higher</span> <span class="n">weight</span> <span class="n">will</span> <span class="n">be</span> <span class="n">more</span> <span class="n">imporant</span> <span class="n">during</span> <span class="n">analysis</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="nb">list</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="analyze-sentiment">
+<h3>Analyze Sentiment<a class="headerlink" href="#analyze-sentiment" title="Permalink to this headline">¶</a></h3>
+<p>The description of <em>Analyze Sentiment</em> is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Analyze</span> <span class="n">Sentiment</span> <span class="p">(</span><span class="n">Document</span><span class="p">)</span> <span class="n">AYLIEN</span> <span class="n">Text</span> <span class="n">Analysis</span>
+<span class="n">Tags</span><span class="p">:</span> <span class="n">Document</span>
+<span class="n">Synopsis</span>
+<span class="n">Analyzes</span> <span class="n">Sentiment</span> <span class="n">of</span> <span class="n">text</span><span class="o">.</span>
+
+<span class="n">Description</span>
+<span class="n">Extracting</span> <span class="n">sentiment</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">piece</span> <span class="n">of</span> <span class="n">text</span> <span class="n">such</span> <span class="k">as</span> <span class="n">a</span> <span class="n">tweet</span><span class="p">,</span> <span class="n">a</span> <span class="n">review</span> <span class="ow">or</span> <span class="n">an</span> <span class="n">article</span> <span class="n">can</span> <span class="n">provide</span> <span class="n">us</span> <span class="k">with</span> <span class="n">valuable</span> <span class="n">insight</span> <span class="n">about</span> <span class="n">the</span> <span class="n">author</span><span class="s">&#39;s emotions and perspective: whether the tone is positive, neutral or negative, and whether the text is subjective (meaning it&#39;</span><span class="n">s</span> <span class="n">reflecting</span> <span class="n">the</span> <span class="n">author</span><span class="s">&#39;s opinion) or objective (meaning it&#39;</span><span class="n">s</span> <span class="n">expressing</span> <span class="n">a</span> <span class="n">fact</span><span class="p">)</span><span class="o">.</span>
+
+<span class="n">Input</span>
+
+<span class="n">documents</span> <span class="mi">1</span>
+
+<span class="n">Output</span>
+
+<span class="n">documents</span>
+
+<span class="n">Parameters</span>
+<span class="n">connection</span>
+<span class="n">The</span> <span class="n">connection</span> <span class="n">details</span> <span class="k">for</span> <span class="n">the</span> <span class="n">AYLIEN</span> <span class="n">Text</span> <span class="n">Analysis</span> <span class="n">API</span> <span class="n">have</span> <span class="n">to</span> <span class="n">be</span> <span class="n">specified</span><span class="o">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">have</span> <span class="n">already</span> <span class="n">configured</span> <span class="n">a</span> <span class="n">connection</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">select</span> <span class="n">it</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">drop</span><span class="o">-</span><span class="n">down</span> <span class="nb">list</span><span class="o">.</span> <span class="n">If</span> <span class="n">you</span> <span class="n">have</span> <span class="ow">not</span> <span class="n">configured</span> <span class="n">one</span> <span class="n">yet</span><span class="p">,</span> <span class="n">select</span> <span class="n">the</span> <span class="n">icon</span> <span class="n">to</span> <span class="n">the</span> <span class="n">right</span> <span class="n">of</span> <span class="n">the</span> <span class="n">drop</span><span class="o">-</span><span class="n">down</span> <span class="nb">list</span> <span class="ow">and</span> <span class="n">create</span> <span class="n">a</span> <span class="n">new</span> <span class="n">connection</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">Manage</span> <span class="n">Connections</span> <span class="n">box</span><span class="o">.</span> <span class="n">Please</span> <span class="n">note</span><span class="p">,</span> <span class="n">the</span> <span class="n">application</span> <span class="nb">id</span> <span class="ow">and</span> <span class="n">application</span> <span class="n">key</span> <span class="n">are</span> <span class="n">required</span><span class="o">.</span> <span class="n">Retrieve</span> <span class="n">your</span> <span class="n">Text</span> <span class="n">Analysis</span> <span class="n">Application</span> <span class="n">ID</span> <span class="n">here</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span>
+<span class="n">sentiment</span> <span class="n">mode</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">Specifies</span> <span class="n">the</span> <span class="n">analyze</span> <span class="n">mode</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>Document to Data<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>The description of <em>Analyze Sentiment</em> is as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">Tags</span><span class="p">:</span> <span class="n">Text</span> <span class="n">Processing</span>
+<span class="n">Synopsis</span>
+<span class="n">Generates</span> <span class="n">a</span> <span class="n">data</span> <span class="nb">set</span> <span class="kn">from</span> <span class="nn">documents.</span>
+
+<span class="n">Description</span>
+<span class="n">This</span> <span class="n">operator</span> <span class="n">generates</span> <span class="n">a</span> <span class="n">data</span> <span class="nb">set</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">collection</span> <span class="n">of</span> <span class="n">documents</span><span class="o">.</span> <span class="n">For</span> <span class="n">each</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">collection</span><span class="p">,</span> <span class="n">an</span> <span class="n">example</span> <span class="ow">is</span> <span class="n">added</span> <span class="n">to</span> <span class="n">the</span> <span class="n">data</span> <span class="nb">set</span><span class="o">.</span> <span class="n">The</span> <span class="n">text</span> <span class="n">contained</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">document</span> <span class="ow">is</span> <span class="n">stored</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">nominal</span> <span class="n">attribute</span><span class="o">.</span> <span class="n">If</span> <span class="n">a</span> <span class="n">label</span> <span class="ow">or</span> <span class="n">meta</span> <span class="n">data</span> <span class="n">are</span> <span class="n">present</span> <span class="n">associated</span> <span class="k">with</span> <span class="n">the</span> <span class="n">documents</span><span class="p">,</span> <span class="n">a</span> <span class="n">label</span> <span class="n">attribute</span> <span class="ow">or</span> <span class="n">attribute</span> <span class="k">for</span> <span class="n">the</span> <span class="n">meta</span> <span class="n">data</span> <span class="n">are</span> <span class="n">created</span><span class="p">,</span> <span class="n">respectively</span><span class="o">.</span>
+
+<span class="n">Input</span>
+
+<span class="n">documents</span> <span class="p">(</span><span class="n">Collection</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">documents</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Output</span>
+
+<span class="n">example</span> <span class="nb">set</span> <span class="p">(</span><span class="n">Data</span> <span class="n">Table</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">example</span> <span class="nb">set</span> <span class="n">port</span><span class="o">.</span>
+
+<span class="n">Parameters</span>
+<span class="n">text</span> <span class="n">attribute</span>
+<span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">text</span> <span class="n">attribute</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span>
+<span class="n">label</span> <span class="n">attribute</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">name</span> <span class="n">of</span> <span class="n">the</span> <span class="n">label</span> <span class="n">attribute</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">string</span>
+<span class="n">add</span> <span class="n">meta</span> <span class="n">information</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">If</span> <span class="n">checked</span><span class="p">,</span> <span class="n">available</span> <span class="n">meta</span> <span class="n">information</span> <span class="n">of</span> <span class="n">the</span> <span class="n">text</span> <span class="n">like</span> <span class="n">filename</span><span class="p">,</span> <span class="n">date</span> <span class="ow">is</span> <span class="n">added</span> <span class="k">as</span> <span class="n">attribute</span><span class="o">.</span>
+<span class="n">Type</span><span class="p">:</span> <span class="n">boolean</span> <span class="n">Default</span><span class="p">:</span> <span class="n">true</span>
+<span class="n">datamanagement</span> <span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="n">Determines</span><span class="p">,</span> <span class="n">how</span> <span class="n">the</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">represented</span> <span class="n">internally</span><span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="important-terms-for-rapid-miner">
+<h3>Important Terms for Rapid Miner<a class="headerlink" href="#important-terms-for-rapid-miner" title="Permalink to this headline">¶</a></h3>
+<p>This was obtained directly from the website <a class="reference external" href="http://docs.rapidminer.com/studio/getting-started/important-terms.html">http://docs.rapidminer.com/studio/getting-started/important-terms.html</a></p>
+<p>Important Terms</p>
+<p>The following lists the first terms you need to know when using RapidMiner Studio. Following the terms are a description of the RapidMiner data types and operator port descriptions.</p>
+<p>Attribute:</p>
+<blockquote>
+<div>The information elements describing a scenario. Attributes are the table columns of a data set.</div></blockquote>
+<p>Classification:</p>
+<blockquote>
+<div>The process of predicting which category (or class) an example belongs to, based on existing data for which category membership is known. A category is defined as the possible values for a label. (Similarly, regression is the process for predicting numerical results.) That is, with classification you construct a model that, when trained, uses the learned rules to predict the category of new data.</div></blockquote>
+<p>Data set:</p>
+<blockquote>
+<div>The training set is the data used to discover predictive relationships and train models. The test set is the data used to test the accuracy and meaningfulness of a model&#8217;s representation of the predictive relationship (typically discovered using the training set). The new data set is the data with missing labels; the rules derived from the training set are applied to predict outcome for the new data set.</div></blockquote>
+<p>Example:</p>
+<blockquote>
+<div>Characterized by its attributes, an example has concrete values that can be compared with other examples. Examples are the table rows of a data set.</div></blockquote>
+<p>Example Set:</p>
+<blockquote>
+<div>The table created from the attributes (columns) and examples (rows). Also known as data or data set.</div></blockquote>
+<p>Label:</p>
+<blockquote>
+<div>The identifying attribute in relation to the current question. The goal is to know or learn this attribute&#8217;s (the label&#8217;s) value, or learn rules for deriving it from the regular attributes, for each row in the example set. Sometimes referred to as the target attribute or variable, it is the thing to predict for new examples that are not yet characterized. There can be only one label per data set.</div></blockquote>
+<p>Model:</p>
+<blockquote>
+<div>The data mining method or prediction instruction. A model explains the discovered rules and/or predicts unknown situations for current and future examples.</div></blockquote>
+<p>Operator:</p>
+<blockquote>
+<div>The building blocks, grouped by function, used to create RapidMiner processes. An operator has input and output ports; the action performed on the input ultimately leads to what is supplied to the output. Operator parameters control those actions. There are more than 1500 operators available in RapidMiner. Operators, in the Operators panel of the Design view, are both browsable and searchable.</div></blockquote>
+<p>Panel:</p>
+<blockquote>
+<div>Each view has its own set of panels, or tools, related to the view. They can be moved, sized, and hidden to suit. You can access additional panels from the View &gt; Show Panel pull-down menu:</div></blockquote>
+<p>Parameter:</p>
+<blockquote>
+<div><p>The setting(s) whose value(s) determine the characteristics or behavior of an operator. RapidMiner presents parameters in the Parameters panel of the Design view. There are regular parameters and expert parameters. The expert parameters are indicated by italic names and are displayed or hidden by clicking the Show/Hide advanced parameters link at the bottom of the panel.</p>
+<p>As part of the Wisdom of Crowds capabilities, RapidMiner Studio provides parameter recommendations based on the knowledge and best practices of other RapidMiner users. The recommender helps configure operators by providing recommendations on which parameters to change and by suggesting appropriate parameter values.</p>
+</div></blockquote>
+<p>Ports:</p>
+<blockquote>
+<div>The point through which data moves, represented by a semicircle labeled icon on the sides or operators and the Design view. See the list of port abbreviations below.</div></blockquote>
+<p>Prediction:</p>
+<blockquote>
+<div>The most probable value for a target attribute; predictions are derived by data mining. If you have rules and data, you can predict an outcome.</div></blockquote>
+<p>Process:</p>
+<blockquote>
+<div>A set of interconnected operators represented by a flow design, where each operator manipulates your data. A process might, for example, load a data set, transform the data, compute a model, and apply the model to another data set.</div></blockquote>
+<p>Process view:</p>
+<blockquote>
+<div>The working area for building processes. This is the canvas in the Design view where you drag operators or where, when you double-click a process, the operators of that process appear.</div></blockquote>
+<p>Repository:</p>
+<blockquote>
+<div>The storage mechanism for data and RapidMiner processes. Best practice recommends you use the repository for data storage instead of reading directly from a file or database. If you use a Read operator, meta data will not be available to RapidMiner, limiting the available functions.</div></blockquote>
+<p>Role:</p>
+<blockquote>
+<div>The identifying tag for or function of an attribute. Roles tell RapidMiner of special meaning or treatment for an attribute. RapidMiner has several pre-defined roles and supports the ability to create your own roles. The label role is of utmost importance in defining the target for a prediction. Any attribute without a role assigned is known as a regular attribute.</div></blockquote>
+<p>Training:</p>
+<blockquote>
+<div>The process of finding predictive relationships. The outcome of this learning process is the model.</div></blockquote>
+<p>View:</p>
+<blockquote>
+<div>A &#8220;work area&#8221; in which you access a specific functionality. There are two pre-defined views. Some extensions can add their own views (for example, the Radoop Extension). You can also create your own view by clicking New view... in the View menu.</div></blockquote>
+<p>RapidMiner data types:</p>
+<blockquote>
+<div><p>The following terms describe the data types RapidMiner assigns to attributes. Defining a data type specifies the kind of values allowed for an attribute. RapidMiner supports the natural division of numbers, texts, and dates. Numeric is the label for numbers, nominal for texts or strings, and date_time for dates.</p>
+<p>attribute
+Parent of all possible types (&#8220;any type&#8221;).</p>
+<p>binominal
+Exactly two values (for example true/false or yes/no).</p>
+<p>date
+Date without time (for example 23.12.2014).</p>
+<p>date_time
+Both date and time (for example 23.12.2014 17:59).</p>
+<p>file_path
+Nominal data type (rarely used) that allows for more granular distinction. Can be used to mark a column as &#8220;only containing file paths.&#8221;</p>
+<p>integer
+A whole number (for example, 23, -5, or 11,024,768).</p>
+<p>nominal
+All kinds of text values; includes polynomial and binomial.</p>
+<p>numeric
+All kinds of number values; includes date, time, integer, and real numbers.</p>
+<p>polynominal
+Many different string values (for example red, green, blue, yellow).</p>
+<p>real
+A fractional number (for example 11.23 or -0.0001).</p>
+<p>text
+Nominal data type that allows for more granular distinction (to differentiate from polynomial).</p>
+<p>time
+Time without date (for example 17:59).</p>
+</div></blockquote>
+<p>Operator port information:</p>
+<div class="highlight-default"><div class="highlight"><pre>The following table lists each port abbreviation and provides a brief description.
+
+Port Abbreviation   Meaning Description
+
+ano Anova   ANOVA matrix for ANOVA significance test
+ann Annotation      Annotations extracted from the input object
+arc Archive Archive file generated during execution of the operator
+ass Association     Association rules that have been discovered in a frequent item set
+att Attribute       Attribute weights (in and out)
+ave Average Performance measures; estimate of performance using the model built on the complete delivered data
+clu Cluster model   Cluster model created when clustering an example set
+clu Clustered set   Example set given to the clustering operator; may contain an attribute with a cluster role (describes the cluster of each example)
+col Collection      Collection of objects
+con Condition       Any object can be supplied; the condition specified in parameters is tested on this object
+cov Covariance      Covariance matrix
+dic Dictionary      Example set used for replacing &#39;from&#39; values with &#39;to&#39; values in a given example set
+dis Distance measure        SimilarityMeasure object
+doc Document        Document or document set
+err Error   Standard error output
+est Estimated performance   Performance vector of the SVM model which gives an estimation of statistical performance of this model
+exa Example set     Example set
+fil File    File object
+fla Flat    Flat collection or flat clustering model
+for Formula Formula result
+fre Frequent        Frequent item or item sets for association rule learning
+gro Grouped Grouped models, attributes, items
+hie Hierarchical    Hierarchical clustering model
+inp Input   Input source, can take various objects
+ite Item sets       Frequent item sets (groups of items that often appear together in the data)
+joi Join    Join of the left and right example sets
+lab Labeled data    Model that was given in input is applied on the example set and the updated example set is delivered from this port
+lef Left    Left input port expecting an example set, which is used as the left example set for a join
+lif Lift chart      Lift Pareto chart for the given model and example set
+mat Matrix  Correlations matrix of all attributes of the input example set
+mer Merged  Merged example set
+mod Model   Default model from this output port
+obj Object  IO object
+ori Original        Input example set is passed without changing to this port
+out Output  Output port
+par Parameter set   Set of parameters that can be applied on an operator
+pat Patterns        GSP algorithm is applied on the given example set; resultant sequential patterns set is delivered through this port
+per Performance     Performance Vector for selected attributes
+pre Preprocessing   Preprocessing model with information regarding the operator&#39;s parameters in the current process
+ran Random forest   Model of a random forest
+ref Reference       Provided reference data or reference set
+req Request set     Provided example set
+res Result set      Distance or similarity between examples of the request set and reference set
+rig Right   Right input port expecting an example set, which is used as the right example set for a join
+roc ROC curve       Calculated ROC curves for included models
+rul Rules   Association rules that have been discovered in a frequent item set
+sec Second  Input take an example set derived from the output of the Generate ID operator in an attached example process
+seg Segment Segment of an image
+sel Selected        Object specified by the index parameter is returned through this port
+ses Session Session example set
+sig Significance    Significance test results of performance vector comparison is delivered through this port
+sim Similarity      Calculated similarity between each example of the given example set with every other example of the same set
+sin Single  Single object of the given collection, which is processed in the inner part of the operator
+sta Stacking        Stacking examples or model
+sto Stored  Through this port, the input object is passed without changing to the output
+sub Subtrahend      Expects an example set; example set must have ID attribute
+sup Superset        Superset of input example sets
+thr Through Objects are passed through without changing
+thr Threshold       Threshold output of the Select Recall operator
+tra Training        Training data to train a model (example set)
+uni Union   Union of the input example sets
+unl Unlabeled       Examples that are not labelled and therefore not used when training a model
+unm Unmatched       Examples that did not match a specified pattern in the original example set
+unr Unrelated       Examples that were unrelated to a specified pattern in the original example set
+vis Visualization   Self-organizing map (SOM) visualization
+wei Weights Attribute weights
+wor Word    Expects or outputs a word list
+xsl XSLT    EXtensible Stylesheet Language (XSLT) document
+Brand
+© RapidMiner GmbH 2017. All rights reserved.
+
+  Provide Feedback
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="realTimeBigData.html" title="Real time big data"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="week3homework2.html" title="Week 3: Homework 2"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Week 3 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Data Analytics at Regis University!</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Josh Peterson.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
+    </div>
+  </body>
+</html>

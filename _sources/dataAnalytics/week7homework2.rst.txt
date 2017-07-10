@@ -1,0 +1,299 @@
+
+*************************************************
+Week 7-2 Unsupervised Learning Exercise
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+
+*How is unsupervised learning related to the statistical clustering problem?*
+
+Unsupervised learning uses the associated parameters to find patterns, associations, and groups without having any associated response.  The most common unsupervised learning methods uses cluster analysis to find hidden relationships and patterns
+
+*What packages (in R, Python…) perform unsupervised learning?*
+
+The two main packages in R for performing unsupervised learning are *factoextra* and *cluster*
+
+*What measures of quality for the learning algorithm might you expect to see?*
+
+Based on the website: http://www.sthda.com/english/wiki/cluster-analysis-in-r-unsupervised-machine-learning: clustering validation requires three main tasks:  cluster tendency, clustering evaluation, and clustering stability.  Cluster tendency is used to determine if using clustering is a good idea of the associated data, clustering evaluation determines the quality of the clustering, and clustering stability looks at the sensitive of the results to different parameters used.
+
+For this example I will be using K-means clustering in R.  The first step is to load the data using the commands::
+
+    data(iris)
+    head(iris)
+
+The head command shows the top values in the dataset.  The columns of the data set include Sepal.Length, Sepal.Width, Petal.Length, Petal.Width, and Species
+
+The next step is to set the random number generator to make sure the results are reproducible.  Once the random number has been set then the kmeans command can be used as seen below::
+
+    set.seed(25)
+    km <- kmeans(iris[,1:4],3,nstart=25)
+    km
+
+The kmeans cluster uses all of the data except for the Species.  The goal of this cluster analysis is to see if the kmeans method can predict what species the flower are based on the parameters.  This method request for three centers and 25 random sets should be chosen to predict the clusters
+
+The results are as follows::
+
+    K-means clustering with 3 clusters of sizes 62, 38, 50
+
+    Cluster means:
+      Sepal.Length Sepal.Width Petal.Length Petal.Width
+    1     5.901613    2.748387     4.393548    1.433871
+    2     6.850000    3.073684     5.742105    2.071053
+    3     5.006000    3.428000     1.462000    0.246000
+
+    Clustering vector:
+      [1] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3
+     [28] 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 3 1 1 2 1
+     [55] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1
+     [82] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 2 2 2 2 1 2
+    [109] 2 2 2 2 2 1 1 2 2 2 2 1 2 1 2 1 2 2 1 1 2 2 2 2 2 1 2
+    [136] 2 2 2 1 2 2 2 1 2 2 2 1 2 2 1
+
+    Within cluster sum of squares by cluster:
+    [1] 39.82097 23.87947 15.15100
+     (between_SS / total_SS =  88.4 %)
+
+    Available components:
+
+    [1] "cluster"      "centers"      "totss"
+    [4] "withinss"     "tot.withinss" "betweenss"
+    [7] "size"         "iter"         "ifault"
+
+The results from the cluster can be compared from the actual species classification using the command::
+
+    table(km$cluster,iris$Species)
+
+The output is as follows::
+
+        setosa versicolor virginica
+    1      0         48        14
+    2      0          2        36
+    3     50          0         0
+
+This shows that the 3rd cluster predicts 100% that they are sets.  Cluster 1 and Cluster 2 also predict rather well but not 100%.
+
+The clustering can be plotted to show a better relationship by plotting the Sepal.Width versus Sepal.Length and then coloring the results based on which cluster they were in and the shape based on the species using the command below::
+
+    library(ggplot2)
+    dat <- data.frame(Sepal.Length =iris[,1],
+                      Sepal.Width =iris[,2],
+                      Cluster = km$cluster,
+                      Species =iris[,5])
+    ggplot(dat,aes(x=Sepal.Length,y=Sepal.Width,color=Cluster,shape=Species)) +
+      geom_point(size=3)
+
+The figures can be seen below.
+
+.. figure:: _static/Sepal_width_length.png
+
+The clustering can also be plotted to show a better relationship by plotting the Petal.Width versus Petal.Length and then coloring the results based on which cluster they were in and the shape based on the species using the command below::
+
+    dat <- data.frame(Petal.Length =iris[,3],
+                      Petal.Width =iris[,4],
+                      Cluster = km$cluster,
+                      Species =iris[,5])
+    ggplot(dat,aes(x=Petal.Length,y=Petal.Width,color=Cluster,shape=Species)) +
+      geom_point(size=3)
+
+.. figure:: _static/petalWidthLength.png
+
+This figure shows the grouping for the setosa - it having a much smaller petal length and width.  The overlap of the other two species can also be seen in this figure.
+
+
+I also applied the same method to the Titanic data.  However, because of the method, I could only use numerical data for the analysis, so I had to modify the data a little.  How I did this was by changing 1 to male and 0 to female and then removing the other text values in the dataset.  This method did not work that well in this case, and the final result was::
+
+        0   1
+    1 416 264
+    2   8  26
+
+
+It predicted that much more people survived.  If only this were true
+
+One of the plots for this can be seen below
+
+.. figure:: _static/titanicUnlearned.png
+
+Appendix A
+============
+
+Code for iris is as follows::
+
+    data(iris)
+    head(iris)
+
+    set.seed(25)
+    km <- kmeans(iris[,1:4],3,nstart=25)
+    km
+
+
+    table(km$cluster,iris$Species)
+
+    plot(iris[,1],iris[,2],col=km$cluster,sh)
+
+    points(km$center[,c(1,2)],col=1:3,pch=8,cex=2)
+
+    plot(iris[,3],iris[,4],col=km$cluster)
+    points(km$center[,c(3,4)],col=1:3,pch=8,cex=2)
+
+    library(ggplot2)
+    dat <- data.frame(Sepal.Length =iris[,1],
+                      Sepal.Width =iris[,2],
+                      Cluster = km$cluster,
+                      Species =iris[,5])
+    ggplot(dat,aes(x=Sepal.Length,y=Sepal.Width,color=Cluster,shape=Species)) +
+      geom_point(size=3)
+
+    dat <- data.frame(Petal.Length =iris[,3],
+                      Petal.Width =iris[,4],
+                      Cluster = km$cluster,
+                      Species =iris[,5])
+    ggplot(dat,aes(x=Petal.Length,y=Petal.Width,color=Cluster,shape=Species)) +
+      geom_point(size=3)
+
+
+
+
+Code for titanic is as follows::
+
+    # Removed all text and set 0 to female and 1 to male
+    data = read.csv("/Users/f4p/Dropbox (ORNL)/1 Coursera/Regis/Data Analytics/Week7/train.csv")
+
+    cleanData <- na.omit(data)
+    head(cleanData)
+
+
+    set.seed(25)
+    km <- kmeans(cleanData[,2:8],2,nstart=50)
+
+
+
+    table(km$cluster,cleanData$Survived)
+
+
+    library(ggplot2)
+    ggplot(cleanData,aes(x=Age,y=Fare,color=km$cluster*3)) +
+      geom_point(size=1+cleanData$Survived)
+
+
+    ggplot(cleanData,aes(x=Age,y=Fare,color=Survived)) +
+      geom_point(size=km$cluster*3)
+
+Appendix B
+============
+
+Description of kmeans functions from the R help screen is as follows::
+
+    K-Means Clustering
+
+    Description
+
+    Perform k-means clustering on a data matrix.
+
+    Usage
+
+    kmeans(x, centers, iter.max = 10, nstart = 1,
+           algorithm = c("Hartigan-Wong", "Lloyd", "Forgy",
+                         "MacQueen"), trace=FALSE)
+    ## S3 method for class 'kmeans'
+    fitted(object, method = c("centers", "classes"), ...)
+    Arguments
+
+    x
+    numeric matrix of data, or an object that can be coerced to such a matrix (such as a numeric vector or a data frame with all numeric columns).
+    centers
+    either the number of clusters, say k, or a set of initial (distinct) cluster centres. If a number, a random set of (distinct) rows in x is chosen as the initial centres.
+    iter.max
+    the maximum number of iterations allowed.
+    nstart
+    if centers is a number, how many random sets should be chosen?
+    algorithm
+    character: may be abbreviated. Note that "Lloyd" and "Forgy" are alternative names for one algorithm.
+    object
+    an R object of class "kmeans", typically the result ob of ob <- kmeans(..).
+    method
+    character: may be abbreviated. "centers" causes fitted to return cluster centers (one for each input point) and "classes" causes fitted to return a vector of class assignments.
+    trace
+    logical or integer number, currently only used in the default method ("Hartigan-Wong"): if positive (or true), tracing information on the progress of the algorithm is produced. Higher values may produce more tracing information.
+    ...
+    not used.
+    Details
+
+    The data given by x are clustered by the k-means method, which aims to partition the points into k groups such that the sum of squares from points to the assigned cluster centres is minimized. At the minimum, all cluster centres are at the mean of their Voronoi sets (the set of data points which are nearest to the cluster centre).
+
+    The algorithm of Hartigan and Wong (1979) is used by default. Note that some authors use k-means to refer to a specific algorithm rather than the general method: most commonly the algorithm given by MacQueen (1967) but sometimes that given by Lloyd (1957) and Forgy (1965). The Hartigan–Wong algorithm generally does a better job than either of those, but trying several random starts (nstart> 1) is often recommended. In rare cases, when some of the points (rows of x) are extremely close, the algorithm may not converge in the “Quick-Transfer” stage, signalling a warning (and returning ifault = 4). Slight rounding of the data may be advisable in that case.
+
+    For ease of programmatic exploration, k=1 is allowed, notably returning the center and withinss.
+
+    Except for the Lloyd–Forgy method, k clusters will always be returned if a number is specified. If an initial matrix of centres is supplied, it is possible that no point will be closest to one or more centres, which is currently an error for the Hartigan–Wong method.
+
+    Value
+
+    kmeans returns an object of class "kmeans" which has a print and a fitted method. It is a list with at least the following components:
+
+    cluster
+    A vector of integers (from 1:k) indicating the cluster to which each point is allocated.
+    centers
+    A matrix of cluster centres.
+    totss
+    The total sum of squares.
+    withinss
+    Vector of within-cluster sum of squares, one component per cluster.
+    tot.withinss
+    Total within-cluster sum of squares, i.e. sum(withinss).
+    betweenss
+    The between-cluster sum of squares, i.e. totss-tot.withinss.
+    size
+    The number of points in each cluster.
+    iter
+    The number of (outer) iterations.
+    ifault
+    integer: indicator of a possible algorithm problem – for experts.
+    References
+
+    Forgy, E. W. (1965) Cluster analysis of multivariate data: efficiency vs interpretability of classifications. Biometrics 21, 768–769.
+
+    Hartigan, J. A. and Wong, M. A. (1979). A K-means clustering algorithm. Applied Statistics 28, 100–108.
+
+    Lloyd, S. P. (1957, 1982) Least squares quantization in PCM. Technical Note, Bell Laboratories. Published in 1982 in IEEE Transactions on Information Theory 28, 128–137.
+
+    MacQueen, J. (1967) Some methods for classification and analysis of multivariate observations. In Proceedings of the Fifth Berkeley Symposium on Mathematical Statistics and Probability, eds L. M. Le Cam & J. Neyman, 1, pp. 281–297. Berkeley, CA: University of California Press.
+
+    Examples
+
+    require(graphics)
+
+    # a 2-dimensional example
+    x <- rbind(matrix(rnorm(100, sd = 0.3), ncol = 2),
+               matrix(rnorm(100, mean = 1, sd = 0.3), ncol = 2))
+    colnames(x) <- c("x", "y")
+    (cl <- kmeans(x, 2))
+    plot(x, col = cl$cluster)
+    points(cl$centers, col = 1:2, pch = 8, cex = 2)
+
+    # sum of squares
+    ss <- function(x) sum(scale(x, scale = FALSE)^2)
+
+    ## cluster centers "fitted" to each obs.:
+    fitted.x <- fitted(cl);  head(fitted.x)
+    resid.x <- x - fitted(cl)
+
+    ## Equalities : ----------------------------------
+    cbind(cl[c("betweenss", "tot.withinss", "totss")], # the same two columns
+             c(ss(fitted.x), ss(resid.x),    ss(x)))
+    stopifnot(all.equal(cl$ totss,        ss(x)),
+          all.equal(cl$ tot.withinss, ss(resid.x)),
+          ## these three are the same:
+          all.equal(cl$ betweenss,    ss(fitted.x)),
+          all.equal(cl$ betweenss, cl$totss - cl$tot.withinss),
+          ## and hence also
+          all.equal(ss(x), ss(fitted.x) + ss(resid.x))
+          )
+
+    kmeans(x,1)$withinss # trivial one-cluster, (its W.SS == ss(x))
+
+    ## random starts do help here with too many clusters
+    ## (and are often recommended anyway!):
+    (cl <- kmeans(x, 5, nstart = 25))
+    plot(x, col = cl$cluster)
+    points(cl$centers, col = 1:5, pch = 8)

@@ -1,0 +1,124 @@
+
+*************************************************
+Week 8 Linear Programming
+*************************************************
+by Joshua Peterson (created in Sphinx)
+
+The linear problem was from the website: http://www.purplemath.com/modules/linprog3.htm
+
+*A calculator company produces a scientific calculator and a graphing calculator. Long-term projections indicate an expected demand of at least 100 scientific and 80 graphing calculators each day. Because of limitations on production capacity, no more than 200 scientific and 170 graphing calculators can be made daily. To satisfy a shipping contract, a total of at least 200 calculators much be shipped each day.*
+
+*If each scientific calculator sold results in a $2 loss, but each graphing calculator produces a $5 profit, how many of each type should be made daily to maximize net profits?*
+
+
+The objective function was to optimize profit when $2 loss for scientific calculators and $5 profit for graphing calculators.  The contracts included the production of scientific calculator was between [100,200], and the production of the graphing calculator was between [80,170].  The total number of calculators >=200.
+
+The R input file is as follows::
+
+    library("lpSolveAPI")
+
+    lprec<-make.lp(0,2)
+    lp.control(lprec,sense="max")
+
+    set.objfn(lprec,c(-2,5)) #-2  for x and +5 for y
+
+    add.constraint(lprec,c(1,0),">=",100) #At least x per day
+    add.constraint(lprec,c(0,1),">=",80) #At least y per day
+    add.constraint(lprec,c(1,0),"<=",200) # no more then 200
+    add.constraint(lprec,c(0,1),"<=",170) # no more y per day
+    add.constraint(lprec,c(1,1),">=",200) # total of at leas 200 shiped per day
+    lprec
+
+    solve(lprec)
+    get.objective(lprec)
+    get.variables(lprec)
+
+The output from the line > lp.control(lprec,sense="max") is ::
+
+    $anti.degen
+    [1] "none"
+
+    $basis.crash
+    [1] "none"
+
+    $bb.depthlimit
+    [1] -50
+
+    $bb.floorfirst
+    [1] "automatic"
+
+    $bb.rule
+    [1] "pseudononint" "greedy"       "dynamic"
+    [4] "rcostfixing"
+
+    $break.at.first
+    [1] FALSE
+
+    $break.at.value
+    [1] 1e+30
+
+    $epsilon
+          epsb       epsd      epsel     epsint
+         1e-10      1e-09      1e-12      1e-07
+    epsperturb   epspivot
+         1e-05      2e-07
+
+    $improve
+    [1] "dualfeas" "thetagap"
+
+    $infinite
+    [1] 1e+30
+
+    $maxpivot
+    [1] 250
+
+    $mip.gap
+    absolute relative
+       1e-11    1e-11
+
+    $negrange
+    [1] -1e+06
+
+    $obj.in.basis
+    [1] TRUE
+
+    $pivoting
+    [1] "devex"    "adaptive"
+
+    $presolve
+    [1] "none"
+
+    $scalelimit
+    [1] 5
+
+    $scaling
+    [1] "geometric"   "equilibrate" "integers"
+
+    $sense
+    [1] "maximize"
+
+    $simplextype
+    [1] "dual"   "primal"
+
+    $timeout
+    [1] 0
+
+    $verbose
+    [1] "neutral"
+
+The output of the line lprec is as follows::
+
+    Model name:
+                C1    C2
+    Maximize    -2     5
+    R1           1     1  >=  200
+    R2           0     1  >=   80
+    R3           1     0  <=  200
+    R4           0     1  <=  170
+    R5           1     1  >=  200
+    Kind       Std   Std
+    Type      Real  Real
+    Upper      Inf   Inf
+    Lower        0     0
+
+The max profit possible is 650 per day, and this would require making 100 scientific calculations and 170 graphing calculators.
